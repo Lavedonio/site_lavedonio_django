@@ -27,11 +27,11 @@
 			</button>
 			<div class="collapse navbar-collapse" id="navbarCollapse">
 				<ul class="navbar-nav mr-auto">
-					<li class="nav-item active">
-						<a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+					<li class="nav-item{% if navbar_active == 'home' %} active{% endif %}">
+						<a class="nav-link" href="{% url 'homepage' %}">Home{% if navbar_active == 'home' %} <span class="sr-only">(current)</span>{% endif %}</a>
 					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="#">Sobre</a>
+					<li class="nav-item{% if navbar_active == 'about' %} active{% endif %}">
+						<a class="nav-link" href="{% url 'about' %}">Sobre{% if navbar_active == 'about' %} <span class="sr-only">(current)</span>{% endif %}</a>
 					</li>
 					<li class="nav-item">
 						<a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Projetos</a>
@@ -39,16 +39,15 @@
 					<li class="nav-item dropdown">
 						<a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Projetos</a>
 						<div class="dropdown-menu" aria-labelledby="dropdown01">
-							<a class="dropdown-item" href="#">Action</a>
-							<a class="dropdown-item" href="#">Another action</a>
-							<a class="dropdown-item" href="#">Something else here</a>
+							<a class="dropdown-item" href="#">Pong</a>
+							<a class="dropdown-item" href="#">Excel Autorun</a>
 						</div>
 					</li>
 					<li class="nav-item">
 						<a class="nav-link" href="#">Blog</a>
 					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="#">Contato</a>
+					<li class="nav-item{% if navbar_active == 'contact' %} active{% endif %}">
+						<a class="nav-link" href="{% url 'contact' %}">Contato{% if navbar_active == 'contact' %} <span class="sr-only">(current)</span>{% endif %}</a>
 					</li>
 				</ul>
 				<form class="form-inline mt-2 mt-md-0">
