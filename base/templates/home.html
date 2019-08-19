@@ -1,4 +1,9 @@
 {% extends 'base.html' %}
 {% block content %}
-			<h1 class="mt-5">Bem vindo!</h1>
+			<h1 class="mt-5 display-1">Bem vindo{% if name_visitor %}, {{ name_visitor }}{% endif %}!</h1>
+			<h2><small>Este é o meu site, onde eu coloco meus projetos pessoais e mantenho um blog.</small></h2>
+
+			<h4 class="mt-5"><small>Saiba mais sobre este site.</small></h4>
+			<p class="lead mt-5 font-weight-light">Saiba mais sobre este site.</p>
+			<p><a class="btn btn-primary btn-md" href="{% url 'about' %}" role="button">Saiba mais &raquo;</a></p>
 {% endblock %}

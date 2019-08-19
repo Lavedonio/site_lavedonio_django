@@ -20,8 +20,8 @@
 <body class="d-flex flex-column h-100">
 	<header>
 		<!-- Fixed navbar -->
-		<nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-dark">
-			<a class="navbar-brand" href="#">Daniel Lavedonio de Lima</a>
+		<nav id="custom-nav" class="navbar navbar-expand-lg navbar-dark fixed-top bg-dark">
+			<a class="navbar-brand" href="{% url 'homepage' %}">Daniel Lavedonio de Lima</a>
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
@@ -66,8 +66,11 @@
 	</main>
 
 	<footer class="footer mt-auto py-3">
-		<div class="container">
-			<span class="text-muted">Este é um projeto <i>open-source</i>. Veja o código fonte <a href="https://github.com/Lavedonio/site_lavedonio_django_br" target="_blank" rel="noopener noreferrer">aqui</a>.</span>
+		<div class="container text-center">
+			<span class="text-muted">Daniel Lavedonio de Lima - 2019</span>
+			<br>
+			<span class="text-muted">Este site é um projeto <i>open-source</i>. Veja o código fonte <a href="https://github.com/Lavedonio/site_lavedonio_django_br" target="_blank" rel="noopener noreferrer">aqui</a>.</span>
+			{% block credits %}{% endblock %}
 		</div>
 	</footer>
 
