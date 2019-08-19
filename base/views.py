@@ -4,7 +4,8 @@ from django.shortcuts import render
 def home(request):
     context = {
         "title": "Homepage",
-        "navbar_active": "home"
+        "navbar_active": "home",
+        "name_visitor": request.META.get('USER')
     }
     return render(request, "home.html", context)
 
