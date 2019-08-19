@@ -2,8 +2,16 @@ main > .container {
   padding: 60px 15px 0;
 }
 
+/*#main-background {
+	background-color: #001B31!important;
+}*/
+
+#custom-nav {
+	background-color: #000B1F!important;
+}
+
 .footer {
-  background-color: #f5f5f5;
+  background-color: #000B1F;
 }
 
 .footer > .container {
