@@ -13,8 +13,8 @@ function calculateMousePos(evt) {
 	var root = document.documentElement;
 
 	//considera as posições X e Y relativas e não totais, desconsiderando o scroll e os outros elementos da página (texto, parágrafos, divs...)
-	var mouseX = evt.clientX - rect.left - root.scrollLeft;
-	var mouseY = evt.clientY - rect.top - root.scrollTop;
+	var mouseX = evt.clientX - rect.left; // - root.scrollLeft;
+	var mouseY = evt.clientY - rect.top; // - root.scrollTop;
 
 	return {
 		x:mouseX,
@@ -136,7 +136,7 @@ function moveEverything(ball, player1, computer) {
 
 	ball.update();
 
-	if(ball.x < 0) {
+	if(ball.x < PADDLE_THICKNESS) {
 		if(ball.y > player1.y && ball.y < (player1.y + player1.height)) {
 			ball.x_speed = -ball.x_speed;
 
@@ -152,7 +152,7 @@ function moveEverything(ball, player1, computer) {
 		}
 	}
 
-	if(ball.x > canvas.width) {
+	if(ball.x > canvas.width - PADDLE_THICKNESS) {
 		if(ball.y > computer.y && ball.y < (computer.y + computer.height)) {
 			ball.x_speed = -ball.x_speed;
 
@@ -181,7 +181,7 @@ function drawEverything(ball, player1, computer) {
 		canvasContext.fillStyle = 'white';
 
 		if(player1.score >= WINNING_SCORE) {
-			canvasContext.fillText("Você ganhou!!", 290, 200);
+			canvasContext.fillText("Você ganhou!!", 330, 200);
 		} else if(computer.score >= WINNING_SCORE) {
 			canvasContext.fillText("Você perdeu =(", 330, 200);
 		}
