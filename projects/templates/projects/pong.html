@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block stylesheet %}
+	<link rel="stylesheet" type="text/css" href="{% static 'css/pong.css' %}">
+{% endblock %}
+
+{% block content %}
+		<h1 class="mt-5 display-3">Pong</h1>
+
+		<p class="lead">Este é uma recriação de um jogo clássico de fliperama ou, como as pessoas da minha geração conhecem, sites de minigames online.</p>
+
+		<p class="text-center"><canvas id="gameCanvas" width="800" height="600"></canvas></p>
+
+		<p class="mb-3">Fiz esse jogo a partir desse tutorial: <a href="https://www.udemy.com/code-your-first-game/">Curso Udemy</a>.</p>
+{% endblock %}
+
+{% block javascript %}
+	<script src="{% static 'js/pong.js' %}"></script>
+{% endblock %}

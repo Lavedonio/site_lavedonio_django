@@ -1,0 +1,18 @@
+main {
+	background-color: black!important;
+}
+
+h1 {
+	color: #A5A5A5;
+}
+
+p {
+	color: #E5E5E5;
+}
+
+canvas {
+	margin: 3rem;
+	border-width: 1px;
+	border-style: solid;
+	border-color: white;
+}
