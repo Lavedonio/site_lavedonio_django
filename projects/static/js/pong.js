@@ -53,7 +53,9 @@ window.onload = function() {
 	canvas.addEventListener('mousemove', // http://www.w3schools.com/jsref/dom_obj_event.asp
 		function(evt) {
 			var mousePos = calculateMousePos(evt);
-			player1.y = mousePos.y - (player1.height / 2);
+			if(mousePos.y > player1.height / 2 && mousePos.y < canvas.height - player1.height / 2) {
+				player1.y = mousePos.y - (player1.height / 2);
+			}
 		});
 
 	canvas.addEventListener('mousedown', function(evt) {
@@ -120,9 +122,9 @@ function Paddle(x) {
 function computerMovement(ball, computer) {
 	var computerYCenter = computer.y + (computer.height / 2);
 
-	if(computerYCenter < ball.y - ((computer.height / 2)) * 0.35) {
+	if(computerYCenter < ball.y - ((computer.height / 2)) * 0.35 && computer.y + computer.height < canvas.height) {
 		computer.y += 6;
-	} else if(computerYCenter > ball.y + ((computer.height / 2)) * 0.35) {
+	} else if(computerYCenter > ball.y + ((computer.height / 2)) * 0.35 && computer.y > 0) {
 		computer.y -= 6;
 	}
 }
@@ -178,15 +180,18 @@ function drawEverything(ball, player1, computer) {
 	canvasContext.font = "20px Georgia";
 
 	if(showingWinScreen) {
+		win_text = "Você ganhou!!";
+		lose_text = "Você perdeu =(";
+
 		canvasContext.fillStyle = 'white';
 
 		if(player1.score >= WINNING_SCORE) {
-			canvasContext.fillText("Você ganhou!!", 330, 200);
+			canvasContext.fillText(win_text, (canvas.width - 10 * win_text.length) / 2, canvas.height / 3);
 		} else if(computer.score >= WINNING_SCORE) {
-			canvasContext.fillText("Você perdeu =(", 330, 200);
+			canvasContext.fillText(lose_text, (canvas.width - 10 * lose_text.length) / 2, canvas.height / 3);
 		}
 
-		canvasContext.fillText("clique para reiniciar", 310, 500);
+		canvasContext.fillText("clique para reiniciar", 310, 5 * canvas.height / 6);
 		return;
 	}
 
