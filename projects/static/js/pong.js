@@ -1,6 +1,7 @@
 var canvas;
 var canvasContext;
 var showingWinScreen = false;
+var gameStarted = false;
 
 const WINNING_SCORE = 5;
 const PADDLE_HEIGHT = 100;
@@ -23,6 +24,10 @@ function calculateMousePos(evt) {
 }
 
 function handleMouseClick(evt, player1, computer) {
+	if(!gameStarted) {
+		gameStarted = true;
+	}
+
 	if(showingWinScreen) {
 		player1.score = 0;
 		computer.score = 0;
@@ -35,7 +40,7 @@ function handleMouseClick(evt, player1, computer) {
 // -------------------- Main --------------------
 
 window.onload = function() {
-	// window.onload associoado a função: carrega o que tiver dentro apenas depois que a página terminar de carregar
+	// window.onload associado a função: carrega o que tiver dentro apenas depois que a página terminar de carregar
 	canvas = document.getElementById('gameCanvas'); //associa a variável canvas ao elemento no HTML
 	canvasContext = canvas.getContext('2d');
 
@@ -89,6 +94,7 @@ function Ball() {
 
 	this.reset = function() {
 		this.x_speed = -this.x_speed;
+		this.y_speed = getRandomArbitrary(-15, 15);
 		this.x = canvas.width / 2;
 		this.y = canvas.height / 2;
 	}
@@ -130,7 +136,7 @@ function computerMovement(ball, computer) {
 }
 
 function moveEverything(ball, player1, computer) {
-	if(showingWinScreen) {
+	if(!gameStarted || showingWinScreen) {
 		return;
 	}
 
@@ -177,7 +183,18 @@ function drawEverything(ball, player1, computer) {
 	// next line blanks out the screen with black
 	colorRect(0, 0, canvas.width, canvas.height, 'black');
 
-	canvasContext.font = "20px Georgia";
+	canvasContext.font = "20px Helvetica";
+
+	if(!gameStarted) {
+		canvasContext.fillStyle = 'white';
+		canvasContext.font = "40px Helvetica";
+		canvasContext.fillText("Pong", (canvas.width - 100) / 2, canvas.height / 3);
+
+		canvasContext.font = "20px Helvetica";
+		canvasContext.fillText("clique para começar", (canvas.width / 2) - 90, 5 * canvas.height / 6);
+
+		return;
+	}
 
 	if(showingWinScreen) {
 		win_text = "Você ganhou!!";
@@ -191,7 +208,7 @@ function drawEverything(ball, player1, computer) {
 			canvasContext.fillText(lose_text, (canvas.width - 10 * lose_text.length) / 2, canvas.height / 3);
 		}
 
-		canvasContext.fillText("clique para reiniciar", 310, 5 * canvas.height / 6);
+		canvasContext.fillText("clique para reiniciar", (canvas.width / 2) - 90, 5 * canvas.height / 6);
 		return;
 	}
 
@@ -214,6 +231,11 @@ function drawEverything(ball, player1, computer) {
 
 
 // ---------- Funções auxiliares ----------
+
+function getRandomArbitrary(min, max) {
+	// https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Math/random
+	return Math.random() * (max - min) + min;
+}
 
 function drawNet() {
 	for(var i = 0; i < canvas.height; i += 40) {
