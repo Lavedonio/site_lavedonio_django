@@ -7,3 +7,11 @@ def pong(request):
         "navbar_active": "projects"
     }
     return render(request, "projects/pong.html", context)
+
+
+def snake(request):
+    context = {
+        "title": "Snake - Projetos",
+        "navbar_active": "projects"
+    }
+    return render(request, "projects/snake.html", context)

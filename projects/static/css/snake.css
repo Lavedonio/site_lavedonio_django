@@ -1,0 +1,36 @@
+main {
+	background-color: black!important;
+}
+
+h1 {
+	color: #A5A5A5;
+}
+
+p {
+	color: #E5E5E5;
+}
+
+.controls {
+	margin-top: 0;
+	margin-bottom: 2rem;
+	margin-right: auto;
+	margin-left: auto;
+	background-color: #050505;
+	width: 550px;
+}
+
+.no-space-bottom {
+	margin-bottom: 0;
+}
+
+.no-space-top {
+	margin-top: 0;
+}
+
+canvas {
+	margin-top: 3rem;
+	/*margin-bottom: 1rem;*/
+	border-width: 1px;
+	border-style: solid;
+	border-color: white;
+}

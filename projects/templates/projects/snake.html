@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block stylesheet %}
+	<link rel="stylesheet" type="text/css" href="{% static 'css/snake.css' %}">
+{% endblock %}
+
+{% block content %}
+		<h1 class="mt-5 display-3">Snake</h1>
+
+		<p class="lead">Esta é uma recriação do clássico "jogo da cobrinha" que todo mundo jogava nos Nokias indestrutíveis no começo dos anos 2000, antes da popularização dos smartphones.</p>
+
+		<p>Aqui, além de pode jogar o jogo, futuramente será possível ver uma IA aprendendo a jogar também!</p>
+
+		<p class="text-center"><canvas id="gameCanvas" width="550" height="550"></canvas></p>
+		<div class="row controls">
+			<div class="col-md-5">
+				<p>Controles:</p>
+				<div class="text-center no-space-bottom"><button id="up-arrow" class="btn btn-info btn-sm">&uarr;</button></div>
+				<div class="text-center no-space-top"><button id="left-arrow" class="btn btn-info btn-sm">&larr;</button><button id="down-arrow" class="btn btn-info btn-sm">&darr;</button><button id="right-arrow" class="btn btn-info btn-sm">&rarr;</button></div>
+			</div>
+			<div class="col-md-7">
+				<p>Refresh rate:
+					<select id="refresh-rate" class="custom-select custom-select-sm">
+						<option value="50" selected>50ms</option>
+						<option value="75">75ms</option>
+						<option value="100">100ms</option>
+						<option value="200">200ms</option>
+						<option value="500">500ms</option>
+					</select>
+				</p>
+				<p>Tamanho do jogo:
+					<select id="num-of-tiles" class="custom-select custom-select-sm">
+						<option value="20">20x20</option>
+						<option value="30">30x30</option>
+						<option value="40" selected>40x40</option>
+					</select>
+				</p>
+			</div>
+		</div>
+
+{% endblock %}
+
+{% block javascript %}
+	<script src="{% static 'js/snake.js' %}"></script>
+{% endblock %}
