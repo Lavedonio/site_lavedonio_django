@@ -10,13 +10,17 @@ p {
 	color: #E5E5E5;
 }
 
-.controls {
+.teste {
+	background-color: #E5E5E5;
+}
+
+#controls {
 	margin-top: 0;
 	margin-bottom: 2rem;
 	margin-right: auto;
 	margin-left: auto;
 	background-color: #050505;
-	width: 550px;
+	width: 600px;
 }
 
 .no-space-bottom {

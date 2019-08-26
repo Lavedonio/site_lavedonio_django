@@ -1,10 +1,16 @@
 var canvas;
 var canvasContext;
+var controls;
+
+var DEFAULT_WIDTH;
+var DEFAULT_HEIGHT;
 var BLOCK_WIDTH;
 var BLOCK_HEIGHT;
+
 var NUMBER_OF_TILES = 40;
 var REFRESH_RATE = 50;
 
+var waiting_for_player_movement = false;
 var player_lost = false;
 var game_started = false;
 var game_ended = false;
@@ -27,6 +33,46 @@ function handleMouseClick(event, player, food) {
 	}
 }
 
+function displaySettings(reload, player=null, food=null) {
+	var reset = true;
+
+	if(window.innerWidth < 575) {
+		canvas.width = window.innerWidth - 50;
+		canvas.height = window.innerWidth - 50;
+		controls.style.width = (window.innerWidth - 50).toString() + "px";
+	}
+	else if(window.innerWidth < 650) {
+		canvas.width = 0.8 * window.innerWidth;
+		canvas.height = 0.8 * window.innerWidth;
+		controls.style.width = (0.8 * window.innerWidth).toString() + "px";
+	}
+	else if(window.innerWidth < 767) {
+		canvas.width = 0.7 * window.innerWidth;
+		canvas.height = 0.7 * window.innerWidth;
+		controls.style.width = (0.7 * window.innerWidth).toString() + "px";
+	}
+	else if(window.innerWidth < 990) {
+		canvas.width = 0.6 * window.innerWidth;
+		canvas.height = 0.6 * window.innerWidth;
+		controls.style.width = (0.6 * window.innerWidth).toString() + "px";
+	}
+	else {
+		canvas.width = DEFAULT_WIDTH;
+		canvas.height = DEFAULT_HEIGHT;
+		controls.style.width = DEFAULT_WIDTH.toString() + "px";
+		reset = false;
+	}
+
+	if(reload) {
+		BLOCK_WIDTH = canvas.width / NUMBER_OF_TILES;
+		BLOCK_HEIGHT = canvas.height / NUMBER_OF_TILES;
+		game_started = false;
+		if(reset) {
+			reset_game(player, food);
+		}
+	}
+}
+
 // ------------- /Global functions --------------
 
 // -------------------- Main --------------------
@@ -36,6 +82,12 @@ window.onload = function() {
 
 	canvas = document.getElementById('gameCanvas');
 	canvasContext = canvas.getContext('2d');
+	controls = document.getElementById('controls');
+
+	DEFAULT_WIDTH = canvas.width;
+	DEFAULT_HEIGHT = canvas.height;
+
+	displaySettings(false);
 
 	var rfr_selector = document.getElementById('refresh-rate');
 	var ntl_selector = document.getElementById('num-of-tiles');
@@ -52,6 +104,8 @@ window.onload = function() {
 	var program_timer = setInterval(function() {
 		moveEverything(player, food);
 		drawEverything(player, food);
+		// console.log("width: " + window.innerWidth + "\nwidth jQuery: " + $(window).width());
+		// console.log("height: " + $(window).height());
 	}, REFRESH_RATE);
 
 	// .addEventListener method (http://www.w3schools.com/jsref/met_element_addeventlistener.asp)
@@ -61,8 +115,6 @@ window.onload = function() {
 		if([32, 37, 38, 39, 40].indexOf(event.keyCode) > -1) {
 			event.preventDefault();
 		}
-		// const keyName = event.keyCode;
-		// console.log('keydown event \n\n' + 'chave:' + keyName);
 		player.update_direction(event.keyCode);
 	});
 
@@ -91,19 +143,35 @@ window.onload = function() {
 		}, REFRESH_RATE);
 	});
 
+	window.addEventListener("resize", function(event) {
+		displaySettings(true, player, food);
+	});
+
 
 	// Change direction by button click
 	document.getElementById("up-arrow").addEventListener('click', function(event) {
-		player.update_direction(38);
+		if(!waiting_for_player_movement) {
+			waiting_for_player_movement = true;
+			player.update_direction(38);
+		}
 	});
 	document.getElementById("left-arrow").addEventListener('click', function(event) {
-		player.update_direction(37);
+		if(!waiting_for_player_movement) {
+			waiting_for_player_movement = true;
+			player.update_direction(37);
+		}
 	});
 	document.getElementById("down-arrow").addEventListener('click', function(event) {
-		player.update_direction(40);
+		if(!waiting_for_player_movement) {
+			waiting_for_player_movement = true;
+			player.update_direction(40);
+		}
 	});
 	document.getElementById("right-arrow").addEventListener('click', function(event) {
-		player.update_direction(39);
+		if(!waiting_for_player_movement) {
+			waiting_for_player_movement = true;
+			player.update_direction(39);
+		}
 	});
 }
 
@@ -290,6 +358,8 @@ function moveEverything(player, food) {
 	if(game_started && !game_ended) {
 		var food_eaten = player.update_position(food);
 
+		waiting_for_player_movement = false;
+
 		// Check if player died
 		if(player.died()) {
 			player_lost = true;
@@ -306,13 +376,16 @@ function moveEverything(player, food) {
 
 		if(food_eaten) {
 			food.new_rand_location(player);
+			food.log();
 			player.score++;
 			if(player.hi_score < player.score) {
 				player.hi_score++;
 			}
 		}
-		player.log();
-		food.log();
+
+		// Log player and food info for debug
+		// player.log();
+		// food.log();
 	}
 }
 
@@ -321,20 +394,20 @@ function drawEverything(player, food) {
 	colorRect(0, 0, canvas.width, canvas.height, 'black');
 
 	if(game_started) {
-		canvasContext.font = "20px Helvetica";
+		canvasContext.font = "1rem Helvetica";
 
 		// this draws the snake
 		player.draw();
-
-		// player score
-		canvasContext.fillStyle = 'white';
-		canvasContext.fillText("Hi-score: " + player.hi_score, 5, 20);
-		canvasContext.fillText("Score: " + player.score, 5, 40);
 
 		// next line draws the food (only case that doesnt is if player occupy all game area i.e. player won)
 		if(!(game_ended && !player_lost)) {
 			food.draw();
 		}
+
+		// player score
+		canvasContext.fillStyle = 'white';
+		canvasContext.fillText("Hi-score: " + player.hi_score, 5, 20);
+		canvasContext.fillText("Score: " + player.score, 5, 40);
 
 		if(game_ended) {
 			win_text = "Você ganhou!!";
@@ -343,21 +416,21 @@ function drawEverything(player, food) {
 			canvasContext.fillStyle = 'white';
 
 			if(player_lost) {
-				canvasContext.fillText(lose_text, (canvas.width - 10 * lose_text.length) / 2, canvas.height / 3);
+				canvasContext.fillText(lose_text, (canvas.width - 8 * lose_text.length) / 2, canvas.height / 3);
 			} else {
-				canvasContext.fillText(win_text, (canvas.width - 10 * win_text.length) / 2, canvas.height / 3);
+				canvasContext.fillText(win_text, (canvas.width - 8 * win_text.length) / 2, canvas.height / 3);
 			}
 
-			canvasContext.fillText("clique para reiniciar", (canvas.width / 2) - 90, 5 * canvas.height / 6);
+			canvasContext.fillText("clique para reiniciar", (canvas.width / 2) - 70, 5 * canvas.height / 6);
 		}
 	}
 	else {
 		canvasContext.fillStyle = 'white';
-		canvasContext.font = "40px Helvetica";
-		canvasContext.fillText("Snake", (canvas.width - 120) / 2, canvas.height / 3);
+		canvasContext.font = "3rem Helvetica";
+		canvasContext.fillText("Snake", (canvas.width - 140) / 2, canvas.height / 3);
 
-		canvasContext.font = "20px Helvetica";
-		canvasContext.fillText("clique para começar", (canvas.width / 2) - 90, 5 * canvas.height / 6);
+		canvasContext.font = "1rem Helvetica";
+		canvasContext.fillText("clique para começar", (canvas.width / 2) - 70, 5 * canvas.height / 6);
 	}
 }
 
