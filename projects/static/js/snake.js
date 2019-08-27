@@ -145,6 +145,7 @@ window.onload = function() {
 
 	window.addEventListener("resize", function(event) {
 		displaySettings(true, player, food);
+		// console.log(controls.width);
 	});
 
 
