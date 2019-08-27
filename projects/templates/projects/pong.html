@@ -3,6 +3,24 @@
 
 {% block stylesheet %}
 	<link rel="stylesheet" type="text/css" href="{% static 'css/pong.css' %}">
+
+	<!-- Font pack: http://www.mattlag.com/bitfonts/ -->
+	<!-- Include fonts in Django: https://stackoverflow.com/questions/21346045/django-new-fonts -->
+	<!-- All font types for all Browsers: https://stackoverflow.com/questions/24990554/how-to-include-a-font-ttf-using-css -->
+	<style>
+		@font-face {
+			font-family: "Bit5x3";
+			src: url('{% static 'fonts/bit5x3/bit5x3.eot' %}'); /* IE9 Compat Modes */
+			src: url('{% static 'fonts/bit5x3/bit5x3.eot?#iefix' %}') format("embedded-opentype"), /* IE6-IE8 */
+				url('{% static 'fonts/bit5x3/bit5x3.otf' %}') format("opentype"), /* Open Type Font */
+				url('{% static 'fonts/bit5x3/bit5x3.svg' %}') format("svg"), /* Legacy iOS */
+				url('{% static 'fonts/bit5x3/bit5x3.ttf' %}') format("truetype"), /* Safari, Android, iOS */
+				url('{% static 'fonts/bit5x3/bit5x3.woff' %}') format("woff"), /* Modern Browsers */
+				url('{% static 'fonts/bit5x3/bit5x3.woff2' %}') format("woff2"); /* Modern Browsers */
+			font-weight: normal;
+			font-style: normal;
+		}
+	</style>
 {% endblock %}
 
 {% block content %}
@@ -10,7 +28,22 @@
 
 		<p class="lead">Este é uma recriação de um jogo clássico de fliperama ou, como as pessoas da minha geração conhecem, sites de minigames online.</p>
 
-		<p class="text-center"><canvas id="gameCanvas" width="800" height="600"></canvas></p>
+		<p class="text-center mx-auto no-space-bottom"><canvas id="gameCanvas" class="mx-auto" width="800" height="600"></canvas></p>
+
+		<div id="controls" class="mx-auto">
+			<p class="lead">Ajustes</p>
+			<p>Pontuação máxima:
+				<select id="max-score" class="custom-select custom-select-sm">
+					<option value="1">1 ponto</option>
+					<option value="3">3 pontos</option>
+					<option value="5" selected>5 pontos</option>
+					<option value="10">10 pontos</option>
+					<option value="15">15 pontos</option>
+					<option value="20">20 pontos</option>
+					<option value="0">Sem limite de pontos</option>
+				</select>
+			</p>
+		</div>
 
 		<p class="mb-3">Fiz esse jogo a partir desse tutorial: <a href="https://www.udemy.com/code-your-first-game/">Curso Udemy</a>.</p>
 {% endblock %}

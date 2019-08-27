@@ -11,8 +11,20 @@ p {
 }
 
 canvas {
-	margin: 3rem;
+	margin-top: 3rem;
 	border-width: 1px;
 	border-style: solid;
 	border-color: white;
+}
+
+#controls {
+	margin-top: 0;
+	margin-bottom: 2rem;
+	padding: 1rem;
+	background-color: #050505;
+	width: 800px;
+}
+
+.no-space-bottom {
+	margin-bottom: 0;
 }

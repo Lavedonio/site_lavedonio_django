@@ -1,11 +1,17 @@
 var canvas;
 var canvasContext;
+var controls;
 var showingWinScreen = false;
 var gameStarted = false;
 
-const WINNING_SCORE = 5;
-const PADDLE_HEIGHT = 100;
-const PADDLE_THICKNESS = 10;
+var WINNING_SCORE = 5;
+var disable_endgame = false;
+
+var DEFAULT_WIDTH;
+var DEFAULT_HEIGHT;
+var PADDLE_HEIGHT = 100;
+var PADDLE_THICKNESS = 10;
+var BALL_SIZE = 10;
 
 // ------------- Cálculo do Mouse -------------
 
@@ -37,12 +43,76 @@ function handleMouseClick(evt, player1, computer) {
 
 // ------------- /Cálculo do Mouse -------------
 
+// -------------- Global functions --------------
+
+function reset_game(ball, player1, computer) {
+	ball.reset();
+	player1.reset(0);
+	computer.reset(canvas.width - PADDLE_THICKNESS);
+
+	showingWinScreen = false;
+	game_ended = false;
+}
+
+function displaySettings(reload, reset, ball=null, player1=null, computer=null) {
+	if(window.innerWidth < 575) {
+		canvas.width = window.innerWidth - 50;
+		canvas.height = 0.75 * canvas.width;
+		controls.style.width = (canvas.width).toString() + "px";
+	}
+	else if(window.innerWidth < 650) {
+		canvas.width = 0.8 * window.innerWidth;
+		canvas.height = 0.75 * canvas.width;
+		controls.style.width = (canvas.width).toString() + "px";
+	}
+	else if(window.innerWidth < 767) {
+		canvas.width = 0.7 * window.innerWidth;
+		canvas.height = 0.75 * canvas.width;
+		controls.style.width = (canvas.width).toString() + "px";
+	}
+	else if(window.innerWidth < 990) {
+		canvas.width = 0.6 * window.innerWidth;
+		canvas.height = 0.75 * canvas.width;
+		controls.style.width = (canvas.width).toString() + "px";
+	}
+	else {
+		canvas.width = DEFAULT_WIDTH;
+		canvas.height = DEFAULT_HEIGHT;
+		controls.style.width = (canvas.width).toString() + "px";
+	}
+
+	if(reload) {
+		PADDLE_HEIGHT = canvas.height / 6;
+		PADDLE_THICKNESS = canvas.width / 60;
+		BALL_SIZE = canvas.width / 60;
+
+		gameStarted = false;
+
+		if(reset) {
+			reset_game(ball, player1, computer);
+		}
+	}
+}
+
+// ------------- /Global functions --------------
+
 // -------------------- Main --------------------
 
 window.onload = function() {
 	// window.onload associado a função: carrega o que tiver dentro apenas depois que a página terminar de carregar
 	canvas = document.getElementById('gameCanvas'); //associa a variável canvas ao elemento no HTML
 	canvasContext = canvas.getContext('2d');
+	controls = document.getElementById('controls');
+
+	DEFAULT_WIDTH = canvas.width;
+	DEFAULT_HEIGHT = canvas.height;
+
+	displaySettings(true, false);
+
+	var score_selector = document.getElementById('max-score');
+
+	WINNING_SCORE = Number(score_selector[score_selector.selectedIndex].value);
+	disable_endgame = WINNING_SCORE === 0;  // if-else
 
 	var framesPerSecond = 30;
 	var ball = new Ball();
@@ -66,6 +136,16 @@ window.onload = function() {
 	canvas.addEventListener('mousedown', function(evt) {
 		handleMouseClick(evt, player1, computer);
 	});
+
+	window.addEventListener("resize", function(event) {
+		displaySettings(true, true, ball, player1, computer);
+	});
+
+	score_selector.addEventListener('change', function(event) {
+		WINNING_SCORE = Number(score_selector[score_selector.selectedIndex].value);
+
+		disable_endgame = WINNING_SCORE === 0;  // if-else
+	});
 }
 
 // ------------------- /Main -------------------
@@ -77,7 +157,7 @@ function Ball() {
 	this.y = 50;
 	this.x_speed = 10;
 	this.y_speed = 4;
-	this.size = 10;
+	this.size = BALL_SIZE;
 
 	this.update = function() {
 		this.x += this.x_speed;
@@ -94,9 +174,10 @@ function Ball() {
 
 	this.reset = function() {
 		this.x_speed = -this.x_speed;
-		this.y_speed = getRandomArbitrary(-15, 15);
+		this.y_speed = getRandomArbitrary(-15 * (canvas.height / DEFAULT_HEIGHT), 15 * (canvas.height / DEFAULT_HEIGHT));
 		this.x = canvas.width / 2;
 		this.y = canvas.height / 2;
+		this.size = BALL_SIZE;
 	}
 
 	this.draw = function() {
@@ -111,8 +192,16 @@ function Paddle(x) {
 	this.thickness = PADDLE_THICKNESS;
 	this.score = 0;
 
+	this.reset = function(x) {
+		this.x = x;
+		this.y = canvas.height / 2;
+		this.height = PADDLE_HEIGHT;
+		this.thickness = PADDLE_THICKNESS;
+		this.score = 0;
+	}
+
 	this.checkIfWon = function() {
-		if(this.score >= WINNING_SCORE) {
+		if(this.score >= WINNING_SCORE && !disable_endgame) {
 			showingWinScreen = true;
 		}
 	}
@@ -183,32 +272,33 @@ function drawEverything(ball, player1, computer) {
 	// next line blanks out the screen with black
 	colorRect(0, 0, canvas.width, canvas.height, 'black');
 
-	canvasContext.font = "20px Helvetica";
+	canvasContext.font = "2rem Bit5x3";
 
 	if(!gameStarted) {
 		canvasContext.fillStyle = 'white';
-		canvasContext.font = "40px Helvetica";
-		canvasContext.fillText("Pong", (canvas.width - 100) / 2, canvas.height / 3);
+		canvasContext.font = "4rem Bit5x3";
+		canvasContext.fillText("Pong", (canvas.width - 125) / 2, canvas.height / 3);
 
-		canvasContext.font = "20px Helvetica";
-		canvasContext.fillText("clique para começar", (canvas.width / 2) - 90, 5 * canvas.height / 6);
+		canvasContext.font = "1.25rem Bit5x3";
+		canvasContext.fillText("clique para comecar", (canvas.width / 2) - 100, 5 * canvas.height / 6);
 
 		return;
 	}
 
 	if(showingWinScreen) {
-		win_text = "Você ganhou!!";
-		lose_text = "Você perdeu =(";
+		win_text = "Voce ganhou!!";
+		lose_text = "Voce perdeu =(";
 
 		canvasContext.fillStyle = 'white';
 
-		if(player1.score >= WINNING_SCORE) {
-			canvasContext.fillText(win_text, (canvas.width - 10 * win_text.length) / 2, canvas.height / 3);
-		} else if(computer.score >= WINNING_SCORE) {
-			canvasContext.fillText(lose_text, (canvas.width - 10 * lose_text.length) / 2, canvas.height / 3);
+		if(player1.score > computer.score) {
+			canvasContext.fillText(win_text, (canvas.width - 16 * win_text.length) / 2, canvas.height / 3);
+		}
+		else {
+			canvasContext.fillText(lose_text, (canvas.width - 16 * lose_text.length) / 2, canvas.height / 3);
 		}
 
-		canvasContext.fillText("clique para reiniciar", (canvas.width / 2) - 90, 5 * canvas.height / 6);
+		canvasContext.fillText("clique para reiniciar", (canvas.width - 350) / 2, 5 * canvas.height / 6);
 		return;
 	}
 
@@ -223,9 +313,19 @@ function drawEverything(ball, player1, computer) {
 	// next line draws the ball
 	ball.draw();
 
+	// 2 digits offset
+	var player_score_draw_offset = 0;
+	if(player1.score < 10) {
+		player_score_draw_offset = 30;
+	}
+	var computer_score_draw_offset = 0;
+	if(computer.score >= 10) {
+		computer_score_draw_offset = 30;
+	}
+
 	// player and computer scores
-	canvasContext.fillText(player1.score, 100, 100);
-	canvasContext.fillText(computer.score, canvas.width - 100, 100);
+	canvasContext.fillText(player1.score, (70 + player_score_draw_offset) * (canvas.width / DEFAULT_WIDTH), canvas.height / 6);
+	canvasContext.fillText(computer.score, (DEFAULT_WIDTH - (100 + computer_score_draw_offset)) * (canvas.width / DEFAULT_WIDTH), canvas.height / 6);
 
 }
 
