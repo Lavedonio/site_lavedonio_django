@@ -3,6 +3,8 @@
 
 {% block stylesheet %}
 	<link rel="stylesheet" type="text/css" href="{% static 'css/blog.css' %}">
+
+	<!-- Full width image: https://stackoverflow.com/questions/12991351/css-force-image-resize-and-keep-aspect-ratio -->
 	<style>
 		div.main-image {
 			background-image: url("{{ post.main_image.url }}");
