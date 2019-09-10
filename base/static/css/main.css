@@ -6,8 +6,23 @@ main > .container {
 	background-color: #001B31!important;
 }*/
 
-#custom-nav {
-	background-color: #000B1F!important;
+#navbar-custom {
+  background-color: #000B1F!important;
+}
+
+/* for dropdown only - change the color of dropdown */
+#navbar-custom .dropdown-menu {
+  background-color: #000B1F!important;
+}
+
+#navbar-custom .dropdown-item {
+  color: #888888;
+}
+
+#navbar-custom .dropdown-item:hover,
+#navbar-custom .dropdown-item:focus {
+  color: #C0C0C0!important;
+  background-color: rgba(40,65,110,.5);
 }
 
 .footer {
