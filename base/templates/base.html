@@ -25,7 +25,7 @@
 <body class="d-flex flex-column h-100">
 	<header>
 		<!-- Fixed navbar -->
-		<nav id="custom-nav" class="navbar navbar-expand-lg navbar-dark fixed-top bg-dark">
+		<nav id="navbar-custom" class="navbar navbar-expand-lg navbar-dark fixed-top bg-dark">
 			<a class="navbar-brand" href="{% url 'homepage' %}">Daniel Lavedonio de Lima</a>
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
@@ -66,9 +66,14 @@
 
 	<!-- Begin page content -->
 	<main role="main" class="flex-shrink-0">
+		{% block before_container %}{% endblock %}
+		{% if no_container %}
+		{% block no_container_content %}{% endblock %}
+		{% else %}
 		<div class="container">
 			{% block content %}{% endblock %}
 		</div>
+		{% endif %}
 	</main>
 
 	<footer class="footer mt-auto py-3">
