@@ -2,6 +2,9 @@ var canvas;
 var canvasContext;
 var controls;
 
+const NAVBAR_HEIGHT = 56;
+const CANVAS_HEIGHT_PADDING = 20;
+
 var DEFAULT_WIDTH;
 var DEFAULT_HEIGHT;
 var BLOCK_WIDTH;
@@ -35,32 +38,68 @@ function handleMouseClick(event, player, food) {
 
 function displaySettings(reload, player=null, food=null) {
 	var reset = true;
+	var available_height = window.innerHeight - NAVBAR_HEIGHT - CANVAS_HEIGHT_PADDING;
 
 	if(window.innerWidth < 575) {
-		canvas.width = window.innerWidth - 50;
-		canvas.height = window.innerWidth - 50;
-		controls.style.width = (window.innerWidth - 50).toString() + "px";
+		if(available_height < window.innerWidth - 50) {
+			canvas.height = available_height;
+			canvas.width = available_height;
+			controls.style.width = available_height.toString() + "px";
+		}
+		else {
+			canvas.width = window.innerWidth - 50;
+			canvas.height = window.innerWidth - 50;
+			controls.style.width = (window.innerWidth - 50).toString() + "px";
+		}
 	}
 	else if(window.innerWidth < 650) {
-		canvas.width = 0.8 * window.innerWidth;
-		canvas.height = 0.8 * window.innerWidth;
-		controls.style.width = (0.8 * window.innerWidth).toString() + "px";
+		if(available_height < 0.8 * window.innerWidth) {
+			canvas.height = available_height;
+			canvas.width = available_height;
+			controls.style.width = available_height.toString() + "px";
+		}
+		else {
+			canvas.width = 0.8 * window.innerWidth;
+			canvas.height = 0.8 * window.innerWidth;
+			controls.style.width = (0.8 * window.innerWidth).toString() + "px";
+		}
 	}
 	else if(window.innerWidth < 767) {
-		canvas.width = 0.7 * window.innerWidth;
-		canvas.height = 0.7 * window.innerWidth;
-		controls.style.width = (0.7 * window.innerWidth).toString() + "px";
+		if(available_height < 0.7 * window.innerWidth) {
+			canvas.height = available_height;
+			canvas.width = available_height;
+			controls.style.width = available_height.toString() + "px";
+		}
+		else {
+			canvas.width = 0.7 * window.innerWidth;
+			canvas.height = 0.7 * window.innerWidth;
+			controls.style.width = (0.7 * window.innerWidth).toString() + "px";
+		}
 	}
 	else if(window.innerWidth < 990) {
-		canvas.width = 0.6 * window.innerWidth;
-		canvas.height = 0.6 * window.innerWidth;
-		controls.style.width = (0.6 * window.innerWidth).toString() + "px";
+		if(available_height < 0.6 * window.innerWidth) {
+			canvas.height = available_height;
+			canvas.width = available_height;
+			controls.style.width = available_height.toString() + "px";
+		}
+		else {
+			canvas.width = 0.6 * window.innerWidth;
+			canvas.height = 0.6 * window.innerWidth;
+			controls.style.width = (0.6 * window.innerWidth).toString() + "px";
+		}
 	}
 	else {
-		canvas.width = DEFAULT_WIDTH;
-		canvas.height = DEFAULT_HEIGHT;
-		controls.style.width = DEFAULT_WIDTH.toString() + "px";
-		reset = false;
+		if(available_height < DEFAULT_HEIGHT) {
+			canvas.height = available_height;
+			canvas.width = available_height;
+			controls.style.width = available_height.toString() + "px";
+		}
+		else {
+			canvas.width = DEFAULT_WIDTH;
+			canvas.height = DEFAULT_HEIGHT;
+			controls.style.width = DEFAULT_WIDTH.toString() + "px";
+			reset = false;
+		}
 	}
 
 	if(reload) {
@@ -98,7 +137,7 @@ window.onload = function() {
 	BLOCK_WIDTH = canvas.width / NUMBER_OF_TILES;
 	BLOCK_HEIGHT = canvas.height / NUMBER_OF_TILES;
 
-	var player = new Snake(Math.floor(NUMBER_OF_TILES / 2), Math.floor(NUMBER_OF_TILES / 2));
+	var player = new Snake(Math.floor((NUMBER_OF_TILES / 2) - 1), Math.floor((NUMBER_OF_TILES / 2) - 1));
 	var food = new Food();
 
 	var program_timer = setInterval(function() {
@@ -115,7 +154,10 @@ window.onload = function() {
 		if([32, 37, 38, 39, 40].indexOf(event.keyCode) > -1) {
 			event.preventDefault();
 		}
-		player.update_direction(event.keyCode);
+		if(!waiting_for_player_movement) {
+			waiting_for_player_movement = true;
+			player.update_direction(event.keyCode);
+		}
 	});
 
 	canvas.addEventListener('mousedown', function(event) {
@@ -238,8 +280,8 @@ function Snake(x, y) {
 	}
 
 	this.reset = function() {
-		this.x = Math.floor(NUMBER_OF_TILES / 2);
-		this.y = Math.floor(NUMBER_OF_TILES / 2);
+		this.x = Math.floor((NUMBER_OF_TILES / 2) - 1);
+		this.y = Math.floor((NUMBER_OF_TILES / 2) - 1);
 		this.x_speed = 1;
 		this.y_speed = 0;
 		this.direction = 0;
@@ -251,7 +293,7 @@ function Snake(x, y) {
 		var died = false;
 
 		// Player is off canvas
-		if((this.x - 1) * (this.y - 1) < 0 || this.x > NUMBER_OF_TILES || this.y > NUMBER_OF_TILES) {
+		if(this.x * this.y < 0 || this.x >= NUMBER_OF_TILES || this.y >= NUMBER_OF_TILES) {
 			died = true;
 		}
 
@@ -275,7 +317,7 @@ function Snake(x, y) {
 
 		var available_positions = [];
 
-		for(var i = 1; i <= Math.pow(NUMBER_OF_TILES, 2); i++) {
+		for(var i = 0; i < Math.pow(NUMBER_OF_TILES, 2); i++) {
 			available_positions.push(i);
 		}
 
@@ -293,7 +335,7 @@ function Snake(x, y) {
 		for(var i = 0; i < this.body.length; i++) {
 			var x = this.body[i][0];
 			var y = this.body[i][1];
-			colorRect((x - 1) * BLOCK_WIDTH, (y - 1) * BLOCK_HEIGHT, BLOCK_WIDTH, BLOCK_HEIGHT, 'green');
+			colorRect(x * BLOCK_WIDTH, y * BLOCK_HEIGHT, BLOCK_WIDTH, BLOCK_HEIGHT, 'green');
 		}
 	}
 
@@ -324,16 +366,16 @@ function Snake(x, y) {
 }
 
 function Food() {
-	this.x = 23;
-	this.y = 20;
+	this.x = 24;
+	this.y = 19;
 
 	this.new_rand_location = function(player) {
 		available_positions = player.not_occupied_positions();
 
 		var new_position = available_positions[getRandomInt(0, available_positions.length)];
 
-		this.y = Math.floor(new_position / NUMBER_OF_TILES) + 1;
-		this.x = new_position - ((this.y - 1) * NUMBER_OF_TILES) + 1;
+		this.y = Math.floor(new_position / NUMBER_OF_TILES);
+		this.x = new_position - (this.y * NUMBER_OF_TILES);
 	}
 
 	this.is_not_eaten = function(x, y) {
@@ -342,7 +384,7 @@ function Food() {
 	}
 
 	this.draw = function(color = 'red') {
-		colorRect((this.x - 1) * BLOCK_WIDTH, (this.y - 1) * BLOCK_HEIGHT, BLOCK_WIDTH, BLOCK_HEIGHT, color);
+		colorRect(this.x * BLOCK_WIDTH, this.y * BLOCK_HEIGHT, BLOCK_WIDTH, BLOCK_HEIGHT, color);
 	}
 
 	this.log = function() {

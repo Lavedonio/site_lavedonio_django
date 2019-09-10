@@ -4,6 +4,9 @@ var controls;
 var showingWinScreen = false;
 var gameStarted = false;
 
+const NAVBAR_HEIGHT = 56;
+const CANVAS_HEIGHT_PADDING = 20;
+
 var WINNING_SCORE = 5;
 var disable_endgame = false;
 
@@ -46,7 +49,7 @@ function handleMouseClick(evt, player1, computer) {
 // -------------- Global functions --------------
 
 function reset_game(ball, player1, computer) {
-	ball.reset();
+	ball.reset(true);
 	player1.reset(0);
 	computer.reset(canvas.width - PADDLE_THICKNESS);
 
@@ -55,30 +58,67 @@ function reset_game(ball, player1, computer) {
 }
 
 function displaySettings(reload, reset, ball=null, player1=null, computer=null) {
+	var available_height = window.innerHeight - NAVBAR_HEIGHT - CANVAS_HEIGHT_PADDING;
+
 	if(window.innerWidth < 575) {
-		canvas.width = window.innerWidth - 50;
-		canvas.height = 0.75 * canvas.width;
-		controls.style.width = (canvas.width).toString() + "px";
+		if(available_height < window.innerWidth - 50 && (4 * available_height) / 3 < window.innerWidth - 50) {
+			canvas.height = available_height;
+			canvas.width = (4 * canvas.height) / 3;
+			controls.style.width = available_height.toString() + "px";
+		}
+		else {
+			canvas.width = window.innerWidth - 50;
+			canvas.height = 0.75 * canvas.width;
+			controls.style.width = (canvas.width).toString() + "px";
+		}
 	}
 	else if(window.innerWidth < 650) {
-		canvas.width = 0.8 * window.innerWidth;
-		canvas.height = 0.75 * canvas.width;
-		controls.style.width = (canvas.width).toString() + "px";
+		if(available_height < 0.8 * window.innerWidth && (4 * available_height) / 3 < 0.8 * window.innerWidth) {
+			canvas.height = available_height;
+			canvas.width = (4 * canvas.height) / 3;
+			controls.style.width = available_height.toString() + "px";
+		}
+		else {
+			canvas.width = 0.8 * window.innerWidth;
+			canvas.height = 0.75 * canvas.width;
+			controls.style.width = (canvas.width).toString() + "px";
+		}
 	}
 	else if(window.innerWidth < 767) {
-		canvas.width = 0.7 * window.innerWidth;
-		canvas.height = 0.75 * canvas.width;
-		controls.style.width = (canvas.width).toString() + "px";
+		if(available_height < 0.7 * window.innerWidth && (4 * available_height) / 3 < 0.7 * window.innerWidth) {
+			canvas.height = available_height;
+			canvas.width = (4 * canvas.height) / 3;
+			controls.style.width = available_height.toString() + "px";
+		}
+		else {
+			canvas.width = 0.7 * window.innerWidth;
+			canvas.height = 0.75 * canvas.width;
+			controls.style.width = (canvas.width).toString() + "px";
+		}
 	}
 	else if(window.innerWidth < 990) {
-		canvas.width = 0.6 * window.innerWidth;
-		canvas.height = 0.75 * canvas.width;
-		controls.style.width = (canvas.width).toString() + "px";
+		if(available_height < 0.6 * window.innerWidth && (4 * available_height) / 3 < 0.6 * window.innerWidth) {
+			canvas.height = available_height;
+			canvas.width = (4 * canvas.height) / 3;
+			controls.style.width = available_height.toString() + "px";
+		}
+		else {
+			canvas.width = 0.6 * window.innerWidth;
+			canvas.height = 0.75 * canvas.width;
+			controls.style.width = (canvas.width).toString() + "px";
+		}
 	}
 	else {
-		canvas.width = DEFAULT_WIDTH;
-		canvas.height = DEFAULT_HEIGHT;
-		controls.style.width = (canvas.width).toString() + "px";
+		if(available_height < DEFAULT_HEIGHT) {
+			canvas.height = available_height;
+			canvas.width = (4 * canvas.height) / 3;
+			controls.style.width = available_height.toString() + "px";
+		}
+		else {
+			canvas.width = DEFAULT_WIDTH;
+			canvas.height = DEFAULT_HEIGHT;
+			controls.style.width = (canvas.width).toString() + "px";
+		}
 	}
 
 	if(reload) {
@@ -155,7 +195,7 @@ window.onload = function() {
 function Ball() {
 	this.x = 110;
 	this.y = 50;
-	this.x_speed = 10;
+	this.x_speed = 12;
 	this.y_speed = 4;
 	this.size = BALL_SIZE;
 
@@ -172,8 +212,13 @@ function Ball() {
 		// }
 	}
 
-	this.reset = function() {
-		this.x_speed = -this.x_speed;
+	this.reset = function(resize=false) {
+		if(resize) {
+			this.x_speed = 12 * (1 * (canvas.width / DEFAULT_WIDTH))
+		}
+		else {
+			this.x_speed = -this.x_speed;
+		}
 		this.y_speed = getRandomArbitrary(-15 * (canvas.height / DEFAULT_HEIGHT), 15 * (canvas.height / DEFAULT_HEIGHT));
 		this.x = canvas.width / 2;
 		this.y = canvas.height / 2;
@@ -265,7 +310,7 @@ function moveEverything(ball, player1, computer) {
 		}
 	}
 
-	//console.log(ballX);
+	console.log(ball.x_speed);
 }
 
 function drawEverything(ball, player1, computer) {
