@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block stylesheet %}
+	<link rel="stylesheet" type="text/css" href="{% static 'css/blog.css' %}">
+	<style>
+		div.main-image {
+			background-image: url("{{ post.main_image.url }}");
+			background-size: cover;
+			background-repeat: no-repeat;
+			background-position: center;
+			min-height: 75%;
+		}
+	</style>
+{% endblock %}
+
+{% block no_container_content %}
+		<!-- <img src="{{ post.main_image.url }}" class="main-img img-fluid w-100" alt="Article Image"> -->
+		<article class="mb-5">
+			<div class="main-image">
+				<div class="container mt-5 pt-5 pb-3 {% if post.light_title_text %} light-text{% endif %}">
+					<h1 class="header-img display-3">{{ post.title }}</h1>
+					<h2 class="article-title">{{ post.subtitle }}</h2>
+				</div>
+				<br>
+			</div>
+			<div class="container mt-4">
+				<div class="media content-section">
+
+					<img class="rounded-circle author-image mr-2" src="{% static 'eu.jpg' %}" alt="Foto de {{ post.author }}">
+					<div class="media-body">
+						<div class="article-metadata">
+							<p class="mb-0">Publicado por <a href="#">{{ post.author }}</a></p>
+							<p class="mt-1 mb-0"><small class="text-muted">Criado em {{ post.date_posted|date }} às {{ post.date_posted|time:"H:i" }}</small></p>
+							{% if post.date_posted != post.last_updated %}<p class="mt-0"><small class="text-muted">Última atualização em {{ post.last_updated|date }} às {{ post.last_updated|time:"H:i" }}</small></p>{% endif %}
+						</div>
+					</div>
+				</div>
+				<hr>
+				<p class="article-content">{{ post.content|linebreaks }}</p>
+			</div>
+		</article>
+{% endblock %}

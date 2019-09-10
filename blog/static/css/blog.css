@@ -1,0 +1,28 @@
+.main-img {
+	height: 25%;
+}
+
+.light-text {
+	color: #E5E5E5;
+}
+
+.header-img {
+	margin-top: 5rem;
+}
+
+.author-image {
+	width: 64px;
+	height: auto;
+}
+
+/*.main-img {
+   width: 100vw;
+   position: relative;
+   left: 50%;
+   margin-left: -50vw;
+}
+
+.main-img img {
+  width: 100%;
+}
+*/
