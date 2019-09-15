@@ -1,18 +1,38 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block stylesheet %}
+	<link rel="stylesheet" type="text/css" href="{% static 'css/blog.css' %}">
+{% endblock %}
+
 {% block content %}
-			<h1 class="mt-5 display-2">Blog</h1>
+			<h1 class="mt-5 mb-4 display-2">Blog</h1>
 
 			{% for post in posts %}
-			<article class="media content-section">
-        <img class="rounded-circle article-img" src="#">
-        <div class="media-body">
-          <div class="article-metadata">
-            <a class="mr-2" href="#">{{ post.author }}</a>
-            <small class="text-muted">{{ post.date_posted|date }} às {{ post.date_posted|time:"H:i" }}</small>
-          </div>
-          <h2><a class="article-title" href="{% url 'post' post.id %}">{{ post.title }}</a></h2>
-          <p class="article-content">{{ post.content|linebreaks|truncatewords:50 }}</p>
-        </div>
-      </article>
+			<!-- <img src="{{ post.main_image.url }}" class="main-img img-fluid w-100" alt="Article Image"> -->
+			<article class="mb-5 article-list">
+				<div style="background-image: url('{{ post.main_image.url }}'); background-size: cover; background-repeat: no-repeat; background-position: center; min-height: 75%; border-radius: 15px 15px 0px 0px;">
+					<div class="container pt-5 pb-3 {% if post.light_title_text %} light-text{% endif %}">
+						<h1 class="header-img display-4"><a class="title" href="{% url 'post' post.id %}">{{ post.title }}</a></h1>
+						<h2 class="h4 article-title"><a class="title" href="{% url 'post' post.id %}">{{ post.subtitle }}</a></h2>
+					</div>
+				</div>
+				<div class="container mt-4">
+					<div class="media content-section">
+
+						<img class="rounded-circle author-image mr-2" src="{% static 'eu.jpg' %}" alt="Foto de {{ post.author }}">
+						<div class="media-body">
+							<div class="article-metadata">
+								<p class="mb-0">Publicado por <a href="#">{{ post.author }}</a></p>
+								<p class="mt-1 mb-0"><small class="text-muted">Criado em {{ post.date_posted|date }} às {{ post.date_posted|time:"H:i" }}</small></p>
+								{% if post.date_posted != post.last_updated %}<p class="mt-0"><small class="text-muted">Última atualização em {{ post.last_updated|date }} às {{ post.last_updated|time:"H:i" }}</small></p>{% endif %}
+								{% if post.draft %}<span class="badge badge-danger">Rascunho</span>{% endif %}
+							</div>
+						</div>
+					</div>
+					<hr>
+					<p class="article-content">{{ post.content|linebreaks|truncatewords:50 }}</p>
+				</div>
+			</article>
 			{% endfor %}
 {% endblock %}
