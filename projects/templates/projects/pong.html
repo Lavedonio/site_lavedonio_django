@@ -26,23 +26,36 @@
 {% block content %}
 		<h1 class="mt-5 display-3">Pong</h1>
 
-		<p class="lead">Este é uma recriação de um jogo clássico de fliperama ou, como as pessoas da minha geração conhecem, sites de minigames online.</p>
+		<p class="lead">Esta é uma recriação de um jogo clássico de fliperama ou, como as pessoas da minha geração conhecem, sites de minigames online.</p>
 
 		<p class="text-center mx-auto no-space-bottom"><canvas id="gameCanvas" class="mx-auto" width="800" height="600"></canvas></p>
 
-		<div id="controls" class="mx-auto">
-			<p class="lead">Ajustes</p>
-			<p>Pontuação máxima:
-				<select id="max-score" class="custom-select custom-select-sm">
-					<option value="1">1 ponto</option>
-					<option value="3">3 pontos</option>
-					<option value="5" selected>5 pontos</option>
-					<option value="10">10 pontos</option>
-					<option value="15">15 pontos</option>
-					<option value="20">20 pontos</option>
-					<option value="0">Sem limite de pontos</option>
-				</select>
-			</p>
+		<div id="controls" class="row mx-auto">
+			<div class="col-sm-12">
+				<p class="lead">Ajustes</p>
+			</div>
+			<div class="col-sm-6">
+				<p>Pontuação máxima:
+					<select id="max-score" class="custom-select custom-select-sm">
+						<option value="1">1 ponto</option>
+						<option value="3">3 pontos</option>
+						<option value="5" selected>5 pontos</option>
+						<option value="10">10 pontos</option>
+						<option value="15">15 pontos</option>
+						<option value="20">20 pontos</option>
+						<option value="0">Sem limite de pontos</option>
+					</select>
+				</p>
+			</div>
+			<div class="col-sm-6">
+				<p>Dificuldade:
+					<select id="difficulty" class="custom-select custom-select-sm">
+						<option value="easy" selected>Fácil</option>
+						<option value="medium">Médio</option>
+						<option value="hard">Difícil</option>
+					</select>
+				</p>
+			</div>
 		</div>
 
 		<p class="mb-3">Fiz esse jogo a partir desse tutorial: <a href="https://www.udemy.com/code-your-first-game/">Curso Udemy</a>.</p>

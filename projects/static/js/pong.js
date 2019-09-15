@@ -1,20 +1,14 @@
 var canvas;
 var canvasContext;
 var controls;
-var showingWinScreen = false;
-var gameStarted = false;
 
 const NAVBAR_HEIGHT = 56;
 const CANVAS_HEIGHT_PADDING = 20;
 
-var WINNING_SCORE = 5;
-var disable_endgame = false;
-
 var DEFAULT_WIDTH;
 var DEFAULT_HEIGHT;
-var PADDLE_HEIGHT = 100;
-var PADDLE_THICKNESS = 10;
-var BALL_SIZE = 10;
+
+var CURRENT_PADDLE_HEIGHT = 100;
 
 // ------------- Cálculo do Mouse -------------
 
@@ -32,15 +26,15 @@ function calculateMousePos(evt) {
 	};
 }
 
-function handleMouseClick(evt, player1, computer) {
-	if(!gameStarted) {
-		gameStarted = true;
+function handleMouseClick(evt, player1, computer, game_settings) {
+	if(!game_settings.game_started) {
+		game_settings.game_started = true;
 	}
 
-	if(showingWinScreen) {
+	if(game_settings.showingWinScreen) {
 		player1.score = 0;
 		computer.score = 0;
-		showingWinScreen = false;
+		game_settings.showingWinScreen = false;
 	}
 }
 
@@ -48,16 +42,17 @@ function handleMouseClick(evt, player1, computer) {
 
 // -------------- Global functions --------------
 
-function reset_game(ball, player1, computer) {
+function reset_game(ball, player1, computer, game_settings) {
+	var paddle_thickness = computer.thickness;
+
 	ball.reset(true);
 	player1.reset(0);
-	computer.reset(canvas.width - PADDLE_THICKNESS);
+	computer.reset(canvas.width - paddle_thickness);
 
-	showingWinScreen = false;
-	game_ended = false;
+	game_settings.showingWinScreen = false;
 }
 
-function displaySettings(reload, reset, ball=null, player1=null, computer=null) {
+function displaySettings(reload, reset, game_settings, ball=null, player1=null, computer=null) {
 	var available_height = window.innerHeight - NAVBAR_HEIGHT - CANVAS_HEIGHT_PADDING;
 
 	if(window.innerWidth < 575) {
@@ -122,14 +117,14 @@ function displaySettings(reload, reset, ball=null, player1=null, computer=null) 
 	}
 
 	if(reload) {
-		PADDLE_HEIGHT = canvas.height / 6;
-		PADDLE_THICKNESS = canvas.width / 60;
-		BALL_SIZE = canvas.width / 60;
+		player1.resize(canvas.height / 6, canvas.width / 60);
+		computer.resize(canvas.height / 6, canvas.width / 60);
+		ball.resize(canvas.width / 60);
 
-		gameStarted = false;
+		game_settings.game_started = false;
 
 		if(reset) {
-			reset_game(ball, player1, computer);
+			reset_game(ball, player1, computer, game_settings);
 		}
 	}
 }
@@ -147,21 +142,26 @@ window.onload = function() {
 	DEFAULT_WIDTH = canvas.width;
 	DEFAULT_HEIGHT = canvas.height;
 
-	displaySettings(true, false);
-
-	var score_selector = document.getElementById('max-score');
-
-	WINNING_SCORE = Number(score_selector[score_selector.selectedIndex].value);
-	disable_endgame = WINNING_SCORE === 0;  // if-else
-
 	var framesPerSecond = 30;
 	var ball = new Ball();
 	var player1 = new Paddle(0);
-	var computer = new Paddle(canvas.width - PADDLE_THICKNESS);
+	var computer = new Paddle(canvas.width - 10);
+	var game_settings = new GameSettings();
+
+	displaySettings(true, false, game_settings, ball, player1, computer);
+
+	// Difficulty selection
+	var difficulty_selector = document.getElementById('difficulty');
+	game_settings.set_difficulty(difficulty_selector[difficulty_selector.selectedIndex].value, computer);
+
+	// Score selection
+	var score_selector = document.getElementById('max-score');
+	game_settings.winning_score = Number(score_selector[score_selector.selectedIndex].value);
+	game_settings.check_if_disable_endgame();
 
 	setInterval(function() {
-		moveEverything(ball, player1, computer);
-		drawEverything(ball, player1, computer);
+		moveEverything(ball, player1, computer, game_settings);
+		drawEverything(ball, player1, computer, game_settings);
 	}, 1000/framesPerSecond);
 
 	// Método .addEventListener (http://www.w3schools.com/jsref/met_element_addeventlistener.asp)
@@ -174,17 +174,27 @@ window.onload = function() {
 		});
 
 	canvas.addEventListener('mousedown', function(evt) {
-		handleMouseClick(evt, player1, computer);
+		handleMouseClick(evt, player1, computer, game_settings);
 	});
 
 	window.addEventListener("resize", function(event) {
-		displaySettings(true, true, ball, player1, computer);
+		displaySettings(true, true, game_settings, ball, player1, computer);
+
+		// Makes sure the correct computer paddle height is enabled
+		game_settings.set_difficulty(difficulty_selector[difficulty_selector.selectedIndex].value, computer);
+	});
+
+	difficulty_selector.addEventListener('change', function(event) {
+		game_settings.set_difficulty(difficulty_selector[difficulty_selector.selectedIndex].value, computer);
+
+		// When difficulty level is changed, game is reseted
+		game_settings.game_started = false;
+		reset_game(ball, player1, computer, game_settings);
 	});
 
 	score_selector.addEventListener('change', function(event) {
-		WINNING_SCORE = Number(score_selector[score_selector.selectedIndex].value);
-
-		disable_endgame = WINNING_SCORE === 0;  // if-else
+		game_settings.winning_score = Number(score_selector[score_selector.selectedIndex].value);
+		game_settings.check_if_disable_endgame();
 	});
 }
 
@@ -197,7 +207,7 @@ function Ball() {
 	this.y = 50;
 	this.x_speed = 12;
 	this.y_speed = 4;
-	this.size = BALL_SIZE;
+	this.size = 10;
 
 	this.update = function() {
 		this.x += this.x_speed;
@@ -212,9 +222,13 @@ function Ball() {
 		// }
 	}
 
+	this.resize = function(new_size) {
+		this.size = new_size;
+	}
+
 	this.reset = function(resize=false) {
 		if(resize) {
-			this.x_speed = 12 * (1 * (canvas.width / DEFAULT_WIDTH))
+			this.x_speed = 12 * (1 * (canvas.width / DEFAULT_WIDTH));
 		}
 		else {
 			this.x_speed = -this.x_speed;
@@ -222,7 +236,6 @@ function Ball() {
 		this.y_speed = getRandomArbitrary(-15 * (canvas.height / DEFAULT_HEIGHT), 15 * (canvas.height / DEFAULT_HEIGHT));
 		this.x = canvas.width / 2;
 		this.y = canvas.height / 2;
-		this.size = BALL_SIZE;
 	}
 
 	this.draw = function() {
@@ -233,21 +246,26 @@ function Ball() {
 function Paddle(x) {
 	this.x = x;
 	this.y = canvas.height / 2;
-	this.height = PADDLE_HEIGHT;
-	this.thickness = PADDLE_THICKNESS;
+	this.height = 100;
+	this.thickness = 10;
 	this.score = 0;
+
+	this.resize = function(new_height, new_thickness) {
+		this.height = new_height;
+		this.thickness = new_thickness;
+
+		CURRENT_PADDLE_HEIGHT = new_height;
+	}
 
 	this.reset = function(x) {
 		this.x = x;
 		this.y = canvas.height / 2;
-		this.height = PADDLE_HEIGHT;
-		this.thickness = PADDLE_THICKNESS;
 		this.score = 0;
 	}
 
-	this.checkIfWon = function() {
-		if(this.score >= WINNING_SCORE && !disable_endgame) {
-			showingWinScreen = true;
+	this.checkIfWon = function(game_settings) {
+		if(this.score >= game_settings.winning_score && !game_settings.disable_endgame) {
+			game_settings.showingWinScreen = true;
 		}
 	}
 
@@ -256,29 +274,87 @@ function Paddle(x) {
 	}
 }
 
-// ------------- /Construtores -------------
+function GameSettings() {
+	this.difficulty = 1;
+	this.game_started = false;
+	this.winning_score = 5;
+	this.disable_endgame = false;
+	this.showingWinScreen = false;
 
+	this.set_difficulty = function(difficulty, computer) {
+		if(difficulty === "easy") {
+			this.difficulty = 1;
+			computer.height = 0.9 * CURRENT_PADDLE_HEIGHT;
+		}
+		else if(difficulty === "medium") {
+			this.difficulty = 2;
+			computer.height = CURRENT_PADDLE_HEIGHT;
+		}
+		else {
+			this.difficulty = 3;
+			computer.height = 1.1 * CURRENT_PADDLE_HEIGHT;
+		}
+	}
 
-function computerMovement(ball, computer) {
-	var computerYCenter = computer.y + (computer.height / 2);
+	this.reset = function() {
+		this.showingWinScreen = false;
+	}
 
-	if(computerYCenter < ball.y - ((computer.height / 2)) * 0.35 && computer.y + computer.height < canvas.height) {
-		computer.y += 6;
-	} else if(computerYCenter > ball.y + ((computer.height / 2)) * 0.35 && computer.y > 0) {
-		computer.y -= 6;
+	this.check_if_disable_endgame = function() {
+		this.disable_endgame = this.winning_score === 0;  // if-else
+	}
+
+	this.ball_speed = function() {
+		// to be defined
+	}
+
+	this.computer_speed = function() {
+		var speed;
+
+		switch(this.difficulty) {
+			case 1:
+				speed = 0.06;
+				break;
+
+			case 2:
+				speed = 0.08;
+				break;
+
+			case 3:
+				speed = 0.1;
+				break;
+
+			default:
+				speed = 0.06;
+				break;
+		}
+		return speed;
 	}
 }
 
-function moveEverything(ball, player1, computer) {
-	if(!gameStarted || showingWinScreen) {
+// ------------- /Construtores -------------
+
+
+function computerMovement(ball, computer, game_settings) {
+	var computerYCenter = computer.y + (computer.height / 2);
+
+	if(computerYCenter < ball.y - ((computer.height / 2)) * 0.35 && computer.y + computer.height < canvas.height) {
+		computer.y += game_settings.computer_speed() * computer.height;
+	} else if(computerYCenter > ball.y + ((computer.height / 2)) * 0.35 && computer.y > 0) {
+		computer.y -= game_settings.computer_speed() * computer.height;
+	}
+}
+
+function moveEverything(ball, player1, computer, game_settings) {
+	if(!game_settings.game_started || game_settings.showingWinScreen) {
 		return;
 	}
 
-	computerMovement(ball, computer);
+	computerMovement(ball, computer, game_settings);
 
 	ball.update();
 
-	if(ball.x < PADDLE_THICKNESS) {
+	if(ball.x < player1.thickness) {
 		if(ball.y > player1.y && ball.y < (player1.y + player1.height)) {
 			ball.x_speed = -ball.x_speed;
 
@@ -288,13 +364,13 @@ function moveEverything(ball, player1, computer) {
 		} else {
 
 			computer.score++; // must be BEFORE ball.reset()
-			computer.checkIfWon();
+			computer.checkIfWon(game_settings);
 
 			ball.reset();
 		}
 	}
 
-	if(ball.x > canvas.width - PADDLE_THICKNESS) {
+	if(ball.x > canvas.width - computer.thickness) {
 		if(ball.y > computer.y && ball.y < (computer.y + computer.height)) {
 			ball.x_speed = -ball.x_speed;
 
@@ -304,7 +380,7 @@ function moveEverything(ball, player1, computer) {
 		} else {
 
 			player1.score++; // must be BEFORE ball.reset()
-			player1.checkIfWon();
+			player1.checkIfWon(game_settings);
 
 			ball.reset();
 		}
@@ -313,13 +389,13 @@ function moveEverything(ball, player1, computer) {
 	console.log(ball.x_speed);
 }
 
-function drawEverything(ball, player1, computer) {
+function drawEverything(ball, player1, computer, game_settings) {
 	// next line blanks out the screen with black
 	colorRect(0, 0, canvas.width, canvas.height, 'black');
 
 	canvasContext.font = "2rem Bit5x3";
 
-	if(!gameStarted) {
+	if(!game_settings.game_started) {
 		canvasContext.fillStyle = 'white';
 		canvasContext.font = "4rem Bit5x3";
 		canvasContext.fillText("Pong", (canvas.width - 125) / 2, canvas.height / 3);
@@ -330,7 +406,7 @@ function drawEverything(ball, player1, computer) {
 		return;
 	}
 
-	if(showingWinScreen) {
+	if(game_settings.showingWinScreen) {
 		win_text = "Voce ganhou!!";
 		lose_text = "Voce perdeu =(";
 
