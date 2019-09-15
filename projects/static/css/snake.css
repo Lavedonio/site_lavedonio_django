@@ -10,6 +10,12 @@ p {
 	color: #E5E5E5;
 }
 
+img {
+	border-width: 1px;
+	border-style: solid;
+	border-color: white;
+}
+
 #controls {
 	margin-top: 0;
 	margin-bottom: 2rem;

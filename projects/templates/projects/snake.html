@@ -12,6 +12,12 @@
 
 		<p>Aqui, além de pode jogar o jogo, futuramente será possível ver uma IA aprendendo a jogar também!</p>
 
+		<p>A ideia é que a IA jogue tão bem quanto esse jogador aqui:</p>
+
+		<p class="text-center"><img src="http://i.imgur.com/dAtcCfH.gif" alt="Snake GIF"></p>
+
+		<p>Sonhar é uma coisa, mas colocar em prática...</p>
+
 		<p class="text-center mx-auto no-space-bottom"><canvas id="gameCanvas" class="mx-auto" width="600" height="600"></canvas></p>
 
 		<div id="controls" class="row mx-auto">
@@ -24,11 +30,11 @@
 			<div class="col-md-7">
 				<p>Refresh rate:
 					<select id="refresh-rate" class="custom-select custom-select-sm">
+						<option value="40">40ms</option>
 						<option value="50" selected>50ms</option>
+						<option value="60">60ms</option>
 						<option value="75">75ms</option>
 						<option value="100">100ms</option>
-						<option value="200">200ms</option>
-						<option value="500">500ms</option>
 					</select>
 				</p>
 				<p>Tamanho do jogo:
