@@ -35,6 +35,7 @@
 							<p class="mb-0">Publicado por <a href="#">{{ post.author }}</a></p>
 							<p class="mt-1 mb-0"><small class="text-muted">Criado em {{ post.date_posted|date }} às {{ post.date_posted|time:"H:i" }}</small></p>
 							{% if post.date_posted != post.last_updated %}<p class="mt-0"><small class="text-muted">Última atualização em {{ post.last_updated|date }} às {{ post.last_updated|time:"H:i" }}</small></p>{% endif %}
+							{% if post.draft %}<span class="badge badge-danger">Rascunho</span>{% endif %}
 						</div>
 					</div>
 				</div>
