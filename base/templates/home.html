@@ -1,9 +1,62 @@
 {% extends 'base.html' %}
 {% block content %}
-			<h1 class="mt-5 display-1">Bem vindo{% if name_visitor %}, {{ name_visitor }}{% endif %}!</h1>
-			<h2><small>Este é o meu site, onde eu coloco meus projetos pessoais e mantenho um blog.</small></h2>
+			<div class="welcome mt-5" style="margin-bottom: 10rem">
+				<h1 class="display-1">Bem vindo{% if name_visitor %}, {{ name_visitor }}{% endif %}!</h1>
+				<h2 class="font-weight-light"><small>Este é o meu site, onde eu coloco meus projetos pessoais e mantenho um blog.</small></h2>
+			</div>
 
-			<h4 class="mt-5"><small>Saiba mais sobre este site.</small></h4>
-			<p class="lead mt-5 font-weight-light">Saiba mais sobre este site.</p>
-			<p><a class="btn btn-primary btn-md" href="{% url 'about' %}" role="button">Saiba mais &raquo;</a></p>
+			<hr>
+
+			<div class="projects mt-3 mb-5">
+				<h2 class="display-4">Projetos em destaque</h2>
+				<div class="row mt-5">
+					<div class="col-md-4 mb-3">
+						<h3 class="text-center font">Projeto 1</h3>
+						<p>Texto para projeto 1</p>
+					</div>
+					<div class="col-md-4 mb-3">
+						<h3 class="text-center">Projeto 2</h3>
+						<p>Texto para projeto 2</p>
+					</div>
+					<div class="col-md-4 mb-3">
+						<h3 class="text-center">Projeto 3</h3>
+						<p>Texto para projeto 3</p>
+					</div>
+				</div>
+			</div>
+			
+			<hr>
+			
+			<div class="blog-posts mt-3 mb-5">
+				<h2 class="display-4">Publicações do blog em destaque</h2>
+				<div class="row mt-5">
+					<div class="col-md-4 mb-3">
+						<h3 class="text-center">Post 1</h3>
+						<p>Texto para post 1</p>
+					</div>
+					<div class="col-md-4 mb-3">
+						<h3 class="text-center">Post 2</h3>
+						<p>Texto para post 2</p>
+					</div>
+					<div class="col-md-4 mb-3">
+						<h3 class="text-center">Post 3</h3>
+						<p>Texto para post 3</p>
+					</div>
+				</div>
+			</div>
+
+			<hr>
+
+			<div class="row mt-5 mb-5">
+				<div class="col-md-6 mb-3">
+					<h3>Saiba mais sobre este site</h3>
+					<p>Meu nome é Daniel Lavedonio de Lima e sou o criador deste site.</p>
+					<p><a class="btn btn-primary btn-md" href="{% url 'about' %}" role="button">Saiba mais &raquo;</a></p>
+				</div>
+				<div class="col-md-6 mb-3">
+					<h3>Entre em contato</h3>
+					<p>Possui dúvidas, sugestões ou tem algum projeto que precisa de ajuda?</p>
+					<p><a class="btn btn-primary btn-md" href="{% url 'contact' %}" role="button">Entre em contato &raquo;</a></p>
+				</div>
+			</div>
 {% endblock %}
