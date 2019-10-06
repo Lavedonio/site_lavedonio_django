@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% block canonical %}<link rel="canonical" href="{% url 'post' post.id %}">{% endblock %}
 
 {% block stylesheet %}
 	<link rel="stylesheet" type="text/css" href="{% static 'css/blog.css' %}">
