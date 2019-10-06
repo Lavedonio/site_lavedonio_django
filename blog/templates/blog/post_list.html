@@ -1,38 +1,133 @@
 {% extends 'base.html' %}
 {% load static %}
+{% block canonical %}<link rel="canonical" href="{% url 'blog' %}">{% endblock %}
 
 {% block stylesheet %}
 	<link rel="stylesheet" type="text/css" href="{% static 'css/blog.css' %}">
 {% endblock %}
 
-{% block content %}
-			<h1 class="mt-5 mb-4 display-2">Blog</h1>
+{% block before_main %}
+	<div class="container featured-articles">
+		<h1 class="display-2 font-italic mb-3 border-bottom">Em destaque</h1>
+		<div class="jumbotron p-3 p-md-5 text-white rounded bg-dark">
+			<div class="col-md-6 px-0">
+				<h1 class="display-4 font-italic">Título mais longo para um post destacado</h1>
+				<p class="lead my-3">Várias linhas formando uma introdução, informando novos leitores rápido e eficientemente sobre o que é mais interessante, neste post.</p>
+				<p class="lead mb-0"><a href="#" class="text-white font-weight-bold">Continue lendo...</a></p>
+			</div>
+		</div>
 
-			{% for post in posts %}
-			<!-- <img src="{{ post.main_image.url }}" class="main-img img-fluid w-100" alt="Article Image"> -->
-			<article class="mb-5 article-list">
-				<div style="background-image: url('{{ post.main_image.url }}'); background-size: cover; background-repeat: no-repeat; background-position: center; min-height: 75%; border-radius: 15px 15px 0px 0px;">
-					<div class="container pt-5 pb-3 {% if post.light_title_text %} light-text{% endif %}">
-						<h1 class="header-img display-4"><a class="title" href="{% url 'post' post.id %}">{{ post.title }}</a></h1>
-						<h2 class="h4 article-title"><a class="title" href="{% url 'post' post.id %}">{{ post.subtitle }}</a></h2>
+		<div class="row mb-2">
+			<div class="col-md-6">
+				<div class="card flex-md-row mb-4 shadow-sm h-md-250">
+					<div class="card-body d-flex flex-column align-items-start">
+						<strong class="d-inline-block mb-2 text-primary">Mundo</strong>
+						<h3 class="mb-0">
+							<a class="text-dark" href="#">Post destacado</a>
+						</h3>
+						<div class="mb-1 text-muted">12 de Nov</div>
+						<p class="card-text mb-auto">Este é um card maior com suporte à texto, em baixo, como uma introdução mais natural ao conteúdo adicional.</p>
+						<a href="#">Continue lendo</a>
 					</div>
+					<img class="card-img-right flex-auto d-none d-lg-block" src="{% static 'placeholder.svg' %}" alt="Card image cap">
 				</div>
-				<div class="container mt-4">
-					<div class="media content-section">
+			</div>
+			<div class="col-md-6">
+				<div class="card flex-md-row mb-4 shadow-sm h-md-250">
+					<div class="card-body d-flex flex-column align-items-start">
+						<strong class="d-inline-block mb-2 text-success">Design</strong>
+						<h3 class="mb-0">
+							<a class="text-dark" href="#">Título do post</a>
+						</h3>
+						<div class="mb-1 text-muted">11 de Nov</div>
+						<p class="card-text mb-auto">Este é um card maior com suporte à texto em baixo, como uma introdução mais natural ao conteúdo adicional.</p>
+						<a href="#">Continue lendo</a>
+					</div>
+					<img class="card-img-right flex-auto d-none d-lg-block" src="{% static 'placeholder.svg' %}" alt="Card image cap">
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
 
-						<img class="rounded-circle author-image mr-2" src="{% static 'eu.jpg' %}" alt="Foto de {{ post.author }}">
-						<div class="media-body">
-							<div class="article-metadata">
-								<p class="mb-0">Publicado por <a href="#">{{ post.author }}</a></p>
-								<p class="mt-1 mb-0"><small class="text-muted">Criado em {{ post.date_posted|date }} às {{ post.date_posted|time:"H:i" }}</small></p>
-								{% if post.date_posted != post.last_updated %}<p class="mt-0"><small class="text-muted">Última atualização em {{ post.last_updated|date }} às {{ post.last_updated|time:"H:i" }}</small></p>{% endif %}
-								{% if post.draft %}<span class="badge badge-danger">Rascunho</span>{% endif %}
+{% block content %}
+			<div class="row">
+				<div class="col-md-8 blog-main">
+					<h3 class="pb-3 mb-4 display-2 border-bottom">Blog</h3>
+
+					{% for post in posts %}
+					<!-- <img src="{{ post.main_image.url }}" class="main-img img-fluid w-100" alt="Article Image"> -->
+					<article class="mb-5 rounded article-list blog-post">
+						<div class="rounded-top" style="background-image: url('{{ post.main_image.url }}'); background-size: cover; background-repeat: no-repeat; background-position: center; min-height: 75%;">
+							<div class="container pt-5 pb-3 {% if post.light_title_text %} light-text{% endif %}">
+								<h1 class="header-img display-4"><a class="title" href="{% url 'post' post.id %}">#{{ post.id }} {{ post.title }}</a></h1>
+								<h2 class="h4 article-title"><a class="title" href="{% url 'post' post.id %}">{{ post.subtitle }}</a></h2>
 							</div>
 						</div>
+						<div class="container mt-4">
+							<div class="media content-section">
+
+								<img class="rounded-circle author-image mr-2" src="{% static 'eu.jpg' %}" alt="Foto de {{ post.author }}">
+								<div class="media-body">
+									<div class="article-metadata">
+										<p class="mb-0">Publicado por <a href="{% url 'about' %}">{{ post.author }}</a></p>
+										<p class="mt-1 mb-0"><small class="text-muted">Criado em {{ post.date_posted|date }} às {{ post.date_posted|time:"H:i" }}</small></p>
+										{% if post.date_posted != post.last_updated %}<p class="mt-0 mb-0"><small class="text-muted">Última atualização em {{ post.last_updated|date }} às {{ post.last_updated|time:"H:i" }}</small></p>{% endif %}
+									</div>
+								</div>
+								<span class="badge badge-dark">Projeto</span>
+								{% if post.draft %}<span class="badge badge-danger ml-1">Rascunho</span>{% endif %}
+							</div>
+							<hr>
+							<p class="article-content">{{ post.content|linebreaks|truncatewords:50 }}</p>
+							<p><a href="{% url 'post' post.id %}">Continuar lendo...</a></p>
+						</div>
+					</article>
+					{% endfor %}
+
+					<nav class="mb-4" aria-label="Paginação do Blog">
+						<ul class="pagination justify-content-center">
+							<li class="page-item disabled">
+								<a class="page-link" href="#" tabindex="-1" aria-disabled="true">Anterior</a>
+							</li>
+							<li class="page-item"><a class="page-link" href="#">1</a></li>
+							<li class="page-item"><a class="page-link" href="#">2</a></li>
+							<li class="page-item"><a class="page-link" href="#">3</a></li>
+							<li class="page-item"><a class="page-link" href="#">4</a></li>
+							<li class="page-item"><a class="page-link" href="#">5</a></li>
+							<li class="page-item">
+								<a class="page-link" href="#">Próximo</a>
+							</li>
+						</ul>
+					</nav>
+
+				</div><!-- /.blog-main -->
+
+				<aside class="col-md-4 sticky-top">
+					<div class="p-3 mb-3 bg-light rounded">
+						<h4 class="font-italic">Sobre</h4>
+						<p class="mb-0 text-justify">Este é um blog pessoal que eu mantenho para registrar e compartilhar os projetos que eu faço.</p>
+						<p class="mb-0 text-justify">Algumas postagens sem relação com os projetos podem surgir; elas estarão marcadas como <em>off-topic</em>.</p>
 					</div>
-					<hr>
-					<p class="article-content">{{ post.content|linebreaks|truncatewords:50 }}</p>
-				</div>
-			</article>
-			{% endfor %}
+
+					<div class="p-3">
+						<h4 class="font-italic">Arquivos</h4>
+						<ol class="list-unstyled mb-0">
+							<li><a href="#">Março de 2018</a></li>
+							<li><a href="#">Fevereiro de 2018</a></li>
+							<li><a href="#">Janeiro de 2018</a></li>
+							<li><a href="#">Dezembro de 2017</a></li>
+							<li><a href="#">Novembro de 2017</a></li>
+							<li><a href="#">Outubro de 2017</a></li>
+							<li><a href="#">Setembro de 2017</a></li>
+							<li><a href="#">Agosto de 2017</a></li>
+							<li><a href="#">Julho de 2017</a></li>
+							<li><a href="#">Junho de 2017</a></li>
+							<li><a href="#">Maio de 2017</a></li>
+							<li><a href="#">Abril de 2017</a></li>
+						</ol>
+					</div>
+				</aside><!-- /.blog-sidebar -->
+
+			</div><!-- /.row -->
 {% endblock %}
