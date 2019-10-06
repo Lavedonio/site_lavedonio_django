@@ -1,3 +1,7 @@
+body {
+  background-color: #F5F5F5;
+}
+
 main > .container {
   padding: 60px 15px 0;
 }
@@ -5,6 +9,14 @@ main > .container {
 /*#main-background {
 	background-color: #001B31!important;
 }*/
+
+#navbar-dashboard a {
+  color: #888888!important;
+}
+
+#navbar-dashboard a:hover {
+  color: #C0C0C0!important;
+}
 
 #navbar-custom {
   background-color: #000B1F!important;
