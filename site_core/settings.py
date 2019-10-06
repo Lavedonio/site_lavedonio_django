@@ -38,6 +38,10 @@ INSTALLED_APPS = [
     'blog.apps.BlogConfig',
     'projects.apps.ProjectsConfig',
 
+    # Third-Party apps
+    'crispy_forms',
+    'widget_tweaks',  # https://simpleisbetterthancomplex.com/article/2017/08/19/how-to-render-django-form-manually.html
+
     # Django default
     'django.contrib.admin',
     'django.contrib.auth',
@@ -129,3 +133,10 @@ STATIC_URL = '/static/'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'homepage'
+
+
+# Third-Party apps settings
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
