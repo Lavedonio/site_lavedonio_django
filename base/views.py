@@ -8,6 +8,7 @@ class HomepageView(TemplateView):
         context = super().get_context_data()
         context["title"] = "Homepage"
         context["navbar_active"] = "home"
+        return context
 
 
 class AboutView(TemplateView):
@@ -17,6 +18,7 @@ class AboutView(TemplateView):
         context = super().get_context_data()
         context["title"] = "Sobre"
         context["navbar_active"] = "about"
+        return context
 
 
 class ContactView(TemplateView):
@@ -26,3 +28,4 @@ class ContactView(TemplateView):
         context = super().get_context_data()
         context["title"] = "Contato"
         context["navbar_active"] = "contact"
+        return context
