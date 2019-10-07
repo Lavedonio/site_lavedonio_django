@@ -54,6 +54,12 @@
 			<div class="row">
 				<div class="col-md-8 blog-main">
 					<h3 class="pb-3 mb-4 display-2 border-bottom">Blog</h3>
+					{% if user.is_authenticated %}
+					<div class="border rounded border-dark mb-4 p-3">
+						<h6 class="mb-2"> Controles</h6>
+						<a href="{% url 'post-create' %}" class="btn btn-info">Nova Publicação</a>
+					</div>
+					{% endif %}
 
 					{% for post in posts %}
 					<!-- <img src="{{ post.main_image.url }}" class="main-img img-fluid w-100" alt="Article Image"> -->
@@ -72,7 +78,7 @@
 									<div class="article-metadata">
 										<p class="mb-0">Publicado por <a href="{% url 'about' %}">{{ post.author }}</a></p>
 										<p class="mt-1 mb-0"><small class="text-muted">Criado em {{ post.date_posted|date }} às {{ post.date_posted|time:"H:i" }}</small></p>
-										{% if post.date_posted != post.last_updated %}<p class="mt-0 mb-0"><small class="text-muted">Última atualização em {{ post.last_updated|date }} às {{ post.last_updated|time:"H:i" }}</small></p>{% endif %}
+										{% if not post.lt_one_minute_between_creation_and_update %}<p class="mt-0 mb-0"><small class="text-muted">Última atualização em {{ post.last_updated|date }} às {{ post.last_updated|time:"H:i" }}</small></p>{% endif %}
 									</div>
 								</div>
 								<span class="badge badge-dark">Projeto</span>

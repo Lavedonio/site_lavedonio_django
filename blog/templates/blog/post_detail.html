@@ -33,15 +33,27 @@
 					<img class="rounded-circle author-image mr-2" src="{% static 'eu.jpg' %}" alt="Foto de {{ post.author }}">
 					<div class="media-body">
 						<div class="article-metadata">
-							<p class="mb-0">Publicado por <a href="#">{{ post.author }}</a></p>
+							<p class="mb-0">Publicado por <a href="{% url 'about' %}">{{ post.author }}</a></p>
 							<p class="mt-1 mb-0"><small class="text-muted">Criado em {{ post.date_posted|date }} às {{ post.date_posted|time:"H:i" }}</small></p>
-							{% if post.date_posted != post.last_updated %}<p class="mt-0"><small class="text-muted">Última atualização em {{ post.last_updated|date }} às {{ post.last_updated|time:"H:i" }}</small></p>{% endif %}
+							{% if not post.lt_one_minute_between_creation_and_update %}<p class="mt-0"><small class="text-muted">Última atualização em {{ post.last_updated|date }} às {{ post.last_updated|time:"H:i" }}</small></p>{% endif %}
 							{% if post.draft %}<span class="badge badge-danger">Rascunho</span>{% endif %}
 						</div>
+						{% if user.is_authenticated %}
+						<div class="mt-2">
+							<a href="{% url 'post-update' post.id %}" class="btn btn-primary btn-sm">Editar Publicação</a>
+							<a href="{% url 'post-delete' post.id %}" class="btn btn-danger btn-sm">Deletar Publicação</a>
+						</div>
+						{% endif %}
 					</div>
 				</div>
 				<hr>
 				<p class="article-content">{{ post.content|linebreaks }}</p>
 			</div>
 		</article>
+{% endblock %}
+
+{% block credits %}
+		{% if post.image_name == "default.jpg" %}
+			<div class="text-muted"><em>Foto de capa da publicação por <a href="https://unsplash.com/@andersjilden?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Anders Jildén</a> em <a href="https://unsplash.com/s/photos/digital?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" title="Unsplash">Unsplash</a></em></div>
+		{% endif %}
 {% endblock %}
