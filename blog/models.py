@@ -7,6 +7,15 @@ from django.utils.translation import gettext_lazy as _
 from django.urls import reverse
 
 
+def year_month_now(year_month_str=None):
+    if year_month_str:
+        year = int(year_month_str[:4])
+        month = int(year_month_str[-2:])
+        return datetime.date(year, month, 1)
+
+    return timezone.localdate().replace(day=1)
+
+
 class Post(models.Model):
     title = models.CharField(max_length=128, verbose_name=_('Title'))
     subtitle = models.CharField(max_length=512, blank=True, null=True, verbose_name=_('Subtitle'))
@@ -16,6 +25,7 @@ class Post(models.Model):
     draft = models.BooleanField(default=False, verbose_name=_('Draft'))
     date_posted = models.DateTimeField(default=timezone.now, verbose_name=_('Date Posted'))
     last_updated = models.DateTimeField(auto_now=True, verbose_name=_('Last Updated'))
+    date_posted_year_month = models.DateField(default=year_month_now)
     content = models.TextField(verbose_name=_('Content'))
 
     @property
