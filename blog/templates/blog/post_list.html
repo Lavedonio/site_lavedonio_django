@@ -7,6 +7,7 @@
 {% endblock %}
 
 {% block before_main %}
+	{% if featured and page_obj.number == 1 %}
 	<div class="container featured-articles">
 		<h1 class="display-2 font-italic mb-3 border-bottom">Em destaque</h1>
 		<div class="jumbotron p-3 p-md-5 text-white rounded bg-dark">
@@ -48,12 +49,16 @@
 			</div>
 		</div>
 	</div>
+	{% endif %}
 {% endblock %}
 
 {% block content %}
 			<div class="row">
 				<div class="col-md-8 blog-main">
-					<h3 class="pb-3 mb-4 display-2 border-bottom">Blog</h3>
+					{% if archive %}
+					<h1 class="pb-3 mb-2 display-2">Blog</h1>
+					<h2 class="pb-3 mb-4 border-bottom">Publicações de {{ year_month_date|date:"F" }} de {{ year_month_date|date:"Y" }}</h2>
+					{% else %}<h1 class="pb-3 mb-4 display-2 border-bottom">Blog</h1>{% endif %}
 					{% if user.is_authenticated %}
 					<div class="border rounded border-dark mb-4 p-3">
 						<h6 class="mb-2"> Controles</h6>
@@ -91,46 +96,79 @@
 					</article>
 					{% endfor %}
 
+					{% if page_obj.paginator.num_pages > 1 %}
 					<nav class="mb-4" aria-label="Paginação do Blog">
 						<ul class="pagination justify-content-center">
-							<li class="page-item disabled">
-								<a class="page-link" href="#" tabindex="-1" aria-disabled="true">Anterior</a>
-							</li>
-							<li class="page-item"><a class="page-link" href="#">1</a></li>
-							<li class="page-item"><a class="page-link" href="#">2</a></li>
-							<li class="page-item"><a class="page-link" href="#">3</a></li>
-							<li class="page-item"><a class="page-link" href="#">4</a></li>
-							<li class="page-item"><a class="page-link" href="#">5</a></li>
+							{% if page_obj.has_previous %}
 							<li class="page-item">
-								<a class="page-link" href="#">Próximo</a>
+								<a class="page-link" href="?pagina=1" aria-label="Primeira Página">
+									<span aria-hidden="true">&laquo;</span>
+									<span class="sr-only">Primeira Página</span>
+								</a>
 							</li>
+							<li class="page-item"><a class="page-link" href="?pagina={{ page_obj.previous_page_number }}">Anterior</a></li>
+							{% else %}
+							<li class="page-item disabled">
+								<a class="page-link" href="#" tabindex="-1" aria-disabled="true" aria-label="Primeira Página">
+									<span aria-hidden="true">&laquo;</span>
+									<span class="sr-only">Primeira Página</span>
+								</a>
+							</li>
+							<li class="page-item disabled"><a class="page-link" href="#" tabindex="-1" aria-disabled="true">Anterior</a></li>
+							{% endif %}
+							{% if 1 < page_obj.number|add:'-2' %}
+								<li class="page-item"><a class="page-link" href="?pagina=1">1</a></li>
+								{% if 1 < page_obj.number|add:'-3' %}<li class="page-item"><a class="page-link" href="#">...</a></li>{% endif %}
+							{% endif %}
+							{% for num in page_obj.paginator.page_range %}
+								{% if page_obj.number == num %}
+									<li class="page-item active">
+										<a class="page-link" href="?pagina={{ num }}">{{ num }} <span class="sr-only">(current)</span></a>
+									</li>
+								{% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+									<li class="page-item"><a class="page-link" href="?pagina={{ num }}">{{ num }}</a></li>
+								{% endif %}
+							{% endfor %}
+							{% if page_obj.number|add:'2' < page_obj.paginator.num_pages %}
+								{% if page_obj.number|add:'3' < page_obj.paginator.num_pages %}<li class="page-item"><a class="page-link" href="#">...</a></li>{% endif %}
+								<li class="page-item"><a class="page-link" href="?pagina={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a></li>
+							{% endif %}
+							{% if page_obj.has_next %}
+							<li class="page-item"><a class="page-link" href="?pagina={{ page_obj.next_page_number }}">Próxima</a></li>
+							<li class="page-item">
+								<a class="page-link" href="?pagina={{ page_obj.paginator.num_pages }}" aria-label="Última Página">
+									<span aria-hidden="true">&raquo;</span>
+									<span class="sr-only">Última Página</span>
+								</a>
+							</li>
+							{% else %}
+							<li class="page-item disabled"><a class="page-link" href="#" tabindex="-1" aria-disabled="true">Próxima</a></li>
+							<li class="page-item disabled">
+								<a class="page-link" href="#" tabindex="-1" aria-disabled="true" aria-label="Última Página">
+									<span aria-hidden="true">&raquo;</span>
+									<span class="sr-only">Última Página</span>
+								</a>
+							</li>
+							{% endif %}
 						</ul>
 					</nav>
+					{% endif %}
 
 				</div><!-- /.blog-main -->
 
 				<aside class="col-md-4 sticky-top">
-					<div class="p-3 mb-3 bg-light rounded">
+					<div class="p-3 mt-4 mb-3 bg-light rounded">
 						<h4 class="font-italic">Sobre</h4>
 						<p class="mb-0 text-justify">Este é um blog pessoal que eu mantenho para registrar e compartilhar os projetos que eu faço.</p>
-						<p class="mb-0 text-justify">Algumas postagens sem relação com os projetos podem surgir; elas estarão marcadas como <em>off-topic</em>.</p>
+						<p class="mb-0 text-justify">Algumas postagens sem relação com os projetos podem surgir; elas estarão marcadas como <i>off-topic</i>.</p>
 					</div>
 
 					<div class="p-3">
 						<h4 class="font-italic">Arquivos</h4>
 						<ol class="list-unstyled mb-0">
-							<li><a href="#">Março de 2018</a></li>
-							<li><a href="#">Fevereiro de 2018</a></li>
-							<li><a href="#">Janeiro de 2018</a></li>
-							<li><a href="#">Dezembro de 2017</a></li>
-							<li><a href="#">Novembro de 2017</a></li>
-							<li><a href="#">Outubro de 2017</a></li>
-							<li><a href="#">Setembro de 2017</a></li>
-							<li><a href="#">Agosto de 2017</a></li>
-							<li><a href="#">Julho de 2017</a></li>
-							<li><a href="#">Junho de 2017</a></li>
-							<li><a href="#">Maio de 2017</a></li>
-							<li><a href="#">Abril de 2017</a></li>
+						{% for instance in archive_queryset %}
+							<li class="font-italic"><a href="{% url 'archive' instance.date_posted_year_month|date:'Y-m' %}">{{ instance.date_posted_year_month|date:"F" }} de {{ instance.date_posted_year_month|date:"Y" }} ({{ instance.num_posts }})</a></li>
+						{% endfor %}
 						</ol>
 					</div>
 				</aside><!-- /.blog-sidebar -->
