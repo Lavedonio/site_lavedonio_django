@@ -98,6 +98,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
         "subtitle",
         "light_title_text",
         "main_image",
+        "featured",
         "draft",
         "content",
     ]
@@ -127,6 +128,7 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         "subtitle",
         "light_title_text",
         "main_image",
+        "featured",
         "draft",
         "content",
     ]
