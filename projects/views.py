@@ -1,17 +1,21 @@
-from django.shortcuts import render
+from django.views.generic import TemplateView
 
 
-def pong(request):
-    context = {
-        "title": "Pong - Projetos",
-        "navbar_active": "projects"
-    }
-    return render(request, "projects/pong.html", context)
+class PongProjectView(TemplateView):
+    template_name = "projects/pong.html"
+
+    def get_context_data(self):
+        context = super().get_context_data()
+        context["title"] = "Pong - Projetos"
+        context["navbar_active"] = "projects"
+        return context
 
 
-def snake(request):
-    context = {
-        "title": "Snake - Projetos",
-        "navbar_active": "projects"
-    }
-    return render(request, "projects/snake.html", context)
+class SnakeProjectView(TemplateView):
+    template_name = "projects/snake.html"
+
+    def get_context_data(self):
+        context = super().get_context_data()
+        context["title"] = "Snake - Projetos"
+        context["navbar_active"] = "projects"
+        return context
