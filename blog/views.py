@@ -55,12 +55,21 @@ class PostListView(ListView):
         context = super().get_context_data(**kwargs)
         context["title"] = "Blog"
         context["navbar_active"] = "blog"
-        context["featured"] = True
         context["archive"] = False
 
+        # Archived year_month
         queryset_archive = Post.objects.values('date_posted_year_month').annotate(num_posts=Count('date_posted_year_month'))
         context["archive_queryset"] = queryset_archive
 
+        # Featured Posts
+        has_featured = Post.objects.filter(featured=True).count() > 0
+        context["featured"] = has_featured
+
+        if has_featured:
+            context["post_most_featured"] = Post.objects.filter(featured=True).order_by('-date_posted')[0]
+            context["posts_featured"] = Post.objects.filter(featured=True).order_by('-date_posted')[1:3]
+
+        # Pagination
         posts = self.get_queryset()
         page = self.request.GET.get('pagina')
         paginator = Paginator(posts, self.paginate_by)
@@ -75,6 +84,7 @@ class PostListView(ListView):
             posts = paginator.page(paginator.num_pages)
 
         context['page_obj'] = posts
+
         return context
 
 
