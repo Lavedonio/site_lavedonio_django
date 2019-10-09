@@ -4,51 +4,53 @@
 
 {% block stylesheet %}
 	<link rel="stylesheet" type="text/css" href="{% static 'css/blog.css' %}">
+
+	<!-- Full width image: https://stackoverflow.com/questions/12991351/css-force-image-resize-and-keep-aspect-ratio -->
+	<style>
+		div.most-featured-image {
+			background-image: url("{% if post_most_featured %}{{ post_most_featured.main_image.url }}{% endif %}");
+			background-size: cover;
+			background-repeat: no-repeat;
+			background-position: center;
+			min-height: 75%;
+		}
+	</style>
 {% endblock %}
 
 {% block before_main %}
 	{% if featured and page_obj.number == 1 %}
-	<div class="container featured-articles">
+	<section class="container featured-articles">
 		<h1 class="display-2 font-italic mb-3 border-bottom">Em destaque</h1>
-		<div class="jumbotron p-3 p-md-5 text-white rounded bg-dark">
-			<div class="col-md-6 px-0">
-				<h1 class="display-4 font-italic">Título mais longo para um post destacado</h1>
-				<p class="lead my-3">Várias linhas formando uma introdução, informando novos leitores rápido e eficientemente sobre o que é mais interessante, neste post.</p>
-				<p class="lead mb-0"><a href="#" class="text-white font-weight-bold">Continue lendo...</a></p>
+		<article class="jumbotron row p-3 p-md-5 text-white rounded bg-dark">
+			<div class="col-md-6 px-0 d-flex flex-column">
+				<h1 class="display-4 font-italic">{{ post_most_featured.title }}</h1>
+				<p class="lead my-3">{{ post_most_featured.subtitle }}</p>
+				<p class="lead mb-0"><a href="{% url 'post' post_most_featured.id %}" class="text-white font-weight-bold">Continue lendo...</a></p>
 			</div>
-		</div>
+			<div class="col-md-6 px-0 d-none d-lg-block most-featured-image most-featured-margin">
+				<p class="d-none">Imagem mais destacada</p>
+			</div>
+		</article>
 
 		<div class="row mb-2">
-			<div class="col-md-6">
-				<div class="card flex-md-row mb-4 shadow-sm h-md-250">
+			{% for post_featured in posts_featured %}
+			<article class="col-md-6">
+				<div class="card rounded flex-md-row mb-4 shadow-sm h-md-300">
 					<div class="card-body d-flex flex-column align-items-start">
 						<strong class="d-inline-block mb-2 text-primary">Mundo</strong>
 						<h3 class="mb-0">
-							<a class="text-dark" href="#">Post destacado</a>
+							<a class="text-dark" href="{% url 'post' post_featured.id %}">{{ post_featured.title }}</a>
 						</h3>
-						<div class="mb-1 text-muted">12 de Nov</div>
-						<p class="card-text mb-auto">Este é um card maior com suporte à texto, em baixo, como uma introdução mais natural ao conteúdo adicional.</p>
-						<a href="#">Continue lendo</a>
+						<div class="mb-1 text-muted">{{ post_featured.date_posted }}</div>
+						<p class="card-text mb-auto">{{ post_featured.subtitle }}</p>
+						<a href="{% url 'post' post_featured.id %}">Continue lendo</a>
 					</div>
-					<img class="card-img-right flex-auto d-none d-lg-block" src="{% static 'placeholder.svg' %}" alt="Card image cap">
+					<div class="crop flex-auto d-none d-lg-block"><img class="card-img-right" src="{{ post_featured.main_image.url }}" style="margin-left: {% widthratio post_featured.main_image.width post_featured.main_image.height -150 %}px; padding-left: 100px;" alt="Imagem Principal da Publicação em destaque"></div>
 				</div>
-			</div>
-			<div class="col-md-6">
-				<div class="card flex-md-row mb-4 shadow-sm h-md-250">
-					<div class="card-body d-flex flex-column align-items-start">
-						<strong class="d-inline-block mb-2 text-success">Design</strong>
-						<h3 class="mb-0">
-							<a class="text-dark" href="#">Título do post</a>
-						</h3>
-						<div class="mb-1 text-muted">11 de Nov</div>
-						<p class="card-text mb-auto">Este é um card maior com suporte à texto em baixo, como uma introdução mais natural ao conteúdo adicional.</p>
-						<a href="#">Continue lendo</a>
-					</div>
-					<img class="card-img-right flex-auto d-none d-lg-block" src="{% static 'placeholder.svg' %}" alt="Card image cap">
-				</div>
-			</div>
+			</article>
+			{% endfor %}
 		</div>
-	</div>
+	</section>
 	{% endif %}
 {% endblock %}
 
@@ -66,7 +68,7 @@
 					</div>
 					{% endif %}
 
-					{% for post in posts %}
+					{% for post in page_obj %}
 					<!-- <img src="{{ post.main_image.url }}" class="main-img img-fluid w-100" alt="Article Image"> -->
 					<article class="mb-5 rounded article-list blog-post">
 						<div class="rounded-top" style="background-image: url('{{ post.main_image.url }}'); background-size: cover; background-repeat: no-repeat; background-position: center; min-height: 75%;">
