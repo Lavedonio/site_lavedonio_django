@@ -11,7 +11,7 @@
 			<fieldset class="form-group">
 				{{ form|crispy }}
 			</fieldset>
-			<button class="btn btn-primary" type="submit">Publicar</button>
+			<button class="btn btn-primary" type="submit">{% if editar %}Salvar Publicação{% else %}Publicar{% endif %}</button>
 			<a href="{% if editar %}{% url 'post' object.id %}{% else %}{% url 'blog' %}{% endif %}" class="btn btn-secondary">Cancelar</a>
 		</form>
 	</div>
