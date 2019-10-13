@@ -80,6 +80,14 @@
   }
 }
 
+@media (min-width: 992px) {
+    .p-img {
+      padding-top: 2.25rem!important;
+      padding-bottom: 2.25rem!important;
+      padding-left: 2.25rem!important;
+    }
+}
+
 /*
  * Blog posts
  */
