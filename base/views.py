@@ -53,3 +53,26 @@ class ContactSuccessView(TemplateView):
         context["title"] = "Contato"
         context["navbar_active"] = "contact"
         return context
+
+
+class SearchView(TemplateView):
+    template_name = "search.html"
+
+    def get_queryset(self, **kwargs):
+        query = self.request.GET.get('q')
+        post_search = Post.objects.filter(title__icontains=query).order_by("-date_posted")
+        project_search = Project.objects.filter(title__icontains=query).order_by("-id")
+
+        return post_search, project_search
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = "Pesquisa"
+
+        context["query"] = self.request.GET.get("q")
+
+        post_search, project_search = self.get_queryset()
+        context["post_search"] = post_search
+        context["project_search"] = project_search
+
+        return context

@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block stylesheet %}
+	<link rel="stylesheet" type="text/css" href="{{ request.scheme }}://{{ request.get_host }}{% static 'css/blog.css' %}">
+{% endblock %}
+
+{% block content %}
+			<h1 class="display-3 mt-5 mb-3 border-bottom">Resultados da pesquisa: <em>{{ query }}</em></h1>
+
+			{% if project_search %}
+			<div class="projects mt-3 mb-5">
+				<h2 class="display-4">Projetos</h2>
+				{% for project in project_search %}
+				<div class="mt-5">
+					<h3 class="card-title text-left"><a class="text-primary" href="{{ request.scheme }}://{{ request.get_host }}/projetos/{{ project.slug }}/">{{ project.title }}</a></h3>
+					<hr>
+					<p class="card-text">{{ project.description }}</p>
+					<p class="card-text"><small class="text-muted">Downloads: {{ project.downloads }}</small></p>
+				</div>
+				{% endfor %}
+			</div>
+			<hr style="border-color: inherit">
+			{% endif %}
+
+			{% if post_search %}
+			<div class="blog-posts mt-3 mb-5">
+				<h2 class="display-4 mb-5">Publicações</h2>
+				<div class="blog-main">
+					{% for post in post_search %}
+					<!-- <img src="{{ request.scheme }}://{{ request.get_host }}{{ post.main_image.url }}" class="main-img img-fluid w-100" alt="Article Image"> -->
+					<article class="mb-5 rounded article-list blog-post">
+						<div class="rounded-top" style="background-image: url('{{ request.scheme }}://{{ request.get_host }}{{ post.main_image.url }}'); background-size: cover; background-repeat: no-repeat; background-position: center; min-height: 75%;">
+							<div class="container pt-5 pb-3 {% if post.light_title_text %} light-text{% endif %}">
+								<h1 class="header-img display-4"><a class="title" href="{{ request.scheme }}://{{ request.get_host }}{% url 'post' post.id %}">#{{ post.id }} {{ post.title }}</a></h1>
+								<h2 class="h4 article-title"><a class="title" href="{{ request.scheme }}://{{ request.get_host }}{% url 'post' post.id %}">{{ post.subtitle }}</a></h2>
+							</div>
+						</div>
+						<div class="container mt-4">
+							<div class="media content-section">
+
+								<img class="rounded-circle author-image mr-2" src="{{ request.scheme }}://{{ request.get_host }}{% static 'eu.jpg' %}" alt="Foto de {{ post.author }}">
+								<div class="media-body">
+									<div class="article-metadata">
+										<p class="mb-0">Publicado por <a href="{{ request.scheme }}://{{ request.get_host }}{% url 'about' %}">{{ post.author }}</a></p>
+										<p class="mt-1 mb-0"><small class="text-muted">Criado em {{ post.date_posted|date }} às {{ post.date_posted|time:"H:i" }}</small></p>
+										{% if not post.lt_one_minute_between_creation_and_update %}<p class="mt-0 mb-0"><small class="text-muted">Última atualização em {{ post.last_updated|date }} às {{ post.last_updated|time:"H:i" }}</small></p>{% endif %}
+									</div>
+								</div>
+								<span class="badge badge-dark">Projeto</span>
+								{% if post.draft %}<span class="badge badge-danger ml-1">Rascunho</span>{% endif %}
+							</div>
+							<hr>
+							<p class="article-content">{{ post.content|linebreaks|truncatewords:50 }}</p>
+							<p><a href="{{ request.scheme }}://{{ request.get_host }}{% url 'post' post.id %}">Continuar lendo...</a></p>
+						</div>
+					</article>
+					{% endfor %}
+				</div>
+			</div>
+			<hr>
+			{% endif %}
+{% endblock %}
