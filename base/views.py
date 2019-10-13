@@ -1,6 +1,9 @@
 from django.views.generic import TemplateView
+from django.views.generic.edit import FormView
+from django.urls import reverse_lazy
 from blog.models import Post
 from projects.models import Project
+from .forms import ContactForm
 
 
 class HomepageView(TemplateView):
@@ -26,8 +29,24 @@ class AboutView(TemplateView):
         return context
 
 
-class ContactView(TemplateView):
+class ContactView(FormView):
     template_name = "contact.html"
+    form_class = ContactForm
+    success_url = reverse_lazy("contact-success")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = "Contato"
+        context["navbar_active"] = "contact"
+        return context
+
+    def form_valid(self, form):
+        form.send_email()
+        return super().form_valid(form)
+
+
+class ContactSuccessView(TemplateView):
+    template_name = "contact_success.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
