@@ -11,28 +11,14 @@
 				<h2 class="display-4">Projetos em destaque</h2>
 				<div class="card-deck mt-5">
 					{% for project in projects %}
-					<div class="card">
+					<div class="card border-primary bg-dark text-light">
 						{# <img class="card-img-top" src="..." alt="Card image cap"> #}
 						<div class="card-body">
-							<h5 class="card-title"><a href="{{ request.scheme }}://{{ request.get_host }}/projetos/{{ project.slug }}/">{{ project.title }}</a></h5>
+							<h3 class="card-title text-left"><a class="text-primary" href="{{ request.scheme }}://{{ request.get_host }}/projetos/{{ project.slug }}/">{{ project.title }}</a></h3>
+							<hr style="border-color: inherit">
 							<p class="card-text">{{ project.description }}</p>
-							<p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+							<p class="card-text"><small class="text-muted">Downloads: {{ project.downloads }}</small></p>
 						</div>
-					</div>
-					{% endfor %}
-				</div>
-			</div>
-			{% endif %}
-
-			{% if projects %}
-			<hr>
-			<div class="projects mt-3 mb-5">
-				<h2 class="display-4">Projetos em destaque</h2>
-				<div class="row mt-5">
-					{% for project in projects %}
-					<div class="col-md-{% widthratio 12 projects.count 1 %} mb-3">
-						<h3 class="text-center font"><a href="{{ request.scheme }}://{{ request.get_host }}/projetos/{{ project.slug }}/">{{ project.title }}</a></h3>
-						<p class="text-justify">{{ project.description }}</p>
 					</div>
 					{% endfor %}
 				</div>
@@ -45,28 +31,13 @@
 				<h2 class="display-4">Publicações do blog em destaque</h2>
 				<div class="card-deck mt-5">
 					{% for post in posts %}
-					<div class="card">
-						{# <img class="card-img-top" src="..." alt="Card image cap"> #}
+					<div class="card bb-0">
+						<img class="card-img-top" style="object-fit: cover;" src="{{ request.scheme }}://{{ request.get_host }}{{ post.main_image.url }}" height="200px" alt="Imagem da publicação">
 						<div class="card-body">
-							<h5 class="card-title"><a href="{{ request.scheme }}://{{ request.get_host }}{% url 'post' post.id %}">{{ post.title }}</a></h5>
+							<h3 class="card-title"><a href="{{ request.scheme }}://{{ request.get_host }}{% url 'post' post.id %}">{{ post.title }}</a></h3>
 							<p class="card-text">{{ post.subtitle }}</p>
-							<p class="card-text"><small class="text-muted"><a href="{{ request.scheme }}://{{ request.get_host }}{% url 'post' post.id %}">{{ request.scheme }}://{{ request.get_host }}{% url 'post' post.id %}</a></small></p>
 						</div>
-					</div>
-					{% endfor %}
-				</div>
-			</div>
-			{% endif %}
-
-			{% if posts %}
-			<hr>
-			<div class="blog-posts mt-3 mb-5">
-				<h2 class="display-4">Publicações do blog em destaque</h2>
-				<div class="row mt-5">
-					{% for post in posts %}
-					<div class="col-md-{% widthratio 12 posts.count 1 %} mb-3">
-						<h3 class="text-center font"><a href="{{ request.scheme }}://{{ request.get_host }}{% url 'post' post.id %}">{{ post.title }}</a></h3>
-						<p class="text-justify">{{ post.subtitle }}</p>
+						<div class="card-footer bg-transparent"><p class="card-text"><a class="btn btn-sm btn-primary" href="{{ request.scheme }}://{{ request.get_host }}{% url 'post' post.id %}">Leia essa publicação</a></p></div>
 					</div>
 					{% endfor %}
 				</div>
