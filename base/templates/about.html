@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block canonical %}<link rel="canonical" href="{% url 'about' %}">{% endblock %}
+{% block canonical %}<link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{% url 'about' %}">{% endblock %}
 
 {% block content %}
 			<h1 class="mt-5 display-4">Sobre</h1>

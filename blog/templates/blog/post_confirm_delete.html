@@ -9,7 +9,7 @@
 		<form method="POST">
 			{% csrf_token %}
 			<button class="btn btn-danger" type="submit">Sim, deletar</button>
-			<a href="{% url 'post' object.id %}" class="btn btn-secondary ml-2">Não, cancelar</a>
+			<a href="{{ request.scheme }}://{{ request.get_host }}{% url 'post' object.id %}" class="btn btn-secondary ml-2">Não, cancelar</a>
 		</form>
 	</div>
 {% endblock %}

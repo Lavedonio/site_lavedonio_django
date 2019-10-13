@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block canonical %}<link rel="canonical" href="{% url 'blog' %}">{% endblock %}
+{% block canonical %}<link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{% url 'blog' %}">{% endblock %}
 
 {% block stylesheet %}
-	<link rel="stylesheet" type="text/css" href="{% static 'css/blog.css' %}">
+	<link rel="stylesheet" type="text/css" href="{{ request.scheme }}://{{ request.get_host }}{% static 'css/blog.css' %}">
 
 	<!-- Full width image: https://stackoverflow.com/questions/12991351/css-force-image-resize-and-keep-aspect-ratio -->
 	<style>
@@ -25,7 +25,7 @@
 			<div class="col-md-6 px-0 pr-lg-2 d-flex flex-column">
 				<h1 class="display-4 font-italic">{{ post_most_featured.title }}</h1>
 				<p class="lead my-3">{{ post_most_featured.subtitle }}</p>
-				<p class="lead mb-0"><a href="{% url 'post' post_most_featured.id %}" class="text-white font-weight-bold">Continue lendo...</a></p>
+				<p class="lead mb-0"><a href="{{ request.scheme }}://{{ request.get_host }}{% url 'post' post_most_featured.id %}" class="text-white font-weight-bold">Continue lendo...</a></p>
 			</div>
 			<div class="col-md-6 px-0 d-none d-lg-block most-featured-image most-featured-margin rounded-right">
 				<p class="d-none">Imagem mais destacada</p>
@@ -39,13 +39,13 @@
 					<div class="card-body d-flex flex-column align-items-start">
 						<strong class="d-inline-block mb-2 text-primary">Mundo</strong>
 						<h3 class="mb-0">
-							<a class="text-dark" href="{% url 'post' post_featured.id %}">{{ post_featured.title }}</a>
+							<a class="text-dark" href="{{ request.scheme }}://{{ request.get_host }}{% url 'post' post_featured.id %}">{{ post_featured.title }}</a>
 						</h3>
 						<div class="mb-1 text-muted">{{ post_featured.date_posted }}</div>
 						<p class="card-text mb-auto">{{ post_featured.subtitle }}</p>
-						<a href="{% url 'post' post_featured.id %}">Continue lendo</a>
+						<a href="{{ request.scheme }}://{{ request.get_host }}{% url 'post' post_featured.id %}">Continue lendo</a>
 					</div>
-					<div class="crop flex-auto d-none d-lg-block rounded-right"><img class="card-img-right" src="{{ post_featured.main_image.url }}" style="margin-left: {% widthratio post_featured.main_image.width post_featured.main_image.height -150 %}px; padding-left: 100px;" alt="Imagem Principal da Publicação em destaque"></div>
+					<div class="crop flex-auto d-none d-lg-block rounded-right"><img class="card-img-right" src="{{ request.scheme }}://{{ request.get_host }}{{ post_featured.main_image.url }}" style="margin-left: {% widthratio post_featured.main_image.width post_featured.main_image.height -150 %}px; padding-left: 100px;" alt="Imagem Principal da Publicação em destaque"></div>
 				</div>
 			</article>
 			{% endfor %}
@@ -64,26 +64,26 @@
 					{% if user.is_authenticated %}
 					<div class="border rounded border-dark mb-4 p-3">
 						<h6 class="mb-2"> Controles</h6>
-						<a href="{% url 'post-create' %}" class="btn btn-info">Nova Publicação</a>
+						<a href="{{ request.scheme }}://{{ request.get_host }}{% url 'post-create' %}" class="btn btn-info">Nova Publicação</a>
 					</div>
 					{% endif %}
 
 					{% for post in page_obj %}
-					<!-- <img src="{{ post.main_image.url }}" class="main-img img-fluid w-100" alt="Article Image"> -->
+					<!-- <img src="{{ request.scheme }}://{{ request.get_host }}{{ post.main_image.url }}" class="main-img img-fluid w-100" alt="Article Image"> -->
 					<article class="mb-5 rounded article-list blog-post">
-						<div class="rounded-top" style="background-image: url('{{ post.main_image.url }}'); background-size: cover; background-repeat: no-repeat; background-position: center; min-height: 75%;">
+						<div class="rounded-top" style="background-image: url('{{ request.scheme }}://{{ request.get_host }}{{ post.main_image.url }}'); background-size: cover; background-repeat: no-repeat; background-position: center; min-height: 75%;">
 							<div class="container pt-5 pb-3 {% if post.light_title_text %} light-text{% endif %}">
-								<h1 class="header-img display-4"><a class="title" href="{% url 'post' post.id %}">#{{ post.id }} {{ post.title }}</a></h1>
-								<h2 class="h4 article-title"><a class="title" href="{% url 'post' post.id %}">{{ post.subtitle }}</a></h2>
+								<h1 class="header-img display-4"><a class="title" href="{{ request.scheme }}://{{ request.get_host }}{% url 'post' post.id %}">#{{ post.id }} {{ post.title }}</a></h1>
+								<h2 class="h4 article-title"><a class="title" href="{{ request.scheme }}://{{ request.get_host }}{% url 'post' post.id %}">{{ post.subtitle }}</a></h2>
 							</div>
 						</div>
 						<div class="container mt-4">
 							<div class="media content-section">
 
-								<img class="rounded-circle author-image mr-2" src="{% static 'eu.jpg' %}" alt="Foto de {{ post.author }}">
+								<img class="rounded-circle author-image mr-2" src="{{ request.scheme }}://{{ request.get_host }}{% static 'eu.jpg' %}" alt="Foto de {{ post.author }}">
 								<div class="media-body">
 									<div class="article-metadata">
-										<p class="mb-0">Publicado por <a href="{% url 'about' %}">{{ post.author }}</a></p>
+										<p class="mb-0">Publicado por <a href="{{ request.scheme }}://{{ request.get_host }}{% url 'about' %}">{{ post.author }}</a></p>
 										<p class="mt-1 mb-0"><small class="text-muted">Criado em {{ post.date_posted|date }} às {{ post.date_posted|time:"H:i" }}</small></p>
 										{% if not post.lt_one_minute_between_creation_and_update %}<p class="mt-0 mb-0"><small class="text-muted">Última atualização em {{ post.last_updated|date }} às {{ post.last_updated|time:"H:i" }}</small></p>{% endif %}
 									</div>
@@ -93,7 +93,7 @@
 							</div>
 							<hr>
 							<p class="article-content">{{ post.content|linebreaks|truncatewords:50 }}</p>
-							<p><a href="{% url 'post' post.id %}">Continuar lendo...</a></p>
+							<p><a href="{{ request.scheme }}://{{ request.get_host }}{% url 'post' post.id %}">Continuar lendo...</a></p>
 						</div>
 					</article>
 					{% endfor %}
@@ -103,12 +103,12 @@
 						<ul class="pagination justify-content-center">
 							{% if page_obj.has_previous %}
 							<li class="page-item">
-								<a class="page-link" href="?pagina=1" aria-label="Primeira Página">
+								<a class="page-link" href="{{ request.scheme }}://{{ request.get_host }}{% if archive %}{% url 'archive' archive_year_month_url %}{% else %}{% url 'blog' %}{% endif %}?pagina=1" aria-label="Primeira Página">
 									<span aria-hidden="true">&laquo;</span>
 									<span class="sr-only">Primeira Página</span>
 								</a>
 							</li>
-							<li class="page-item"><a class="page-link" href="?pagina={{ page_obj.previous_page_number }}">Anterior</a></li>
+							<li class="page-item"><a class="page-link" href="{{ request.scheme }}://{{ request.get_host }}{% if archive %}{% url 'archive' archive_year_month_url %}{% else %}{% url 'blog' %}{% endif %}?pagina={{ page_obj.previous_page_number }}">Anterior</a></li>
 							{% else %}
 							<li class="page-item disabled">
 								<a class="page-link" href="#" tabindex="-1" aria-disabled="true" aria-label="Primeira Página">
@@ -119,26 +119,26 @@
 							<li class="page-item disabled"><a class="page-link" href="#" tabindex="-1" aria-disabled="true">Anterior</a></li>
 							{% endif %}
 							{% if 1 < page_obj.number|add:'-2' %}
-								<li class="page-item"><a class="page-link" href="?pagina=1">1</a></li>
+								<li class="page-item"><a class="page-link" href="{{ request.scheme }}://{{ request.get_host }}{% if archive %}{% url 'archive' archive_year_month_url %}{% else %}{% url 'blog' %}{% endif %}?pagina=1">1</a></li>
 								{% if 1 < page_obj.number|add:'-3' %}<li class="page-item"><a class="page-link" href="#">...</a></li>{% endif %}
 							{% endif %}
 							{% for num in page_obj.paginator.page_range %}
 								{% if page_obj.number == num %}
 									<li class="page-item active">
-										<a class="page-link" href="?pagina={{ num }}">{{ num }} <span class="sr-only">(current)</span></a>
+										<a class="page-link" href="{{ request.scheme }}://{{ request.get_host }}{% if archive %}{% url 'archive' archive_year_month_url %}{% else %}{% url 'blog' %}{% endif %}?pagina={{ num }}">{{ num }} <span class="sr-only">(current)</span></a>
 									</li>
 								{% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-									<li class="page-item"><a class="page-link" href="?pagina={{ num }}">{{ num }}</a></li>
+									<li class="page-item"><a class="page-link" href="{{ request.scheme }}://{{ request.get_host }}{% if archive %}{% url 'archive' archive_year_month_url %}{% else %}{% url 'blog' %}{% endif %}?pagina={{ num }}">{{ num }}</a></li>
 								{% endif %}
 							{% endfor %}
 							{% if page_obj.number|add:'2' < page_obj.paginator.num_pages %}
 								{% if page_obj.number|add:'3' < page_obj.paginator.num_pages %}<li class="page-item"><a class="page-link" href="#">...</a></li>{% endif %}
-								<li class="page-item"><a class="page-link" href="?pagina={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a></li>
+								<li class="page-item"><a class="page-link" href="{{ request.scheme }}://{{ request.get_host }}{% if archive %}{% url 'archive' archive_year_month_url %}{% else %}{% url 'blog' %}{% endif %}?pagina={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a></li>
 							{% endif %}
 							{% if page_obj.has_next %}
-							<li class="page-item"><a class="page-link" href="?pagina={{ page_obj.next_page_number }}">Próxima</a></li>
+							<li class="page-item"><a class="page-link" href="{{ request.scheme }}://{{ request.get_host }}{% if archive %}{% url 'archive' archive_year_month_url %}{% else %}{% url 'blog' %}{% endif %}?pagina={{ page_obj.next_page_number }}">Próxima</a></li>
 							<li class="page-item">
-								<a class="page-link" href="?pagina={{ page_obj.paginator.num_pages }}" aria-label="Última Página">
+								<a class="page-link" href="{{ request.scheme }}://{{ request.get_host }}{% if archive %}{% url 'archive' archive_year_month_url %}{% else %}{% url 'blog' %}{% endif %}?pagina={{ page_obj.paginator.num_pages }}" aria-label="Última Página">
 									<span aria-hidden="true">&raquo;</span>
 									<span class="sr-only">Última Página</span>
 								</a>
@@ -169,7 +169,7 @@
 						<h4 class="font-italic">Arquivos</h4>
 						<ol class="list-unstyled mb-0">
 						{% for instance in archive_queryset %}
-							<li class="font-italic"><a href="{% url 'archive' instance.date_posted_year_month|date:'Y-m' %}">{{ instance.date_posted_year_month|date:"F" }} de {{ instance.date_posted_year_month|date:"Y" }} ({{ instance.num_posts }})</a></li>
+							<li class="font-italic"><a href="{{ request.scheme }}://{{ request.get_host }}{% url 'archive' instance.date_posted_year_month|date:'Y-m' %}">{{ instance.date_posted_year_month|date:"F" }} de {{ instance.date_posted_year_month|date:"Y" }} ({{ instance.num_posts }})</a></li>
 						{% endfor %}
 						</ol>
 					</div>

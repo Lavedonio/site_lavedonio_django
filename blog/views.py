@@ -23,6 +23,7 @@ class PostFilterListView(ListView):
         context["navbar_active"] = "blog"
         context["featured"] = False
         context["archive"] = True
+        context["archive_year_month_url"] = self.kwargs['year_month']
         context["year_month_date"] = year_month_now(self.kwargs['year_month'])
 
         queryset_archive = Post.objects.values('date_posted_year_month').annotate(num_posts=Count('date_posted_year_month'))

@@ -8,15 +8,15 @@
 	<meta name="keywords" content="Python,BI,Data Science,IA,Currículo,CV">
 	<meta name="author" content="Daniel Lavedonio de Lima">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	{% block canonical %}<link rel="canonical" href="{% url 'homepage' %}">{% endblock %}
+	{% block canonical %}<link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{% url 'homepage' %}">{% endblock %}
 
-	<link rel="icon" href="{% static 'img/favicon.ico' %}" type="image/x-icon"/>
-	<link rel="shortcut icon" href="{% static 'img/favicon.ico' %}" type="image/x-icon"/>
+	<link rel="icon" href="{{ request.scheme }}://{{ request.get_host }}{% static 'img/favicon.ico' %}" type="image/x-icon"/>
+	<link rel="shortcut icon" href="{{ request.scheme }}://{{ request.get_host }}{% static 'img/favicon.ico' %}" type="image/x-icon"/>
 
 	<!-- Bootstrap CSS -->
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
-	<link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+	<link rel="stylesheet" type="text/css" href="{{ request.scheme }}://{{ request.get_host }}{% static 'css/main.css' %}">
 
 	{% block stylesheet %}{% endblock %}
 
@@ -27,17 +27,17 @@
 	<header>
 		<!-- Fixed navbar -->
 		<nav id="navbar-custom" class="navbar navbar-expand-lg navbar-dark fixed-top bg-dark">
-			<a class="navbar-brand" href="{% url 'homepage' %}">Daniel Lavedonio de Lima</a>
+			<a class="navbar-brand" href="{{ request.scheme }}://{{ request.get_host }}{% url 'homepage' %}">Daniel Lavedonio de Lima</a>
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
 			<div class="collapse navbar-collapse" id="navbarCollapse">
 				<ul class="navbar-nav mr-auto">
 					<li class="nav-item{% if navbar_active == 'home' %} active{% endif %}">
-						<a class="nav-link" href="{% url 'homepage' %}">Home{% if navbar_active == 'home' %} <span class="sr-only">(current)</span>{% endif %}</a>
+						<a class="nav-link" href="{{ request.scheme }}://{{ request.get_host }}{% url 'homepage' %}">Home{% if navbar_active == 'home' %} <span class="sr-only">(current)</span>{% endif %}</a>
 					</li>
 					<li class="nav-item{% if navbar_active == 'about' %} active{% endif %}">
-						<a class="nav-link" href="{% url 'about' %}">Sobre{% if navbar_active == 'about' %} <span class="sr-only">(current)</span>{% endif %}</a>
+						<a class="nav-link" href="{{ request.scheme }}://{{ request.get_host }}{% url 'about' %}">Sobre{% if navbar_active == 'about' %} <span class="sr-only">(current)</span>{% endif %}</a>
 					</li>
 					<li class="nav-item">
 						<a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Projetos</a>
@@ -45,16 +45,16 @@
 					<li class="nav-item dropdown{% if navbar_active == 'projects' %} active{% endif %}">
 						<a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Projetos{% if navbar_active == 'projects' %} <span class="sr-only">(current)</span>{% endif %}</a>
 						<div class="dropdown-menu" aria-labelledby="dropdown01">
-							<a class="dropdown-item" href="{% url 'pong' %}">Pong</a>
-							<a class="dropdown-item" href="{% url 'snake' %}">Snake</a>
+							<a class="dropdown-item" href="{{ request.scheme }}://{{ request.get_host }}{% url 'pong' %}">Pong</a>
+							<a class="dropdown-item" href="{{ request.scheme }}://{{ request.get_host }}{% url 'snake' %}">Snake</a>
 							<a class="dropdown-item" href="#">Excel Autorun</a>
 						</div>
 					</li>
 					<li class="nav-item{% if navbar_active == 'blog' %} active{% endif %}">
-						<a class="nav-link" href="{% url 'blog' %}">Blog{% if navbar_active == 'contact' %} <span class="sr-only">(current)</span>{% endif %}</a>
+						<a class="nav-link" href="{{ request.scheme }}://{{ request.get_host }}{% url 'blog' %}">Blog{% if navbar_active == 'contact' %} <span class="sr-only">(current)</span>{% endif %}</a>
 					</li>
 					<li class="nav-item{% if navbar_active == 'contact' %} active{% endif %}">
-						<a class="nav-link" href="{% url 'contact' %}">Contato{% if navbar_active == 'contact' %} <span class="sr-only">(current)</span>{% endif %}</a>
+						<a class="nav-link" href="{{ request.scheme }}://{{ request.get_host }}{% url 'contact' %}">Contato{% if navbar_active == 'contact' %} <span class="sr-only">(current)</span>{% endif %}</a>
 					</li>
 				</ul>
 				{% if user.is_authenticated %}
@@ -63,7 +63,7 @@
 						<a class="nav-link" href="#">Dashboard{% if navbar_active == 'dashboard' %} <span class="sr-only">(current)</span>{% endif %}</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="{% url 'logout' %}">Logout</a>
+						<a class="nav-link" href="{{ request.scheme }}://{{ request.get_host }}{% url 'logout' %}">Logout</a>
 					</li>
 				</ul>
 				{% endif %}

@@ -3,7 +3,7 @@
 {% block canonical %}<meta name="robots" content="noindex">{% endblock %}
 
 {% block stylesheet %}
-	<link rel="stylesheet" type="text/css" href="{% static 'css/floating-labels.css' %}">
+	<link rel="stylesheet" type="text/css" href="{{ request.scheme }}://{{ request.get_host }}{% static 'css/floating-labels.css' %}">
 {% endblock %}
 
 {% block title_custom %}<title>Login - Daniel Lavedonio de Lima</title>{% endblock %}
@@ -22,7 +22,7 @@
 			</form>
 			<div class="border-top mt-3 pt-3">
 				<small class="text-muted">
-					Está perdido? <a class="ml-2" href="{% url 'homepage' %}">Volte para a página inicial</a>
+					Está perdido? <a class="ml-2" href="{{ request.scheme }}://{{ request.get_host }}{% url 'homepage' %}">Volte para a página inicial</a>
 				</small>
 			</div>
 		</div>

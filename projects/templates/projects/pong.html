@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block stylesheet %}
-	<link rel="stylesheet" type="text/css" href="{% static 'css/pong.css' %}">
+	<link rel="stylesheet" type="text/css" href="{{ request.scheme }}://{{ request.get_host }}{% static 'css/pong.css' %}">
 
 	<!-- Font pack: http://www.mattlag.com/bitfonts/ -->
 	<!-- Include fonts in Django: https://stackoverflow.com/questions/21346045/django-new-fonts -->
@@ -10,13 +10,13 @@
 	<style>
 		@font-face {
 			font-family: "Bit5x3";
-			src: url('{% static 'fonts/bit5x3/bit5x3.eot' %}'); /* IE9 Compat Modes */
-			src: url('{% static 'fonts/bit5x3/bit5x3.eot?#iefix' %}') format("embedded-opentype"), /* IE6-IE8 */
-				url('{% static 'fonts/bit5x3/bit5x3.otf' %}') format("opentype"), /* Open Type Font */
-				url('{% static 'fonts/bit5x3/bit5x3.svg' %}') format("svg"), /* Legacy iOS */
-				url('{% static 'fonts/bit5x3/bit5x3.ttf' %}') format("truetype"), /* Safari, Android, iOS */
-				url('{% static 'fonts/bit5x3/bit5x3.woff' %}') format("woff"), /* Modern Browsers */
-				url('{% static 'fonts/bit5x3/bit5x3.woff2' %}') format("woff2"); /* Modern Browsers */
+			src: url('{{ request.scheme }}://{{ request.get_host }}{% static 'fonts/bit5x3/bit5x3.eot' %}'); /* IE9 Compat Modes */
+			src: url('{{ request.scheme }}://{{ request.get_host }}{% static 'fonts/bit5x3/bit5x3.eot?#iefix' %}') format("embedded-opentype"), /* IE6-IE8 */
+				url('{{ request.scheme }}://{{ request.get_host }}{% static 'fonts/bit5x3/bit5x3.otf' %}') format("opentype"), /* Open Type Font */
+				url('{{ request.scheme }}://{{ request.get_host }}{% static 'fonts/bit5x3/bit5x3.svg' %}') format("svg"), /* Legacy iOS */
+				url('{{ request.scheme }}://{{ request.get_host }}{% static 'fonts/bit5x3/bit5x3.ttf' %}') format("truetype"), /* Safari, Android, iOS */
+				url('{{ request.scheme }}://{{ request.get_host }}{% static 'fonts/bit5x3/bit5x3.woff' %}') format("woff"), /* Modern Browsers */
+				url('{{ request.scheme }}://{{ request.get_host }}{% static 'fonts/bit5x3/bit5x3.woff2' %}') format("woff2"); /* Modern Browsers */
 			font-weight: normal;
 			font-style: normal;
 		}
@@ -62,5 +62,5 @@
 {% endblock %}
 
 {% block javascript %}
-	<script src="{% static 'js/pong.js' %}"></script>
+	<script src="{{ request.scheme }}://{{ request.get_host }}{% static 'js/pong.js' %}"></script>
 {% endblock %}

@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block stylesheet %}
-	<link rel="stylesheet" type="text/css" href="{% static 'css/snake.css' %}">
+	<link rel="stylesheet" type="text/css" href="{{ request.scheme }}://{{ request.get_host }}{% static 'css/snake.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -50,5 +50,5 @@
 {% endblock %}
 
 {% block javascript %}
-	<script src="{% static 'js/snake.js' %}"></script>
+	<script src="{{ request.scheme }}://{{ request.get_host }}{% static 'js/snake.js' %}"></script>
 {% endblock %}

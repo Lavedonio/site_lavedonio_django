@@ -14,7 +14,7 @@
 					<div class="card">
 						{# <img class="card-img-top" src="..." alt="Card image cap"> #}
 						<div class="card-body">
-							<h5 class="card-title"><a href="/projetos/{{ project.slug }}/">{{ project.title }}</a></h5>
+							<h5 class="card-title"><a href="{{ request.scheme }}://{{ request.get_host }}/projetos/{{ project.slug }}/">{{ project.title }}</a></h5>
 							<p class="card-text">{{ project.description }}</p>
 							<p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
 						</div>
@@ -31,7 +31,7 @@
 				<div class="row mt-5">
 					{% for project in projects %}
 					<div class="col-md-{% widthratio 12 projects.count 1 %} mb-3">
-						<h3 class="text-center font"><a href="/projetos/{{ project.slug }}/">{{ project.title }}</a></h3>
+						<h3 class="text-center font"><a href="{{ request.scheme }}://{{ request.get_host }}/projetos/{{ project.slug }}/">{{ project.title }}</a></h3>
 						<p class="text-justify">{{ project.description }}</p>
 					</div>
 					{% endfor %}
@@ -48,7 +48,7 @@
 					<div class="card">
 						{# <img class="card-img-top" src="..." alt="Card image cap"> #}
 						<div class="card-body">
-							<h5 class="card-title"><a href="{% url 'post' post.id %}">{{ post.title }}</a></h5>
+							<h5 class="card-title"><a href="{{ request.scheme }}://{{ request.get_host }}{% url 'post' post.id %}">{{ post.title }}</a></h5>
 							<p class="card-text">{{ post.subtitle }}</p>
 							<p class="card-text"><small class="text-muted"><a href="{{ request.scheme }}://{{ request.get_host }}{% url 'post' post.id %}">{{ request.scheme }}://{{ request.get_host }}{% url 'post' post.id %}</a></small></p>
 						</div>
@@ -65,7 +65,7 @@
 				<div class="row mt-5">
 					{% for post in posts %}
 					<div class="col-md-{% widthratio 12 posts.count 1 %} mb-3">
-						<h3 class="text-center font"><a href="{% url 'post' post.id %}">{{ post.title }}</a></h3>
+						<h3 class="text-center font"><a href="{{ request.scheme }}://{{ request.get_host }}{% url 'post' post.id %}">{{ post.title }}</a></h3>
 						<p class="text-justify">{{ post.subtitle }}</p>
 					</div>
 					{% endfor %}
@@ -79,12 +79,12 @@
 				<div class="col-md-6 mb-3">
 					<h3>Saiba mais sobre este site</h3>
 					<p>Meu nome é Daniel Lavedonio de Lima e sou o criador deste site.</p>
-					<p><a class="btn btn-primary btn-md" href="{% url 'about' %}" role="button">Saiba mais &raquo;</a></p>
+					<p><a class="btn btn-primary btn-md" href="{{ request.scheme }}://{{ request.get_host }}{% url 'about' %}" role="button">Saiba mais &raquo;</a></p>
 				</div>
 				<div class="col-md-6 mb-3">
 					<h3>Entre em contato</h3>
 					<p>Possui dúvidas, sugestões ou tem algum projeto que precisa de ajuda?</p>
-					<p><a class="btn btn-primary btn-md" href="{% url 'contact' %}" role="button">Entre em contato &raquo;</a></p>
+					<p><a class="btn btn-primary btn-md" href="{{ request.scheme }}://{{ request.get_host }}{% url 'contact' %}" role="button">Entre em contato &raquo;</a></p>
 				</div>
 			</div>
 {% endblock %}

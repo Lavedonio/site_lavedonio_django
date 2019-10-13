@@ -1,14 +1,14 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block canonical %}<link rel="canonical" href="{% url 'post' post.id %}">{% endblock %}
+{% block canonical %}<link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{% url 'post' post.id %}">{% endblock %}
 
 {% block stylesheet %}
-	<link rel="stylesheet" type="text/css" href="{% static 'css/blog.css' %}">
+	<link rel="stylesheet" type="text/css" href="{{ request.scheme }}://{{ request.get_host }}{% static 'css/blog.css' %}">
 
 	<!-- Full width image: https://stackoverflow.com/questions/12991351/css-force-image-resize-and-keep-aspect-ratio -->
 	<style>
 		div.main-image {
-			background-image: url("{{ post.main_image.url }}");
+			background-image: url("{{ request.scheme }}://{{ request.get_host }}{{ post.main_image.url }}");
 			background-size: cover;
 			background-repeat: no-repeat;
 			background-position: center;
@@ -18,7 +18,7 @@
 {% endblock %}
 
 {% block no_container_content %}
-		<!-- <img src="{{ post.main_image.url }}" class="main-img img-fluid w-100" alt="Article Image"> -->
+		<!-- <img src="{{ request.scheme }}://{{ request.get_host }}{{ post.main_image.url }}" class="main-img img-fluid w-100" alt="Article Image"> -->
 		<article class="mb-5">
 			<div class="main-image">
 				<div class="container mt-5 pt-5 pb-3 {% if post.light_title_text %} light-text{% endif %}">
@@ -30,18 +30,18 @@
 			<div class="container mt-4">
 				<div class="media content-section">
 
-					<img class="rounded-circle author-image mr-2" src="{% static 'eu.jpg' %}" alt="Foto de {{ post.author }}">
+					<img class="rounded-circle author-image mr-2" src="{{ request.scheme }}://{{ request.get_host }}{% static 'eu.jpg' %}" alt="Foto de {{ post.author }}">
 					<div class="media-body">
 						<div class="article-metadata">
-							<p class="mb-0">Publicado por <a href="{% url 'about' %}">{{ post.author }}</a></p>
+							<p class="mb-0">Publicado por <a href="{{ request.scheme }}://{{ request.get_host }}{% url 'about' %}">{{ post.author }}</a></p>
 							<p class="mt-1 mb-0"><small class="text-muted">Criado em {{ post.date_posted|date }} às {{ post.date_posted|time:"H:i" }}</small></p>
 							{% if not post.lt_one_minute_between_creation_and_update %}<p class="mt-0"><small class="text-muted">Última atualização em {{ post.last_updated|date }} às {{ post.last_updated|time:"H:i" }}</small></p>{% endif %}
 							{% if post.draft %}<span class="badge badge-danger">Rascunho</span>{% endif %}
 						</div>
 						{% if user.is_authenticated %}
 						<div class="mt-2">
-							<a href="{% url 'post-update' post.id %}" class="btn btn-primary btn-sm">Editar Publicação</a>
-							<a href="{% url 'post-delete' post.id %}" class="btn btn-danger btn-sm">Deletar Publicação</a>
+							<a href="{{ request.scheme }}://{{ request.get_host }}{% url 'post-update' post.id %}" class="btn btn-primary btn-sm">Editar Publicação</a>
+							<a href="{{ request.scheme }}://{{ request.get_host }}{% url 'post-delete' post.id %}" class="btn btn-danger btn-sm">Deletar Publicação</a>
 						</div>
 						{% endif %}
 					</div>
