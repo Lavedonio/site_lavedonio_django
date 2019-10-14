@@ -5,6 +5,7 @@
 {% endblock %}
 
 {% block content %}
+			{% if query %}
 			<h1 class="display-3 mt-5 mb-3 border-bottom">Resultados da pesquisa: <em>{{ query }}</em></h1>
 
 			{% if project_search %}
@@ -58,5 +59,9 @@
 				</div>
 			</div>
 			<hr>
+			{% endif %}
+			{% else %}
+			<h1 class="display-3 mt-5 mb-3 border-bottom">Ops, tem algo de estranho aí!</h1>
+			<h4>Parece que você não colocou nada na pesquisa. Tente pesquisar novamente, ou volte para a <a href="{{ request.scheme }}://{{ request.get_host }}{% url 'homepage' %}">homepage</a>.</h4>
 			{% endif %}
 {% endblock %}

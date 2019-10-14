@@ -1,3 +1,6 @@
+import operator
+from functools import reduce
+from django.db.models import Q
 from django.views.generic import TemplateView
 from django.views.generic.edit import FormView
 from django.urls import reverse_lazy
@@ -60,10 +63,24 @@ class SearchView(TemplateView):
 
     def get_queryset(self, **kwargs):
         query = self.request.GET.get('q')
-        post_search = Post.objects.filter(title__icontains=query).order_by("-date_posted")
-        project_search = Project.objects.filter(title__icontains=query).order_by("-id")
 
-        return post_search, project_search
+        if query:
+            print(query)
+            query_list = query.split()
+
+            post_search = Post.objects.filter(
+                reduce(operator.or_, (Q(title__icontains=q) for q in query_list)) |
+                reduce(operator.or_, (Q(subtitle__icontains=q) for q in query_list))
+            ).order_by("-date_posted")
+
+            project_search = Project.objects.filter(
+                reduce(operator.or_, (Q(title__icontains=q) for q in query_list)) |
+                reduce(operator.or_, (Q(description__icontains=q) for q in query_list))
+            ).order_by("-id")
+
+            return post_search, project_search
+        else:
+            return None, None
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
