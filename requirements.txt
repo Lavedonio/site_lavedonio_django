@@ -1,4 +1,4 @@
-Django==2.2.9
+Django==3.0.1
 django-crispy-forms==1.8.1
 django-widget-tweaks==1.4.5
 Pillow==6.2.1
