@@ -16,6 +16,8 @@
 	<!-- Bootstrap CSS -->
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
+	<link href="https://fonts.googleapis.com/css?family=Dancing+Script&display=swap" rel="stylesheet">
+
 	<link rel="stylesheet" type="text/css" href="{{ request.scheme }}://{{ request.get_host }}{% static 'css/main.css' %}">
 
 	{% block stylesheet %}{% endblock %}
@@ -25,52 +27,36 @@
 </head>
 <body class="d-flex flex-column h-100">
 	<header>
-		<!-- Fixed navbar -->
-		<nav id="navbar-custom" class="navbar navbar-expand-lg navbar-dark fixed-top bg-dark">
-			<a class="navbar-brand" href="{{ request.scheme }}://{{ request.get_host }}{% url 'homepage' %}">Daniel Lavedonio de Lima</a>
-			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-				<span class="navbar-toggler-icon"></span>
-			</button>
-			<div class="collapse navbar-collapse" id="navbarCollapse">
-				<ul class="navbar-nav mr-auto">
-					<li class="nav-item{% if navbar_active == 'home' %} active{% endif %}">
-						<a class="nav-link" href="{{ request.scheme }}://{{ request.get_host }}{% url 'homepage' %}">Home{% if navbar_active == 'home' %} <span class="sr-only">(current)</span>{% endif %}</a>
-					</li>
-					<li class="nav-item{% if navbar_active == 'about' %} active{% endif %}">
-						<a class="nav-link" href="{{ request.scheme }}://{{ request.get_host }}{% url 'about' %}">Sobre{% if navbar_active == 'about' %} <span class="sr-only">(current)</span>{% endif %}</a>
-					</li>
-					<!-- <li class="nav-item">
-						<a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Projetos</a>
-					</li> -->
-					<li class="nav-item dropdown{% if navbar_active == 'projects' %} active{% endif %}">
-						<a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Projetos{% if navbar_active == 'projects' %} <span class="sr-only">(current)</span>{% endif %}</a>
-						<div class="dropdown-menu" aria-labelledby="dropdown01">
-							<a class="dropdown-item" href="{{ request.scheme }}://{{ request.get_host }}{% url 'pong' %}">Pong</a>
-							<a class="dropdown-item" href="{{ request.scheme }}://{{ request.get_host }}{% url 'snake' %}">Snake</a>
-							<a class="dropdown-item" href="#">Excel Autorun</a>
-						</div>
-					</li>
-					<li class="nav-item{% if navbar_active == 'blog' %} active{% endif %}">
-						<a class="nav-link" href="{{ request.scheme }}://{{ request.get_host }}{% url 'blog' %}">Blog{% if navbar_active == 'contact' %} <span class="sr-only">(current)</span>{% endif %}</a>
-					</li>
-					<li class="nav-item{% if navbar_active == 'contact' %} active{% endif %}">
-						<a class="nav-link" href="{{ request.scheme }}://{{ request.get_host }}{% url 'contact' %}">Contato{% if navbar_active == 'contact' %} <span class="sr-only">(current)</span>{% endif %}</a>
-					</li>
-				</ul>
-				{% if user.is_authenticated %}
-				<ul class="navbar-nav mr-2">
-					<li class="nav-item{% if navbar_active == 'dashboard' %} active{% endif %}">
-						<a class="nav-link" href="#">Dashboard{% if navbar_active == 'dashboard' %} <span class="sr-only">(current)</span>{% endif %}</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="{{ request.scheme }}://{{ request.get_host }}{% url 'logout' %}">Logout</a>
-					</li>
-				</ul>
-				{% endif %}
-				<form class="form-inline mt-2 mt-md-0" action="{% url 'search' %}" method="GET" accept-charset="utf-8">
-					<input class="form-control mr-sm-2" type="text" name="q" placeholder="Pesquisar" aria-label="Pesquisar">
-					<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Pesquisar</button>
-				</form>
+		<nav class="navbar navbar-expand-md navbar-dark bg-dark custom-navbar">
+			<div class="container">
+				<a class="navbar-brand brand-font main-navbar-font" href="{{ request.scheme }}://{{ request.get_host }}{% url 'homepage' %}">Lavedonio</a>
+				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#vertical-navbar" aria-controls="vertical-navbar" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+
+				<div class="collapse navbar-collapse" id="vertical-navbar">
+					<ul class="navbar-nav ml-auto">
+						<li class="nav-item nav-list{% if navbar_active == 'home' %} active{% endif %}">
+							<a class="nav-link" href="{{ request.scheme }}://{{ request.get_host }}{% url 'homepage' %}">Home{% if navbar_active == 'home' %} <span class="sr-only">(current)</span>{% endif %}</a>
+						</li>
+						<li class="nav-item nav-list{% if navbar_active == 'about' %} active{% endif %}">
+							<a class="nav-link" href="{{ request.scheme }}://{{ request.get_host }}{% url 'about' %}">Sobre{% if navbar_active == 'about' %} <span class="sr-only">(current)</span>{% endif %}</a>
+						</li>
+						<li class="nav-item nav-list">
+							<a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Projetos</a>
+						</li>
+						<li class="nav-item nav-list{% if navbar_active == 'blog' %} active{% endif %}">
+							<a class="nav-link" href="{{ request.scheme }}://{{ request.get_host }}{% url 'blog' %}">Blog{% if navbar_active == 'contact' %} <span class="sr-only">(current)</span>{% endif %}</a>
+						</li>
+						<li class="nav-item nav-list{% if navbar_active == 'contact' %} active{% endif %}">
+							<a class="nav-link" href="{{ request.scheme }}://{{ request.get_host }}{% url 'contact' %}">Contato{% if navbar_active == 'contact' %} <span class="sr-only">(current)</span>{% endif %}</a>
+						</li>
+					</ul>
+					<!--<form class="form-inline ml-lg-3 ml-md-0 my-2">
+						<input class="form-control" type="text" placeholder="Search" aria-label="Pesquisar">
+						<button class="btn btn-outline-success ml-2" type="submit">Pesquisar</button>
+					</form> -->
+				</div>
 			</div>
 		</nav>
 	</header>
@@ -88,12 +74,43 @@
 		{% endif %}
 	</main>
 
-	<footer class="footer mt-auto py-3">
-		<div class="container text-center">
-			<span class="text-muted">Daniel Lavedonio de Lima - 2019</span>
-			<br>
-			<span class="text-muted">Este site é um projeto <i>open-source</i>. Veja o código fonte <a href="https://github.com/Lavedonio/site_lavedonio_django_br" target="_blank" rel="noopener noreferrer">aqui</a>.</span>
-			{% block credits %}{% endblock %}
+	<footer class="footer custom-footer mt-auto">
+		<div class="container text-center px-xl-5">
+
+			<div class="d-md-flex flex-row justify-content-between footer-menu">
+				<div class="d-block mt-md-0 brand-font">
+					<h5 class="footer-menu-brand">Daniel Lavedonio de Lima</h5>
+				</div>
+
+				<div class="d-block mt-3 mt-md-0 mx-md-2">
+					<h5 class="footer-menu-label">Mapa do Site</h5>
+					<a href="{{ request.scheme }}://{{ request.get_host }}{% url 'homepage' %}" class="d-block footer-menu-link">Home</a>
+					<a href="{{ request.scheme }}://{{ request.get_host }}{% url 'about' %}" class="d-block footer-menu-link">Sobre</a>
+					<a href="#" class="d-block footer-menu-link">Projetos</a>
+					<a href="{{ request.scheme }}://{{ request.get_host }}{% url 'blog' %}" class="d-block footer-menu-link">Blog</a>
+					<a href="{{ request.scheme }}://{{ request.get_host }}{% url 'contact' %}" class="d-block footer-menu-link">Contato</a>
+				</div>
+
+				<div class="d-block mt-3 mt-md-0 mx-md-2">
+					<h5 class="footer-menu-label">Redes Sociais</h5>
+					<a href="https://github.com/Lavedonio/" class="d-block footer-menu-link">GitHub</a>
+					<a href="https://www.linkedin.com/in/daniel-lavedonio-de-lima/" class="d-block footer-menu-link">LinkedIn</a>
+					<a href="https://twitter.com/Lavedonio/" class="d-block footer-menu-link">Twitter</a>
+				</div>
+
+				<div class="d-block mt-3 mt-md-0">
+					<h5 class="footer-menu-label">Pesquisar</h5>
+					<form class="mt-2" action="{% url 'search' %}" method="GET" accept-charset="utf-8">
+						<input class="form-control form-control-sm" type="text" name="q" placeholder="Pesquisar" aria-label="Pesquisar">
+						<br>
+						<button class="btn btn-sm btn-outline-success mt-n3" type="submit">Pesquisar</button>
+					</form>
+				</div>
+			</div>
+
+			{% block credits %}<span class="d-block mt-1 footer-info">Fotos desta página por <a href="https://unsplash.com/@jefflssantos?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Jefferson Santos</a> em <a href="https://unsplash.com/s/photos/python-programming-pip?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a></span>{% endblock %}
+			<span class="d-block mt-3 footer-info">Este site é um projeto <i>open-source</i>. Veja o código fonte <a href="https://github.com/Lavedonio/site_lavedonio_django_br" target="_blank" rel="noopener noreferrer">aqui</a>.</span>
+			<span class="d-block mt-1 footer-info">Daniel Lavedonio de Lima - 2020</span>
 		</div>
 	</footer>
 
@@ -102,7 +119,6 @@
 	<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
 	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-	<script src="{% static 'js/main.js' %}"></script>
 	{% block javascript %}{% endblock %}
 </body>
 </html>

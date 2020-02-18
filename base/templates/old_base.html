@@ -1,0 +1,108 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR" class="h-100">
+<head>
+	<!-- Required meta tags -->
+	<meta charset="UTF-8">
+	<meta name="description" content="Site pessoal">
+	<meta name="keywords" content="Python,BI,Data Science,IA,Currículo,CV">
+	<meta name="author" content="Daniel Lavedonio de Lima">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	{% block canonical %}<link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{% url 'homepage' %}">{% endblock %}
+
+	<link rel="icon" href="{{ request.scheme }}://{{ request.get_host }}{% static 'img/favicon.ico' %}" type="image/x-icon"/>
+	<link rel="shortcut icon" href="{{ request.scheme }}://{{ request.get_host }}{% static 'img/favicon.ico' %}" type="image/x-icon"/>
+
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+	<link rel="stylesheet" type="text/css" href="{{ request.scheme }}://{{ request.get_host }}{% static 'css/main.css' %}">
+
+	{% block stylesheet %}{% endblock %}
+
+	{% block title_custom %}<title>{% if title %}{{ title }} - {% endif %}Daniel Lavedonio de Lima</title>{% endblock %}
+
+</head>
+<body class="d-flex flex-column h-100">
+	<header>
+		<!-- Fixed navbar -->
+		<nav id="navbar-custom" class="navbar navbar-expand-lg navbar-dark fixed-top bg-dark">
+			<a class="navbar-brand" href="{{ request.scheme }}://{{ request.get_host }}{% url 'homepage' %}">Daniel Lavedonio de Lima</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarCollapse">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item{% if navbar_active == 'home' %} active{% endif %}">
+						<a class="nav-link" href="{{ request.scheme }}://{{ request.get_host }}{% url 'homepage' %}">Home{% if navbar_active == 'home' %} <span class="sr-only">(current)</span>{% endif %}</a>
+					</li>
+					<li class="nav-item{% if navbar_active == 'about' %} active{% endif %}">
+						<a class="nav-link" href="{{ request.scheme }}://{{ request.get_host }}{% url 'about' %}">Sobre{% if navbar_active == 'about' %} <span class="sr-only">(current)</span>{% endif %}</a>
+					</li>
+					<!-- <li class="nav-item">
+						<a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Projetos</a>
+					</li> -->
+					<li class="nav-item dropdown{% if navbar_active == 'projects' %} active{% endif %}">
+						<a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Projetos{% if navbar_active == 'projects' %} <span class="sr-only">(current)</span>{% endif %}</a>
+						<div class="dropdown-menu" aria-labelledby="dropdown01">
+							<a class="dropdown-item" href="{{ request.scheme }}://{{ request.get_host }}{% url 'pong' %}">Pong</a>
+							<a class="dropdown-item" href="{{ request.scheme }}://{{ request.get_host }}{% url 'snake' %}">Snake</a>
+							<a class="dropdown-item" href="#">Excel Autorun</a>
+						</div>
+					</li>
+					<li class="nav-item{% if navbar_active == 'blog' %} active{% endif %}">
+						<a class="nav-link" href="{{ request.scheme }}://{{ request.get_host }}{% url 'blog' %}">Blog{% if navbar_active == 'contact' %} <span class="sr-only">(current)</span>{% endif %}</a>
+					</li>
+					<li class="nav-item{% if navbar_active == 'contact' %} active{% endif %}">
+						<a class="nav-link" href="{{ request.scheme }}://{{ request.get_host }}{% url 'contact' %}">Contato{% if navbar_active == 'contact' %} <span class="sr-only">(current)</span>{% endif %}</a>
+					</li>
+				</ul>
+				{% if user.is_authenticated %}
+				<ul class="navbar-nav mr-2">
+					<li class="nav-item{% if navbar_active == 'dashboard' %} active{% endif %}">
+						<a class="nav-link" href="#">Dashboard{% if navbar_active == 'dashboard' %} <span class="sr-only">(current)</span>{% endif %}</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="{{ request.scheme }}://{{ request.get_host }}{% url 'logout' %}">Logout</a>
+					</li>
+				</ul>
+				{% endif %}
+				<form class="form-inline mt-2 mt-md-0" action="{% url 'search' %}" method="GET" accept-charset="utf-8">
+					<input class="form-control mr-sm-2" type="text" name="q" placeholder="Pesquisar" aria-label="Pesquisar">
+					<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Pesquisar</button>
+				</form>
+			</div>
+		</nav>
+	</header>
+	{% block before_main %}{% endblock %}
+
+	<!-- Begin page content -->
+	<main role="main" class="flex-shrink-0">
+		{% block before_container %}{% endblock %}
+		{% if no_container %}
+		{% block no_container_content %}{% endblock %}
+		{% else %}
+		<div class="container">
+			{% block content %}{% endblock %}
+		</div>
+		{% endif %}
+	</main>
+
+	<footer class="footer mt-auto py-3">
+		<div class="container text-center">
+			<span class="text-muted">Daniel Lavedonio de Lima - 2019</span>
+			<br>
+			<span class="text-muted">Este site é um projeto <i>open-source</i>. Veja o código fonte <a href="https://github.com/Lavedonio/site_lavedonio_django_br" target="_blank" rel="noopener noreferrer">aqui</a>.</span>
+			{% block credits %}{% endblock %}
+		</div>
+	</footer>
+
+	<!-- Optional JavaScript -->
+	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+	<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+	<script src="{% static 'js/main.js' %}"></script>
+	{% block javascript %}{% endblock %}
+</body>
+</html>

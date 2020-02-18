@@ -1,47 +1,57 @@
-body {
-  background-color: #F5F5F5;
+.custom-navbar {
+	min-height: 9vh;
+	background-color: #000124!important;
+	color: #CFCFCF;
 }
 
-main > .container {
-  padding: 60px 15px 0;
+.brand-font {
+	font-family: 'Dancing Script', cursive;
 }
 
-/*#main-background {
-	background-color: #001B31!important;
-}*/
-
-#navbar-dashboard a {
-  color: #888888!important;
+.main-navbar-font {
+	font-size: 40px;
+	line-height: 40px;
 }
 
-#navbar-dashboard a:hover {
-  color: #C0C0C0!important;
+.nav-list {
+	padding-left: 10px;
+	padding-right: 10px;
 }
 
-#navbar-custom {
-  background-color: #000B1F!important;
+.custom-footer {
+	background-color: #222326;
+	padding-top: 50px;
+	padding-bottom: 25px;
 }
 
-/* for dropdown only - change the color of dropdown */
-#navbar-custom .dropdown-menu {
-  background-color: #000B1F!important;
+.footer-menu {
+	margin-bottom: 40px;
+	text-align: left;
 }
 
-#navbar-custom .dropdown-item {
-  color: #888888;
+.footer-menu-brand {
+	color: #E7F6FF;
+	font-size: 26px;
+	line-height: 40px;
 }
 
-#navbar-custom .dropdown-item:hover,
-#navbar-custom .dropdown-item:focus {
-  color: #C0C0C0!important;
-  background-color: rgba(40,65,110,.5);
+.footer-menu-label {
+	color: #E7F6FF;
+	font-size: 17px;
+	line-height: 1.2;
+	margin-bottom: 15px;
 }
 
-.footer {
-  background-color: #000B1F;
+.footer-menu-link {
+	/* color: #004CFF; */
+	font-size: 14px;
+	line-height: 20px;
+	padding-bottom: 10px;
 }
 
-.footer > .container {
-  padding-right: 15px;
-  padding-left: 15px;
+.footer-info {
+	color: #E7F6FF;
+	font-size: 15px;
+	line-height: 1.5;
 }
+
