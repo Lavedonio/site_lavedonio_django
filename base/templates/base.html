@@ -16,7 +16,7 @@
 	<!-- Bootstrap CSS -->
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
-	<link href="https://fonts.googleapis.com/css?family=Dancing+Script&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Dancing+Script|Poppins&display=swap" rel="stylesheet">
 
 	<link rel="stylesheet" type="text/css" href="{{ request.scheme }}://{{ request.get_host }}{% static 'css/main.css' %}">
 
@@ -62,8 +62,9 @@
 	</header>
 	{% block before_main %}{% endblock %}
 
-	<!-- Begin page content -->
+	<!-- Page content -->
 	<main role="main" class="flex-shrink-0">
+		{% block main_section %}{% endblock %}
 		{% block before_container %}{% endblock %}
 		{% if no_container %}
 		{% block no_container_content %}{% endblock %}
@@ -77,7 +78,7 @@
 	<footer class="footer custom-footer mt-auto">
 		<div class="container text-center px-xl-5">
 
-			<div class="d-md-flex flex-row justify-content-between footer-menu">
+			<div class="d-md-flex flex-row justify-content-between text-center text-md-left footer-menu">
 				<div class="d-block mt-md-0 brand-font">
 					<h5 class="footer-menu-brand">Daniel Lavedonio de Lima</h5>
 				</div>
@@ -108,7 +109,7 @@
 				</div>
 			</div>
 
-			{% block credits %}<span class="d-block mt-1 footer-info">Fotos desta página por <a href="https://unsplash.com/@jefflssantos?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Jefferson Santos</a> em <a href="https://unsplash.com/s/photos/python-programming-pip?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a></span>{% endblock %}
+			{% block credits %}{% endblock %}
 			<span class="d-block mt-3 footer-info">Este site é um projeto <i>open-source</i>. Veja o código fonte <a href="https://github.com/Lavedonio/site_lavedonio_django_br" target="_blank" rel="noopener noreferrer">aqui</a>.</span>
 			<span class="d-block mt-1 footer-info">Daniel Lavedonio de Lima - 2020</span>
 		</div>
