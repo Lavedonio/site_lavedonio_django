@@ -1,3 +1,22 @@
+h1 {
+	font-weight: bold;
+	font-size: 60px;
+	font-size: 3.75rem;
+	line-height: 1.3;
+}
+
+h2 {
+	font-weight: bold;
+	font-size: 38px;
+	font-size: 2.375rem;
+	line-height: 1.2;
+}
+
+h2.regular-bootstrap {
+	font-weight: 500;
+	font-size: 2em;
+}
+
 .custom-navbar {
 	min-height: 9vh;
 	background-color: #000124!important;
@@ -26,7 +45,6 @@
 
 .footer-menu {
 	margin-bottom: 40px;
-	text-align: left;
 }
 
 .footer-menu-brand {
@@ -55,3 +73,85 @@
 	line-height: 1.5;
 }
 
+.line {
+	border: 2px solid #333;
+	width: 100px;
+	margin-top: 23px;
+	margin-bottom: 20px;
+	margin-left: 5px;
+}
+
+.hero-main {
+	margin: 0px;
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: center;
+	min-height: 91vh;
+}
+
+.hero-main-card {
+	font-family: 'Poppins', arial, tahoma, sans-serif;
+	padding: 18px 40px;
+	color: #E7F6FF;
+	background-color: rgba(0, 0, 0, 0.71);
+	-webkit-box-shadow: 10px 10px 20px 1px rgba(255, 255, 255, 0.19);
+	-moz-box-shadow: 10px 10px 20px 1px rgba(255, 255, 255, 0.19);
+	box-shadow: 10px 10px 20px 1px rgba(255, 255, 255, 0.19);
+}
+
+.project-post {
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: center;
+	font-family: 'Poppins', arial, tahoma, sans-serif;
+}
+
+.project-display {
+	padding: 20px 15px;
+	color: #E7F6FF;
+	max-width: 400px;
+	background-color: rgba(0, 0, 0, 0.71);
+	-webkit-box-shadow: 14px 14px 13px 4px rgba(81, 84, 85, 0.22);
+	-moz-box-shadow: 14px 14px 13px 4px rgba(81, 84, 85, 0.22);
+	box-shadow: 14px 14px 13px 4px rgba(81, 84, 85, 0.22);
+}
+
+.project-display > h3 {
+	font-weight: normal;
+}
+
+.project-display > p {
+	font-size: 14px;
+	font-size: 0.8750rem;
+}
+
+.image-container {
+	width: 100%;
+	height: auto;
+}
+
+.image-container > img {
+	max-width: 100%;
+	height: auto;
+}
+
+.post-display {
+	padding: 20px 15px;
+	max-width: 500px;
+	background-color: white;
+	-webkit-box-shadow: 11px 11px 14px -5px black;
+	-moz-box-shadow: 11px 11px 14px -5px black;
+	box-shadow: 11px 11px 14px -5px black;
+}
+
+.project-display > h3 {
+	font-weight: normal;
+}
+
+.about-contact {
+	font-family: 'Poppins', arial, tahoma, sans-serif;
+}
+
+.wrapper-content {
+	min-height: 100px;
+}

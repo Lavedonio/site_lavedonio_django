@@ -1,61 +1,79 @@
 {% extends 'base.html' %}
-{% block content %}
-			<div class="welcome mt-5" style="margin-bottom: 10rem">
-				<h1 class="display-1">Bem vindo!</h1>
-				<h2 class="font-weight-light"><small>Este é o meu site, onde eu coloco meus projetos pessoais e mantenho um blog.</small></h2>
+{% load static %}
+{% block main_section %}
+		<!-- Hero section -->
+		<section class="hero-main d-flex align-items-stretch" style="background-image: url({% static 'img/yancy-min-code-unsplash.jpg' %});">
+			<div class="container d-flex align-items-center my-sm-0 my-5">
+				<div class="d-block hero-main-card" style="width: 100%;">
+					<h1>Olá!</h1>
+					<div class="line" style="border-color: #E7F6FF;"></div>
+					<h2 class="mb-4 regular-bootstrap">Meu nome é Daniel e eu sou estudante de engenharia elétrica, aspirante a cientista de dados e um curioso por natureza.</h2>
+					<h2 class="regular-bootstrap">Sejam bem vindos ao meu site!</h2>
+				</div>
 			</div>
+		</section>
 
-			{% if projects %}
-			<hr>
-			<div class="projects mt-3 mb-5">
-				<h2 class="display-4">Projetos em destaque</h2>
-				<div class="card-deck mt-5">
+		{% if projects %}
+		<!-- Featured Projects -->
+		<section class="project-post d-flex align-items-stretch" style="background-image: url({% static 'img/jeff-sheldon-project-unsplash.jpg' %}); background-attachment: fixed;">
+			<div class="container">
+				<h2 class="mt-5" style="color: white;">Projetos em destaque</h2>
+				<div class="line" style="border-color: white;"></div>
+				<div class="row d-md-flex flew-row justify-content-md-around justify-content-center">
 					{% for project in projects %}
-					<div class="card border-primary bg-dark text-light">
-						{# <img class="card-img-top" src="..." alt="Card image cap"> #}
-						<div class="card-body">
-							<h3 class="card-title text-left"><a class="text-primary" href="{{ request.scheme }}://{{ request.get_host }}/projetos/{{ project.slug }}/">{{ project.title }}</a></h3>
-							<hr style="border-color: inherit">
-							<p class="card-text">{{ project.description }}</p>
-							<p class="card-text"><small class="text-muted">Downloads: {{ project.downloads }}</small></p>
-						</div>
+					<div class="project-display d-flex flex-column mx-2 my-4">
+						<h3 class="regular-bootstrap pl-2">{{ project.title }}</h3>
+						<div class="image-container my-2"><img class="img-fluid" src="" alt=""></div>
+						<p class="my-auto">{{ project.description }}</p>
+						<p class="mx-0 mb-0 mt-3"><a class="btn btn-primary btn-sm" href="{{ request.scheme }}://{{ request.get_host }}/projetos/{{ project.slug }}/" role="button">Ver mais &raquo;</a></p>
 					</div>
 					{% endfor %}
 				</div>
 			</div>
-			{% endif %}
+		</section>
+		{% endif %}
 
-			{% if posts %}
-			<hr>
-			<div class="blog-posts mt-3 mb-5">
-				<h2 class="display-4">Publicações do blog em destaque</h2>
-				<div class="card-deck mt-5">
+		{% if posts %}
+		<!-- Featured Blog Posts -->
+		<section class="project-post d-flex align-items-stretch" style="background-image: url({% static 'img/emile-perron-code-unsplash.jpg' %});">
+			<div class="container">
+				<h2 class="mt-5">Publicações em destaque</h2>
+				<div class="line"></div>
+				<div class="row d-md-flex flew-row justify-content-md-around justify-content-center">
 					{% for post in posts %}
-					<div class="card bb-0">
-						<img class="card-img-top" style="object-fit: cover;" src="{{ request.scheme }}://{{ request.get_host }}{{ post.main_image.url }}" height="200px" alt="Imagem da publicação">
-						<div class="card-body">
-							<h3 class="card-title"><a href="{{ request.scheme }}://{{ request.get_host }}{% url 'post' post.id %}">{{ post.title }}</a></h3>
-							<p class="card-text">{{ post.subtitle }}</p>
-						</div>
-						<div class="card-footer bg-transparent"><p class="card-text"><a class="btn btn-sm btn-primary" href="{{ request.scheme }}://{{ request.get_host }}{% url 'post' post.id %}">Leia essa publicação</a></p></div>
+					<div class="post-display d-flex flex-column mx-0 my-4">
+						<h3 class="regular-bootstrap pl-1">{{ post.title }}</h3>
+						<div class="image-container my-2"><img class="img-fluid" src="{{ request.scheme }}://{{ request.get_host }}{{ post.main_image.url }}" alt="Imagem da publicação"></div>
+						<p class="my-auto">{{ post.subtitle }}</p>
+						<p class="mx-0 mb-0 mt-3"><a class="btn btn-primary btn-sm" href="{{ request.scheme }}://{{ request.get_host }}{% url 'post' post.id %}" role="button">Continuar lendo &raquo;</a></p>
 					</div>
 					{% endfor %}
 				</div>
 			</div>
-			{% endif %}
+		</section>
+		{% endif %}
 
-			<hr>
-
-			<div class="row mt-5 mb-5">
-				<div class="col-md-6 mb-3">
-					<h3>Saiba mais sobre este site</h3>
-					<p>Meu nome é Daniel Lavedonio de Lima e sou o criador deste site.</p>
-					<p><a class="btn btn-primary btn-md" href="{{ request.scheme }}://{{ request.get_host }}{% url 'about' %}" role="button">Saiba mais &raquo;</a></p>
-				</div>
-				<div class="col-md-6 mb-3">
-					<h3>Entre em contato</h3>
-					<p>Possui dúvidas, sugestões ou tem algum projeto que precisa de ajuda?</p>
-					<p><a class="btn btn-primary btn-md" href="{{ request.scheme }}://{{ request.get_host }}{% url 'contact' %}" role="button">Entre em contato &raquo;</a></p>
+		<!-- About & Contact -->
+		<section class="about-contact mb-5">
+			<div class="container">
+				<div class="row">
+					<div class="col-12 col-md-6 mt-4 mt-md-5 p-4 p-md-0 pt-md-4 pr-md-4 p-lg-4">
+						<h2>Saiba mais</h2>
+						<div class="pt-3 wrapper-content">
+							<p>Conheça mais sobre quem eu sou e o que eu faço atualmente.</p>
+						</div>
+						<p><a class="btn btn-primary btn-md" href="{{ request.scheme }}://{{ request.get_host }}{% url 'about' %}" role="button">Quero saber mais &raquo;</a></p>
+					</div>
+					<div class="col-12 col-md-6 mt-md-5 p-4 p-md-0 pt-md-4 pl-md-4 p-lg-4">
+						<h2>Entre em contato</h2>
+						<div class="pt-3 wrapper-content">
+							<p>Quer muito dizer algo? Dê um oi por meio do formulário ou pelas redes sociais.</p>
+						</div>
+						<p><a class="btn btn-primary btn-md" href="{{ request.scheme }}://{{ request.get_host }}{% url 'contact' %}" role="button">Contato &raquo;</a></p>
+					</div>
 				</div>
 			</div>
+		</section>
 {% endblock %}
+
+{% block credits %}<span class="d-block mt-1 footer-info">Fotos desta página por <a href="https://unsplash.com/@yancymin?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Yancy Min</a>{% if projects and posts %},{% elif projects %} e{% endif %}{% if projects %} <a href="https://unsplash.com/@ugmonk?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Jeff Sheldon</a>{% endif %}{% if posts %} e <a href="https://unsplash.com/@emilep?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Émile Perron</a>{% endif %} em <a href="https://unsplash.com/s/photos/code?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a></span>{% endblock %}
