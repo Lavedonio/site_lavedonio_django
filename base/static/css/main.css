@@ -81,29 +81,36 @@ h2.regular-bootstrap {
 	margin-left: 5px;
 }
 
-.hero-main {
-	margin: 0px;
+.font-poppins {
+	font-family: 'Poppins', arial, tahoma, sans-serif;
+}
+
+.light-color-text {
+	color: #E7F6FF;
+}
+
+.light-text {
+	font-weight: normal;
+}
+
+.background-img {
 	background-size: cover;
 	background-repeat: no-repeat;
 	background-position: center;
+}
+
+.hero-main {
+	margin: 0px;
 	min-height: 91vh;
 }
 
 .hero-main-card {
-	font-family: 'Poppins', arial, tahoma, sans-serif;
 	padding: 18px 40px;
 	color: #E7F6FF;
 	background-color: rgba(0, 0, 0, 0.71);
 	-webkit-box-shadow: 10px 10px 20px 1px rgba(255, 255, 255, 0.19);
 	-moz-box-shadow: 10px 10px 20px 1px rgba(255, 255, 255, 0.19);
 	box-shadow: 10px 10px 20px 1px rgba(255, 255, 255, 0.19);
-}
-
-.project-post {
-	background-size: cover;
-	background-repeat: no-repeat;
-	background-position: center;
-	font-family: 'Poppins', arial, tahoma, sans-serif;
 }
 
 .project-display {
@@ -148,10 +155,23 @@ h2.regular-bootstrap {
 	font-weight: normal;
 }
 
-.about-contact {
-	font-family: 'Poppins', arial, tahoma, sans-serif;
-}
-
 .wrapper-content {
 	min-height: 100px;
+}
+
+.main-img-padding {
+	padding-top: 7.5rem;
+	padding-bottom: 8rem;
+}
+
+.overlap-container {
+	background-color: white;
+	margin-top: -7.5rem;
+	border-radius: 3px;
+}
+
+.contact-secondary-headings {
+	font-size: 24px;
+	font-size: 1.5rem;
+	line-height: 1.2;
 }

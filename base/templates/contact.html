@@ -7,26 +7,48 @@
 	<link rel="stylesheet" type="text/css" href="{{ request.scheme }}://{{ request.get_host }}{% static 'css/floating-labels.css' %}">
 {% endblock %}
 
-{% block content %}
-			<h1 class="mt-5 display-4">Contato</h1>
+{% block main_section %}
+		<section class="background-img font-poppins light-color-text d-flex align-items-stretch" style="background-image: url({% static 'img/carlyson-oliveira-avenida-paulista-unsplash.jpg' %});">
+			<div class="container main-img-padding px-0 d-flex align-items-end">
+				<div class="d-block">
+					<h1 class="light-text">Contato</h1>
+					<div class="line" style="border-color: #E7F6FF;"></div>
+				</div>
+			</div>
+		</section>
+		<section>
+			<div class="container overlap-container mb-5">
+				<div class="p-3 row">
+					<div class="col-12 col-md-7 col-lg-8">
+						<h3 class="light-text mb-3 contact-secondary-headings">Entre em contato pelo formulário...</h3>
+						<form method="POST" class="mb-5" style="max-width: 600px;">
+							{% csrf_token %}
+							<!-- <fieldset class="form-group">
+								{{ form|crispy }}
+							</fieldset> -->
+							{% include 'includes/bootstrap4_form_floating-labels.html' with form=form %}
+							<button class="btn btn-primary btn-md" type="submit">Enviar</button>
+						</form>
+					</div>
+					<div class="col-12 col-md-5 col-lg-4 pl-xl-4">
+						<h3 class="light-text text-left mb-3 ml-xl-n4 contact-secondary-headings">... ou pelas redes sociais</h3>
 
-			<h2 class="mt-3"><small>Procure-me nestes links:</small></h2>
-			<ul id="social-networks" class="list-inline mt-4">
-			  <li class="list-inline-item"><a href="https://www.linkedin.com/in/daniel-lavedonio-de-lima/"><img src="{% static 'img/linkedin.svg' %}" alt="Linked In" height="32px" width="32px"></a></li>
-				<li class="list-inline-item"><a href="https://twitter.com/Lavedonio/"><img src="{% static 'img/twitter.svg' %}" alt="Twitter" height="32px" width="32px"></a></li>
-				<li class="list-inline-item"><a href="https://github.com/Lavedonio/"><img src="{% static 'img/github.svg' %}" alt="GitHub" height="32px" width="32px"></a></li>
-			</ul>
-			<h2 class="mt-5 mb-4"><small>Ou me mande uma mensagem diretamente:</small></h2>
-			<form method="POST" class="mb-5">
-				{% csrf_token %}
-				<!-- <fieldset class="form-group">
-					{{ form|crispy }}
-				</fieldset> -->
-				{% include 'includes/bootstrap4_form_floating-labels.html' with form=form %}
-				<button class="btn btn-primary btn-lg" type="submit">Enviar</button>
-			</form>
+						<div class="mt-1 text-center text-md-left"><a href="https://github.com/Lavedonio/"><img src="{% static 'img/github.svg' %}" alt="GitHub" height="32px" width="32px"></a></div>
+
+						<div class="mt-2 text-center text-md-left"><a href="https://twitter.com/Lavedonio?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-size="large" data-lang="pt" data-show-count="false">Follow @Lavedonio</a></div>
+
+						<div class="LI-profile-badge mt-1 text-center text-md-left"  data-version="v1" data-size="medium" data-locale="pt_BR" data-type="vertical" data-theme="light" data-vanity="daniel-lavedonio-de-lima"><a class="LI-simple-link" href='https://br.linkedin.com/in/daniel-lavedonio-de-lima?trk=profile-badge'>Daniel Lavedonio de Lima</a></div>
+					</div>
+				</div>
+			</div>
+		</section>
 {% endblock %}
 
 {% block credits %}
-			<div class="text-muted"><em>Ícones de redes sociais feitos por <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> no <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> são licenciados pela <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank" rel="noopener noreferrer">CC 3.0 BY</a></em></div>
+			<span class="d-block mt-1 footer-info">Foto desta página por <a href="https://unsplash.com/@carlyson?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Carlyson Oliveira</a> em <a href="https://unsplash.com/s/photos/avenida-paulista?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a></span>
+{% endblock %}
+
+{% block javascript %}
+	<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+	<script type="text/javascript" src="https://platform.linkedin.com/badges/js/profile.js" async defer></script>
 {% endblock %}
