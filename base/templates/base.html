@@ -46,7 +46,7 @@
 							<a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Projetos</a>
 						</li>
 						<li class="nav-item nav-list{% if navbar_active == 'blog' %} active{% endif %}">
-							<a class="nav-link" href="{{ request.scheme }}://{{ request.get_host }}{% url 'blog' %}">Blog{% if navbar_active == 'contact' %} <span class="sr-only">(current)</span>{% endif %}</a>
+							<a class="nav-link" href="{{ request.scheme }}://{{ request.get_host }}{% url 'blog' %}">Blog{% if navbar_active == 'blog' %} <span class="sr-only">(current)</span>{% endif %}</a>
 						</li>
 						<li class="nav-item nav-list{% if navbar_active == 'contact' %} active{% endif %}">
 							<a class="nav-link" href="{{ request.scheme }}://{{ request.get_host }}{% url 'contact' %}">Contato{% if navbar_active == 'contact' %} <span class="sr-only">(current)</span>{% endif %}</a>
