@@ -17,89 +17,69 @@
 	</style>
 {% endblock %}
 
-{% block before_main %}
-	{% if featured and page_obj.number == 1 %}
-	<section class="container featured-articles">
-		<h1 class="display-2 font-italic mb-3 border-bottom">Em destaque</h1>
-		<article class="jumbotron row p-3 p-img pr-lg-0 text-white rounded bg-dark">
-			<div class="col-md-6 px-0 pr-lg-2 d-flex flex-column">
-				<h1 class="display-4 font-italic">{{ post_most_featured.title }}</h1>
-				<p class="lead my-3">{{ post_most_featured.subtitle }}</p>
-				<p class="lead mb-0"><a href="{{ request.scheme }}://{{ request.get_host }}{% url 'post' post_most_featured.id %}" class="text-white font-weight-bold">Continue lendo...</a></p>
-			</div>
-			<div class="col-md-6 px-0 d-none d-lg-block most-featured-image most-featured-margin rounded-right">
-				<p class="d-none">Imagem mais destacada</p>
-			</div>
-		</article>
-
-		<div class="row mb-2">
-			{% for post_featured in posts_featured %}
-			<article class="col-md-6">
-				<div class="card rounded flex-md-row mb-4 shadow-sm h-md-300">
-					<div class="card-body d-flex flex-column align-items-start">
-						<strong class="d-inline-block mb-2 text-primary">Mundo</strong>
-						<h3 class="mb-0">
-							<a class="text-dark" href="{{ request.scheme }}://{{ request.get_host }}{% url 'post' post_featured.id %}">{{ post_featured.title }}</a>
-						</h3>
-						<div class="mb-1 text-muted">{{ post_featured.date_posted }}</div>
-						<p class="card-text mb-auto">{{ post_featured.subtitle }}</p>
-						<a href="{{ request.scheme }}://{{ request.get_host }}{% url 'post' post_featured.id %}">Continue lendo</a>
-					</div>
-					<div class="crop flex-auto d-none d-lg-block rounded-right"><img class="card-img-right" src="{{ request.scheme }}://{{ request.get_host }}{{ post_featured.main_image.url }}" style="margin-left: {% widthratio post_featured.main_image.width post_featured.main_image.height -150 %}px; padding-left: 100px;" alt="Imagem Principal da Publicação em destaque"></div>
+{% block main_section %}
+		<section class="main-section{% if archive or page_obj.has_previous %}-filtered{% endif %} background-img font-poppins light-color-text d-flex align-items-stretch" style="background-image: linear-gradient(63deg, rgba(40, 34, 62, 0.8) 0%, rgba(255, 255, 255, 0.3) 100%), url({% static 'img/ali-yahya-notebook-unsplash.jpg' %});">
+			<div class="container main-img-padding px-0 pb-2 d-flex align-items-end">
+				<div class="d-block">
+					<h1 class="light-text">Blog</h1>
+					<div class="line" style="border-color: #E7F6FF;"></div>
+					<p class="light-text">Uma coleção de projetos, ferramentas úteis e rabiscos de pensamentos.</p>
 				</div>
-			</article>
-			{% endfor %}
-		</div>
-	</section>
-	{% endif %}
-{% endblock %}
-
-{% block content %}
-			<div class="row">
-				<div class="col-md-8 blog-main">
-					{% if archive %}
-					<h1 class="pb-3 mb-2 display-2">Blog</h1>
-					<h2 class="pb-3 mb-4 border-bottom">Publicações de {{ year_month_date|date:"F" }} de {{ year_month_date|date:"Y" }}</h2>
-					{% else %}<h1 class="pb-3 mb-4 display-2 border-bottom">Blog</h1>{% endif %}
-					{% if user.is_authenticated %}
-					<div class="border rounded border-dark mb-4 p-3">
-						<h6 class="mb-2"> Controles</h6>
-						<a href="{{ request.scheme }}://{{ request.get_host }}{% url 'post-create' %}" class="btn btn-info">Nova Publicação</a>
+			</div>
+		</section>
+		{% if not archive and not page_obj.has_previous %}
+		<section class="font-poppins mb-3">
+			<div class="container px-0">
+				<h2 class="light-text light-color-text">Publicações em destaque</h2>
+				<div class="light-line" style="border-color: #E7F6FF;"></div>
+				<div class="row d-md-flex flew-row justify-content-md-around justify-content-center">
+					{% for post_featured in posts_featured %}
+					<div class="post-display d-flex flex-column mx-0 my-4">
+						<h3 class="regular-bootstrap pl-1">{{ post_featured.title }}</h3>
+						<div class="image-container my-2"><img class="img-fluid" src="{{ request.scheme }}://{{ request.get_host }}{{ post_featured.main_image.url }}" alt="Imagem da publicação"></div>
+						<p class="my-auto">{{ post_featured.subtitle }}</p>
+						<p class="mx-0 mb-0 mt-3"><a class="btn btn-primary btn-sm" href="{{ request.scheme }}://{{ request.get_host }}{% url 'post' post_featured.id %}" role="button">Continuar lendo &raquo;</a></p>
 					</div>
-					{% endif %}
+					{% endfor %}
+				</div>
+			</div>
+		</section>
+		{% endif %}
 
+		<section class="container mt-5 px-0 px-md-1">
+			<div class="row">
+				<div class="col-12 col-md-8 col-lg-9">
+					<h2 class="light-text font-poppins">Publicações{% if archive %} de {{ year_month_date|date:"F" }} de {{ year_month_date|date:"Y" }}{% endif %}{% if page_obj.has_previous %} (Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}){% endif %}</h2>
+					<div class="light-line mb-5"></div>
 					{% for post in page_obj %}
-					<!-- <img src="{{ request.scheme }}://{{ request.get_host }}{{ post.main_image.url }}" class="main-img img-fluid w-100" alt="Article Image"> -->
-					<article class="mb-5 rounded article-list blog-post">
-						<div class="rounded-top" style="background-image: url('{{ request.scheme }}://{{ request.get_host }}{{ post.main_image.url }}'); background-size: cover; background-repeat: no-repeat; background-position: center; min-height: 75%;">
-							<div class="container pt-5 pb-3 {% if post.light_title_text %} light-text{% endif %}">
-								<h1 class="header-img display-4"><a class="title" href="{{ request.scheme }}://{{ request.get_host }}{% url 'post' post.id %}">#{{ post.id }} {{ post.title }}</a></h1>
-								<h2 class="h4 article-title"><a class="title" href="{{ request.scheme }}://{{ request.get_host }}{% url 'post' post.id %}">{{ post.subtitle }}</a></h2>
-							</div>
-						</div>
-						<div class="container mt-4">
-							<div class="media content-section">
-
-								<img class="rounded-circle author-image mr-2" src="{{ request.scheme }}://{{ request.get_host }}{% static 'eu.jpg' %}" alt="Foto de {{ post.author }}">
-								<div class="media-body">
-									<div class="article-metadata">
-										<p class="mb-0">Publicado por <a href="{{ request.scheme }}://{{ request.get_host }}{% url 'about' %}">{{ post.author }}</a></p>
-										<p class="mt-1 mb-0"><small class="text-muted">Criado em {{ post.date_posted|date }} às {{ post.date_posted|time:"H:i" }}</small></p>
-										{% if not post.lt_one_minute_between_creation_and_update %}<p class="mt-0 mb-0"><small class="text-muted">Última atualização em {{ post.last_updated|date }} às {{ post.last_updated|time:"H:i" }}</small></p>{% endif %}
-									</div>
+					<article class="mb-5">
+						<h3 class="light-text"><a style="color: inherit;" href="{{ request.scheme }}://{{ request.get_host }}{% url 'post' post.id %}">{{ post.title }}</a></h3>
+						<p class="mb-0"><a style="color: inherit;" href="{{ request.scheme }}://{{ request.get_host }}{% url 'post' post.id %}">{{ post.subtitle }}</a></p>
+						<div class="background-img font-poppins light-color-text d-flex align-items-stretch" style="background-image: url({{ request.scheme }}://{{ request.get_host }}{{ post.main_image.url }}); width: 100%; height: 300px;"></div>
+						<div class="media content-section mt-3 mb-2">
+							<img class="rounded-circle author-image mr-2" src="{{ request.scheme }}://{{ request.get_host }}{% static 'img/eu.jpg' %}" alt="Foto de {{ post.author }}">
+							<div class="media-body">
+								<div class="article-metadata">
+									<p class="mb-0">Publicado por <a href="{{ request.scheme }}://{{ request.get_host }}{% url 'about' %}">{{ post.author }}</a></p>
+									<p class="mt-1 mb-0"><small class="text-muted">Criado em {{ post.date_posted|date }} às {{ post.date_posted|time:"H:i" }}</small></p>
+									{% if not post.lt_one_minute_between_creation_and_update %}<p class="mt-0 mb-0"><small class="text-muted">Última atualização em {{ post.last_updated|date }} às {{ post.last_updated|time:"H:i" }}</small></p>{% endif %}
 								</div>
-								<span class="badge badge-dark">Projeto</span>
-								{% if post.draft %}<span class="badge badge-danger ml-1">Rascunho</span>{% endif %}
 							</div>
-							<hr>
-							<p class="article-content">{{ post.content|linebreaks|truncatewords:50 }}</p>
-							<p><a href="{{ request.scheme }}://{{ request.get_host }}{% url 'post' post.id %}">Continuar lendo...</a></p>
 						</div>
+						<div class="tag-block">
+							<span class="mx-1">Tags:</span>
+							<div class="tag" style="background-color: #3F3F3F;">Projeto</div>
+							<div class="tag" style="background-color: #2000AF;">Tutoriais</div>
+							<div class="tag" style="background-color: #06A900;">Blog</div>
+						</div>
+						<p class="mt-2">{{ post.content|linebreaks|truncatewords:50 }}</p>
+						<p class="mb-4"><a class="btn btn-primary btn-sm" href="{{ request.scheme }}://{{ request.get_host }}{% url 'post' post.id %}" role="button">Continuar lendo &raquo;</a></p>
 					</article>
 					{% endfor %}
 
+					<!-- Pagination -->
 					{% if page_obj.paginator.num_pages > 1 %}
-					<nav class="mb-4" aria-label="Paginação do Blog">
+					<nav class="mb-5" aria-label="Paginação do Blog">
 						<ul class="pagination justify-content-center">
 							{% if page_obj.has_previous %}
 							<li class="page-item">
@@ -156,24 +136,31 @@
 					</nav>
 					{% endif %}
 
-				</div><!-- /.blog-main -->
+				</div>
 
-				<aside class="col-md-4 sticky-top">
-					<div class="p-3 mt-4 mb-3 bg-light rounded">
-						<h4 class="font-italic">Sobre</h4>
-						<p class="mb-0 text-justify">Este é um blog pessoal que eu mantenho para registrar e compartilhar os projetos que eu faço.</p>
-						<p class="mb-0 text-justify">Algumas postagens sem relação com os projetos podem surgir; elas estarão marcadas como <i>off-topic</i>.</p>
-					</div>
-
+				<aside class="col-12 col-md-4 col-lg-3">
 					<div class="p-3">
-						<h4 class="font-italic">Arquivos</h4>
+						<h4 class="font-italic font-poppins mb-2">Tags</h4>
+						<div class="tag" style="background-color: #06A900;">Blog</div>
+						<div class="tag" style="background-color: #DADADA; color: #333;">Offtopic</div>
+						<div class="tag" style="background-color: #3F3F3F;">Projeto</div>
+						<div class="tag" style="background-color: #2000AF;">Tutoriais</div>
+					</div>
+					<div class="p-3 mb-5">
+						<h4 class="font-italic font-poppins mb-3">Arquivos</h4>
+						<h5 class="mb-1" style="font-size: 19px;">2020</h5>
+						<div class="light-line mt-0 mb-2" style="width: 35px; margin-left: 0px;"></div>
 						<ol class="list-unstyled mb-0">
 						{% for instance in archive_queryset %}
 							<li class="font-italic"><a href="{{ request.scheme }}://{{ request.get_host }}{% url 'archive' instance.date_posted_year_month|date:'Y-m' %}">{{ instance.date_posted_year_month|date:"F" }} de {{ instance.date_posted_year_month|date:"Y" }} ({{ instance.num_posts }})</a></li>
 						{% endfor %}
 						</ol>
 					</div>
-				</aside><!-- /.blog-sidebar -->
+				</aside>
+			</div>
+		</section>
+{% endblock %}
 
-			</div><!-- /.row -->
+{% block credits %}
+			<span class="d-block mt-1 footer-info">Foto no topo desta página por <a href="https://unsplash.com/@ayahya09?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Ali Yahya</a> em <a href="https://unsplash.com/s/photos/notebook?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a></span>
 {% endblock %}

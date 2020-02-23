@@ -67,8 +67,7 @@ class PostListView(ListView):
         context["featured"] = has_featured
 
         if has_featured:
-            context["post_most_featured"] = Post.objects.filter(featured=True).order_by('-date_posted')[0]
-            context["posts_featured"] = Post.objects.filter(featured=True).order_by('-date_posted')[1:3]
+            context["posts_featured"] = Post.objects.filter(featured=True).order_by('-date_posted')[:2]
 
         # Pagination
         posts = self.get_queryset()
