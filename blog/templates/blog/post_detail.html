@@ -17,26 +17,26 @@
 	</style>
 {% endblock %}
 
-{% block no_container_content %}
-		<!-- <img src="{{ request.scheme }}://{{ request.get_host }}{{ post.main_image.url }}" class="main-img img-fluid w-100" alt="Article Image"> -->
-		<article class="mb-5">
-			<div class="main-image">
-				<div class="container mt-5 pt-5 pb-3 {% if post.light_title_text %} light-text{% endif %}">
-					<h1 class="header-img display-3">{{ post.title }}</h1>
-					<h2 class="article-title">{{ post.subtitle }}</h2>
+{% block main_section %}
+		<section class="post-main-img background-img font-poppins light-color-text d-flex align-items-stretch" style="background-image: linear-gradient(63deg, rgba(40, 34, 62, 0.8) 50%, rgba(255, 255, 255, 0.3) 100%), url({{ request.scheme }}://{{ request.get_host }}{{ post.main_image.url }});">
+			<div class="container main-img-padding px-0 pb-2 d-flex align-items-end">
+				<div class="d-block">
+					<h1 class="light-text">{{ post.title }}</h1>
+					<div class="line" style="border-color: #E7F6FF;"></div>
+					<p class="light-text">{{ post.subtitle }}</p>
 				</div>
-				<br>
 			</div>
-			<div class="container mt-4">
+		</section>
+		<article class="mt-3 mb-5">
+			<div class="container">
 				<div class="media content-section">
 
-					<img class="rounded-circle author-image mr-2" src="{{ request.scheme }}://{{ request.get_host }}{% static 'eu.jpg' %}" alt="Foto de {{ post.author }}">
+					<img class="rounded-circle author-image mr-2" src="{{ request.scheme }}://{{ request.get_host }}{% static 'img/eu.jpg' %}" alt="Foto de {{ post.author }}">
 					<div class="media-body">
 						<div class="article-metadata">
-							<p class="mb-0">Publicado por <a href="{{ request.scheme }}://{{ request.get_host }}{% url 'about' %}">{{ post.author }}</a></p>
+							<p class="mb-0">Publicado por <a href="{{ request.scheme }}://{{ request.get_host }}{% url 'about' %}">{{ post.author }}</a>{% if post.draft %} <span class="ml-2 badge badge-danger">Rascunho</span>{% endif %}</p>
 							<p class="mt-1 mb-0"><small class="text-muted">Criado em {{ post.date_posted|date }} às {{ post.date_posted|time:"H:i" }}</small></p>
 							{% if not post.lt_one_minute_between_creation_and_update %}<p class="mt-0"><small class="text-muted">Última atualização em {{ post.last_updated|date }} às {{ post.last_updated|time:"H:i" }}</small></p>{% endif %}
-							{% if post.draft %}<span class="badge badge-danger">Rascunho</span>{% endif %}
 						</div>
 						{% if user.is_authenticated %}
 						<div class="mt-2">
@@ -46,14 +46,15 @@
 						{% endif %}
 					</div>
 				</div>
+				<div class="tag-block">
+					<span class="mx-1">Tags:</span>
+					<div class="tag" style="background-color: #3F3F3F;">Projeto</div>
+					<div class="tag" style="background-color: #2000AF;">Tutoriais</div>
+					<div class="tag" style="background-color: #06A900;">Blog</div>
+				</div>
 				<hr>
 				<p class="article-content">{{ post.content|linebreaks }}</p>
+				<a href="{{ request.scheme }}://{{ request.get_host }}{% url 'blog' %}" class="btn btn-primary btn-sm">&laquo; Voltar ao Blog</a>
 			</div>
 		</article>
-{% endblock %}
-
-{% block credits %}
-		{% if post.image_name == "default.jpg" %}
-			<div class="text-muted"><em>Foto de capa da publicação por <a href="https://unsplash.com/@andersjilden?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Anders Jildén</a> em <a href="https://unsplash.com/s/photos/digital?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" title="Unsplash">Unsplash</a></em></div>
-		{% endif %}
 {% endblock %}
