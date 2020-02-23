@@ -4,17 +4,6 @@
 
 {% block stylesheet %}
 	<link rel="stylesheet" type="text/css" href="{{ request.scheme }}://{{ request.get_host }}{% static 'css/blog.css' %}">
-
-	<!-- Full width image: https://stackoverflow.com/questions/12991351/css-force-image-resize-and-keep-aspect-ratio -->
-	<style>
-		div.most-featured-image {
-			background-image: url("{% if post_most_featured %}{{ post_most_featured.main_image.url }}{% endif %}");
-			background-size: cover;
-			background-repeat: no-repeat;
-			background-position: center;
-			min-height: 75%;
-		}
-	</style>
 {% endblock %}
 
 {% block main_section %}
