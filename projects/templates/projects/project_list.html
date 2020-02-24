@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block canonical %}<link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{% url 'projects' %}">{% endblock %}
+
+{% block main_section %}
+		<section class="background-img font-poppins main-img d-flex align-items-stretch" style="background-image: url({% static 'img/art-lasovsky-pen-unsplash.jpg' %});">
+			<div class="container px-0 d-flex align-items-end">
+				<div class="d-block">
+					<h1 class="light-text">Projetos</h1>
+					<div class="line"></div>
+				</div>
+			</div>
+		</section>
+		<section class="container">
+			<p class="mt-3">Lorem ipsum...</p>
+		</section>
+{% endblock %}
