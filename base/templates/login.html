@@ -8,19 +8,18 @@
 
 {% block title_custom %}<title>Login - Daniel Lavedonio de Lima</title>{% endblock %}
 
-{% block before_main %}
-	<div id="login">
-		<div class="content-section container mt-3">
-			<div id="title" class="d-flex mt-3 mb-3 pb-2 border-bottom">
-				<div class="mr-auto"><h1>Login</h1></div>
-				<div><h1><i>Área Restrita</i></h1></div>
+{% block main_section %}
+	<div id="login" class="my-3 pb-2">
+		<div class="content-section container">
+			<div id="title" class="mb-3 pb-2 border-bottom">
+				<h1 class="font-poppins" style="font-size: 40px;">Login - Área Restrita</h1>
 			</div>
 			<form class="form-signin" method="POST">
 				{% csrf_token %}
 				{% include 'includes/bootstrap4_form_floating-labels.html' with form=form %}
 				<button class="btn btn-outline-info" type="submit">Login</button>
 			</form>
-			<div class="border-top mt-3 pt-3">
+			<div class="border-top mt-3 pt-3 pb-2 mb-0">
 				<small class="text-muted">
 					Está perdido? <a class="ml-2" href="{{ request.scheme }}://{{ request.get_host }}{% url 'homepage' %}">Volte para a página inicial</a>
 				</small>
