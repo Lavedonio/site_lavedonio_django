@@ -159,6 +159,10 @@ h2.regular-bootstrap {
 	min-height: 100px;
 }
 
+.main-img {
+	min-height: 40vh;
+}
+
 .main-img-padding {
 	padding-top: 7.5rem;
 	padding-bottom: 8rem;
