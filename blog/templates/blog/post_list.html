@@ -128,6 +128,12 @@
 				</div>
 
 				<aside class="col-12 col-md-4 col-lg-3">
+					{% if user.is_authenticated %}
+					<div class="p-3 border border-success">
+						<h4 class="font-italic font-poppins mb-2">Controles de administrador:</h4>
+						<div class="d-block"><a href="{{ request.scheme }}://{{ request.get_host }}{% url 'post-create' %}" class="btn btn-success btn-sm">Nova Publicação</a></div>
+					</div>
+					{% endif %}
 					<div class="p-3">
 						<h4 class="font-italic font-poppins mb-2">Tags</h4>
 						<div class="tag" style="background-color: #06A900;">Blog</div>
