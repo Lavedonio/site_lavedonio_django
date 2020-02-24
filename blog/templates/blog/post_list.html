@@ -8,7 +8,7 @@
 
 {% block main_section %}
 		<section class="main-section{% if archive or page_obj.has_previous %}-filtered{% endif %} background-img font-poppins light-color-text d-flex align-items-stretch" style="background-image: linear-gradient(63deg, rgba(40, 34, 62, 0.8) 0%, rgba(255, 255, 255, 0.3) 100%), url({% static 'img/ali-yahya-notebook-unsplash.jpg' %});">
-			<div class="container main-img-padding px-0 pb-2 d-flex align-items-end">
+			<div class="container main-img-padding pb-2 d-flex align-items-end">
 				<div class="d-block">
 					<h1 class="light-text">Blog</h1>
 					<div class="line" style="border-color: #E7F6FF;"></div>
@@ -18,12 +18,12 @@
 		</section>
 		{% if not archive and not page_obj.has_previous %}
 		<section class="font-poppins mb-3">
-			<div class="container px-0">
+			<div class="container">
 				<h2 class="light-text light-color-text">Publicações em destaque</h2>
 				<div class="light-line" style="border-color: #E7F6FF;"></div>
 				<div class="row d-md-flex flew-row justify-content-md-around justify-content-center">
 					{% for post_featured in posts_featured %}
-					<div class="post-display d-flex flex-column mx-0 my-4">
+					<div class="post-display d-flex flex-column border mx-0 my-4">
 						<h3 class="regular-bootstrap pl-1">{{ post_featured.title }}</h3>
 						<div class="image-container my-2"><img class="img-fluid" src="{{ request.scheme }}://{{ request.get_host }}{{ post_featured.main_image.url }}" alt="Imagem da publicação"></div>
 						<p class="my-auto">{{ post_featured.subtitle }}</p>
@@ -35,7 +35,7 @@
 		</section>
 		{% endif %}
 
-		<section class="container mt-5 px-0 px-md-1">
+		<section class="container mt-5 px-md-1">
 			<div class="row">
 				<div class="col-12 col-md-8 col-lg-9">
 					<h2 class="light-text font-poppins">Publicações{% if archive %} de {{ year_month_date|date:"F" }} de {{ year_month_date|date:"Y" }}{% endif %}{% if page_obj.has_previous %} (Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}){% endif %}</h2>
