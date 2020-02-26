@@ -87,16 +87,16 @@
 					<h5 class="footer-menu-label">Mapa do Site</h5>
 					<a href="{{ request.scheme }}://{{ request.get_host }}{% url 'homepage' %}" class="d-block footer-menu-link">Home</a>
 					<a href="{{ request.scheme }}://{{ request.get_host }}{% url 'about' %}" class="d-block footer-menu-link">Sobre</a>
-					<a href="#" class="d-block footer-menu-link">Projetos</a>
+					<a href="{{ request.scheme }}://{{ request.get_host }}{% url 'projects' %}" class="d-block footer-menu-link">Projetos</a>
 					<a href="{{ request.scheme }}://{{ request.get_host }}{% url 'blog' %}" class="d-block footer-menu-link">Blog</a>
 					<a href="{{ request.scheme }}://{{ request.get_host }}{% url 'contact' %}" class="d-block footer-menu-link">Contato</a>
 				</div>
 
 				<div class="d-block mt-3 mt-md-0 mx-md-2">
 					<h5 class="footer-menu-label">Redes Sociais</h5>
-					<a href="https://github.com/Lavedonio/" class="d-block footer-menu-link">GitHub</a>
-					<a href="https://www.linkedin.com/in/daniel-lavedonio-de-lima/" class="d-block footer-menu-link">LinkedIn</a>
-					<a href="https://twitter.com/Lavedonio/" class="d-block footer-menu-link">Twitter</a>
+					<a href="https://github.com/Lavedonio/" class="d-block footer-menu-link" target="_blank" rel="noopener noreferrer">GitHub</a>
+					<a href="https://www.linkedin.com/in/daniel-lavedonio-de-lima/" class="d-block footer-menu-link" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+					<a href="https://twitter.com/Lavedonio/" class="d-block footer-menu-link" target="_blank" rel="noopener noreferrer">Twitter</a>
 				</div>
 
 				<div class="d-block mt-3 mt-md-0">
