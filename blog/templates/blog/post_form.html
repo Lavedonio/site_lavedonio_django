@@ -5,14 +5,14 @@
 
 {% block content %}
 	<div class="content-section container mt-3 mb-5">
-		<h1 class="mt-3 mb-3 pb-2 border-bottom">{% if editar %}Editar Publicação{% else %}Nova Publicação{% endif %}</h1>
+		<h1 class="mt-3 mb-3 pb-2 font-poppins light-text border-bottom">{% if editar %}Editar Publicação{% else %}Nova Publicação{% endif %}</h1>
 		<form method="POST" enctype="multipart/form-data">
 			{% csrf_token %}
 			<fieldset class="form-group">
 				{{ form|crispy }}
 			</fieldset>
 			<button class="btn btn-primary" type="submit">{% if editar %}Salvar Publicação{% else %}Publicar{% endif %}</button>
-			<a href="{{ request.scheme }}://{{ request.get_host }}{% if editar %}{% url 'post' object.id %}{% else %}{% url 'blog' %}{% endif %}" class="btn btn-secondary">Cancelar</a>
+			<a href="{{ request.scheme }}://{{ request.get_host }}{% if editar %}{% url 'post' object.slug %}{% else %}{% url 'blog' %}{% endif %}" class="btn btn-secondary">Cancelar</a>
 		</form>
 	</div>
 {% endblock %}

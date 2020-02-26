@@ -34,19 +34,19 @@
 					<img class="rounded-circle author-image mr-2" src="{{ request.scheme }}://{{ request.get_host }}{% static 'img/eu.jpg' %}" alt="Foto de {{ post.author }}">
 					<div class="media-body">
 						<div class="article-metadata">
-							<p class="mb-0">Publicado por <a href="{{ request.scheme }}://{{ request.get_host }}{% url 'about' %}">{{ post.author }}</a>{% if post.draft %} <span class="ml-2 badge badge-danger">Rascunho</span>{% endif %}</p>
+							<p class="mb-0">Publicado por <a href="{{ request.scheme }}://{{ request.get_host }}{% url 'about' %}">{{ post.author }}</a>{% if not post.published %} <span class="ml-2 badge badge-danger">Não Publicado</span>{% endif %}</p>
 							<p class="mt-1 mb-0"><small class="text-muted">Criado em {{ post.date_posted|date }} às {{ post.date_posted|time:"H:i" }}</small></p>
 							{% if not post.lt_one_minute_between_creation_and_update %}<p class="mt-0"><small class="text-muted">Última atualização em {{ post.last_updated|date }} às {{ post.last_updated|time:"H:i" }}</small></p>{% endif %}
 						</div>
-						{% if user.is_authenticated %}
-						<div class="my-2">
-							<div class="d-block mb-1">Controles de administrador:</div>
-							<a href="{{ request.scheme }}://{{ request.get_host }}{% url 'post-update' post.id %}" class="btn btn-primary btn-sm">Editar Publicação</a>
-							<a href="{{ request.scheme }}://{{ request.get_host }}{% url 'post-delete' post.id %}" class="btn btn-danger btn-sm">Deletar Publicação</a>
-						</div>
-						{% endif %}
 					</div>
 				</div>
+				{% if user.is_authenticated %}
+				<div class="mb-2">
+					<div class="d-block mb-1">Controles de administrador:</div>
+					<a href="{{ request.scheme }}://{{ request.get_host }}{% url 'post-update' post.slug %}" class="btn btn-primary btn-sm mb-1">Editar Publicação</a>
+					<a href="{{ request.scheme }}://{{ request.get_host }}{% url 'post-delete' post.slug %}" class="btn btn-danger btn-sm mb-1">Deletar Publicação</a>
+				</div>
+				{% endif %}
 				<div class="tag-block">
 					<span class="mx-1">Tags:</span>
 					<div class="tag" style="background-color: #3F3F3F;">Projeto</div>

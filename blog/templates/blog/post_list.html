@@ -27,7 +27,7 @@
 						<h3 class="regular-bootstrap pl-1">{{ post_featured.title }}</h3>
 						<div class="image-container my-2"><img class="img-fluid" src="{{ request.scheme }}://{{ request.get_host }}{{ post_featured.main_image.url }}" alt="Imagem da publicação"></div>
 						<p class="my-auto">{{ post_featured.subtitle }}</p>
-						<p class="mx-0 mb-0 mt-3"><a class="btn btn-primary btn-sm" href="{{ request.scheme }}://{{ request.get_host }}{% url 'post' post_featured.id %}" role="button">Continuar lendo &raquo;</a></p>
+						<p class="mx-0 mb-0 mt-3"><a class="btn btn-primary btn-sm" href="{{ request.scheme }}://{{ request.get_host }}{% url 'post' post_featured.slug %}" role="button">Continuar lendo &raquo;</a></p>
 					</div>
 					{% endfor %}
 				</div>
@@ -42,19 +42,26 @@
 					<div class="light-line mb-5"></div>
 					{% for post in page_obj %}
 					<article class="mb-5">
-						<h3 class="light-text"><a style="color: inherit;" href="{{ request.scheme }}://{{ request.get_host }}{% url 'post' post.id %}">{{ post.title }}</a></h3>
-						<p class="mb-0"><a style="color: inherit;" href="{{ request.scheme }}://{{ request.get_host }}{% url 'post' post.id %}">{{ post.subtitle }}</a></p>
+						<h3 class="light-text"><a style="color: inherit;" href="{{ request.scheme }}://{{ request.get_host }}{% url 'post' post.slug %}">{{ post.title }}</a></h3>
+						<p class="mb-0"><a style="color: inherit;" href="{{ request.scheme }}://{{ request.get_host }}{% url 'post' post.slug %}">{{ post.subtitle }}</a></p>
 						<div class="background-img font-poppins light-color-text d-flex align-items-stretch" style="background-image: url({{ request.scheme }}://{{ request.get_host }}{{ post.main_image.url }}); width: 100%; height: 300px;"></div>
 						<div class="media content-section mt-3 mb-2">
 							<img class="rounded-circle author-image mr-2" src="{{ request.scheme }}://{{ request.get_host }}{% static 'img/eu.jpg' %}" alt="Foto de {{ post.author }}">
 							<div class="media-body">
 								<div class="article-metadata">
-									<p class="mb-0">Publicado por <a href="{{ request.scheme }}://{{ request.get_host }}{% url 'about' %}">{{ post.author }}</a></p>
+									<p class="mb-0">Publicado por <a href="{{ request.scheme }}://{{ request.get_host }}{% url 'about' %}">{{ post.author }}</a>{% if not post.published %} <span class="ml-2 badge badge-danger">Não Publicado</span>{% endif %}</p></p>
 									<p class="mt-1 mb-0"><small class="text-muted">Criado em {{ post.date_posted|date }} às {{ post.date_posted|time:"H:i" }}</small></p>
 									{% if not post.lt_one_minute_between_creation_and_update %}<p class="mt-0 mb-0"><small class="text-muted">Última atualização em {{ post.last_updated|date }} às {{ post.last_updated|time:"H:i" }}</small></p>{% endif %}
 								</div>
 							</div>
 						</div>
+						{% if user.is_authenticated %}
+						<div class="mb-2">
+							<div class="d-block mb-1">Controles de administrador:</div>
+							<a href="{{ request.scheme }}://{{ request.get_host }}{% url 'post-update' post.slug %}" class="btn btn-primary btn-sm mb-1">Editar Publicação</a>
+							<a href="{{ request.scheme }}://{{ request.get_host }}{% url 'post-delete' post.slug %}" class="btn btn-danger btn-sm mb-1">Deletar Publicação</a>
+						</div>
+						{% endif %}
 						<div class="tag-block">
 							<span class="mx-1">Tags:</span>
 							<div class="tag" style="background-color: #3F3F3F;">Projeto</div>
@@ -62,7 +69,7 @@
 							<div class="tag" style="background-color: #06A900;">Blog</div>
 						</div>
 						<p class="mt-2">{{ post.content|linebreaks|truncatewords:50 }}</p>
-						<p class="mb-4"><a class="btn btn-primary btn-sm" href="{{ request.scheme }}://{{ request.get_host }}{% url 'post' post.id %}" role="button">Continuar lendo &raquo;</a></p>
+						<p class="mb-4"><a class="btn btn-primary btn-sm" href="{{ request.scheme }}://{{ request.get_host }}{% url 'post' post.slug %}" role="button">Continuar lendo &raquo;</a></p>
 					</article>
 					{% endfor %}
 
@@ -146,7 +153,7 @@
 						<h5 class="mb-1" style="font-size: 19px;">2020</h5>
 						<div class="light-line mt-0 mb-2" style="width: 35px; margin-left: 0px;"></div>
 						<ol class="list-unstyled mb-0">
-						{% for instance in archive_queryset %}
+						{% for instance in archive_queryset|dictsortreversed:"date_posted_year_month" %}
 							<li class="font-italic"><a href="{{ request.scheme }}://{{ request.get_host }}{% url 'archive' instance.date_posted_year_month|date:'Y-m' %}">{{ instance.date_posted_year_month|date:"F" }} de {{ instance.date_posted_year_month|date:"Y" }} ({{ instance.num_posts }})</a></li>
 						{% endfor %}
 						</ol>

@@ -1,11 +1,11 @@
+import datetime
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Count
-from django.utils import timezone
-from .models import Post, year_month_now
+from .models import Post
 
 
 class PostFilterListView(ListView):
@@ -14,7 +14,13 @@ class PostFilterListView(ListView):
     paginate_by = 5
 
     def get_queryset(self):
-        year_month = year_month_now(self.kwargs.get('year_month'))
+        year_month_str = self.kwargs.get('year_month')
+        year_month = datetime.date(
+            year=int(year_month_str[:4]),
+            month=int(year_month_str[-2:]),
+            day=1
+        )
+
         return Post.objects.filter(date_posted_year_month=year_month).order_by('-date_posted')
 
     def get_context_data(self, **kwargs):
@@ -24,9 +30,17 @@ class PostFilterListView(ListView):
         context["featured"] = False
         context["archive"] = True
         context["archive_year_month_url"] = self.kwargs['year_month']
-        context["year_month_date"] = year_month_now(self.kwargs['year_month'])
 
-        queryset_archive = Post.objects.values('date_posted_year_month').annotate(num_posts=Count('date_posted_year_month'))
+        year_month_str = self.kwargs['year_month']
+        context["year_month_date"] = datetime.date(
+            year=int(year_month_str[:4]),
+            month=int(year_month_str[-2:]),
+            day=1
+        )
+
+        queryset_archive = Post.objects.values('date_posted_year_month') \
+            .order_by('-date_posted_year_month') \
+            .annotate(num_posts=Count('date_posted_year_month'))
         context["archive_queryset"] = queryset_archive
 
         posts = self.get_queryset()
@@ -94,7 +108,7 @@ class PostDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        post = get_object_or_404(Post, pk=self.kwargs['pk'])
+        post = get_object_or_404(Post, slug=self.kwargs['slug'])
         context["title"] = post.title + " - Blog"
         context["navbar_active"] = "blog"
         context["no_container"] = True
@@ -106,10 +120,9 @@ class PostCreateView(LoginRequiredMixin, CreateView):
     fields = [
         "title",
         "subtitle",
-        "light_title_text",
         "main_image",
         "featured",
-        "draft",
+        "published",
         "content",
     ]
 
@@ -122,12 +135,6 @@ class PostCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.author = self.request.user
-
-        if not form.cleaned_data['draft']:
-            now = timezone.now()
-            form.instance.date_posted = now
-            form.instance.last_updated = now
-            form.instance.date_posted_year_month = year_month_now()
         return super().form_valid(form)
 
 
@@ -136,10 +143,9 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     fields = [
         "title",
         "subtitle",
-        "light_title_text",
         "main_image",
         "featured",
-        "draft",
+        "published",
         "content",
     ]
 
@@ -152,11 +158,6 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
     def form_valid(self, form):
         form.instance.author = self.request.user
-        post = self.get_object()
-
-        if not form.cleaned_data['draft'] and not post.date_posted:
-            form.instance.date_posted = timezone.now()
-            form.instance.date_posted_year_month = year_month_now()
         return super().form_valid(form)
 
     def test_func(self):

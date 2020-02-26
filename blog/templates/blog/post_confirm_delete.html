@@ -4,12 +4,14 @@
 
 {% block content %}
 	<div class="content-section container mt-3 mb-5">
-		<h1 class="mt-3 mb-3 pb-2 border-bottom">Deletar Publicação <small class="text-muted"> - Confirmar Ação</small></h1>
+		<h1 class="mt-3 font-poppins light-text smaller-heading">Deletar Publicação</h1>
+		<div class="light-line"></div>
+		<h2 class="regular-bootstrap mb-3 pb-2 border-bottom" style="color: #666;">Confirmar Ação</h2>
 		<p class="lead"><strong><span style="color: #DC3545;">Atenção:</span> esta ação não pode ser desfeita!</strong></p>
 		<form method="POST">
 			{% csrf_token %}
 			<button class="btn btn-danger" type="submit">Sim, deletar</button>
-			<a href="{{ request.scheme }}://{{ request.get_host }}{% url 'post' object.id %}" class="btn btn-secondary ml-2">Não, cancelar</a>
+			<a href="{{ request.scheme }}://{{ request.get_host }}{% url 'post' object.slug %}" class="btn btn-secondary ml-2">Não, cancelar</a>
 		</form>
 	</div>
 {% endblock %}

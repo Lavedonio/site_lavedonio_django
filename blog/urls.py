@@ -18,9 +18,9 @@ from .views import PostListView, PostDetailView, PostCreateView, PostUpdateView,
 
 urlpatterns = [
     path('', PostListView.as_view(), name="blog"),
-    path('post/<int:pk>/', PostDetailView.as_view(), name="post"),
     path('post/novo/', PostCreateView.as_view(), name="post-create"),
-    path('post/<int:pk>/editar/', PostUpdateView.as_view(), name="post-update"),
-    path('post/<int:pk>/deletar/', PostDeleteView.as_view(), name="post-delete"),
+    path('post/<slug:slug>/', PostDetailView.as_view(), name="post"),
+    path('post/<slug:slug>/editar/', PostUpdateView.as_view(), name="post-update"),
+    path('post/<slug:slug>/deletar/', PostDeleteView.as_view(), name="post-delete"),
     path('arquivo/<str:year_month>/', PostFilterListView.as_view(), name="archive"),
 ]

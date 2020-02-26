@@ -2,6 +2,7 @@
 
 import blog.models
 from django.db import migrations, models
+from django.utils import timezone
 
 
 class Migration(migrations.Migration):
@@ -14,6 +15,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='post',
             name='date_posted_year_month',
-            field=models.DateField(default=blog.models.year_month_now),
+            field=models.DateField(default=timezone.now),
         ),
     ]

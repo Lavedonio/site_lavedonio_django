@@ -1,5 +1,6 @@
 import os
 import datetime
+import uuid
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
@@ -7,26 +8,18 @@ from django.utils.translation import gettext_lazy as _
 from django.urls import reverse
 
 
-def year_month_now(year_month_str=None):
-    if year_month_str:
-        year = int(year_month_str[:4])
-        month = int(year_month_str[-2:])
-        return datetime.date(year, month, 1)
-
-    return timezone.localdate().replace(day=1)
-
-
 class Post(models.Model):
+    id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=128, verbose_name=_('Title'))
     subtitle = models.CharField(max_length=512, blank=True, null=True, verbose_name=_('Subtitle'))
-    light_title_text = models.BooleanField(default=False, verbose_name=_('Light Title Text'))
-    main_image = models.ImageField(default='posts/default.jpg', upload_to='posts', verbose_name=_('Main Image'))
+    slug = models.SlugField(max_length=128, unique=True, default=uuid.uuid4, verbose_name=_('Slug'))
+    main_image = models.ImageField(default='default_post_img.jpg', upload_to='posts', verbose_name=_('Main Image'))
     author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, verbose_name=_('Author'))
     featured = models.BooleanField(default=False, verbose_name=_('Featured'))
-    draft = models.BooleanField(default=False, verbose_name=_('Draft'))
+    published = models.BooleanField(default=True, verbose_name=_('Published'))
     date_posted = models.DateTimeField(default=timezone.now, verbose_name=_('Date Posted'))
     last_updated = models.DateTimeField(auto_now=True, verbose_name=_('Last Updated'))
-    date_posted_year_month = models.DateField(default=year_month_now)
+    date_posted_year_month = models.DateField(default=timezone.now)
     content = models.TextField(verbose_name=_('Content'))
 
     @property
@@ -46,4 +39,4 @@ class Post(models.Model):
         return self.title
 
     def get_absolute_url(self):
-        return reverse('post', kwargs={'pk': self.pk})
+        return reverse('post', kwargs={'slug': self.slug})

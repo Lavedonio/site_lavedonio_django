@@ -17,14 +17,6 @@
   padding-bottom: 0;
 }
 
-.light-line {
-  border-top: 2px solid #333;
-  width: 75px;
-  margin-top: 10px;
-  margin-bottom: 0px;
-  margin-left: 5px;
-}
-
 .blog-image-container {
   width: 100%;
   height: auto;

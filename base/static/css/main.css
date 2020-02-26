@@ -81,6 +81,14 @@ h2.regular-bootstrap {
 	margin-left: 5px;
 }
 
+.light-line {
+  border-top: 2px solid #333;
+  width: 75px;
+  margin-top: 10px;
+  margin-bottom: 0px;
+  margin-left: 5px;
+}
+
 .font-poppins {
 	font-family: 'Poppins', arial, tahoma, sans-serif;
 }
@@ -178,4 +186,9 @@ h2.regular-bootstrap {
 	font-size: 24px;
 	font-size: 1.5rem;
 	line-height: 1.2;
+}
+
+.smaller-heading {
+	font-size: 40px;
+	font-size: 2.5rem;
 }
