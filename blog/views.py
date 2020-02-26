@@ -14,17 +14,26 @@ class PostFilterListView(ListView):
     paginate_by = 5
 
     def get_queryset(self, **kwargs):
-        year_month_str = self.kwargs.get('year_month')
-        year_month = datetime.date(
-            year=int(year_month_str[:4]),
-            month=int(year_month_str[-2:]),
-            day=1
-        )
+        if self.kwargs.get('year_month') is not None:
+            year_month_str = self.kwargs.get('year_month')
+            year_month = datetime.date(
+                year=int(year_month_str[:4]),
+                month=int(year_month_str[-2:]),
+                day=1
+            )
 
-        if self.request.user.is_authenticated:
-            return Post.objects.filter(date_posted_year_month=year_month).order_by('-date_posted')
+            if self.request.user.is_authenticated:
+                return Post.objects.filter(date_posted_year_month=year_month).order_by('-date_posted')
+            else:
+                return Post.objects.filter(Q(date_posted_year_month=year_month) & Q(published=True)).order_by('-date_posted')
+
         else:
-            return Post.objects.filter(Q(date_posted_year_month=year_month) & Q(published=True)).order_by('-date_posted')
+            tag = Tag.objects.filter(name__iexact=self.kwargs['tag_name']).first()
+
+            if self.request.user.is_authenticated:
+                return Post.objects.filter(tag=tag).order_by('-date_posted')
+            else:
+                return Post.objects.filter(Q(tag=tag) & Q(published=True)).order_by('-date_posted')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -32,6 +41,7 @@ class PostFilterListView(ListView):
         context["navbar_active"] = "blog"
         context["featured"] = False
         context["filtering"] = True
+        context["tags"] = Tag.objects.all().order_by("name")
 
         # Getting info of archive or tag, acording to the kwargs
         if self.kwargs.get('year_month') is not None:
@@ -39,8 +49,6 @@ class PostFilterListView(ListView):
 
             year_month_str = self.kwargs['year_month']
             context["filtered_url"] = year_month_str
-
-            qs_context = {"type": 'archive'}
 
             context["year_month_date"] = datetime.date(
                 year=int(year_month_str[:4]),
@@ -50,10 +58,7 @@ class PostFilterListView(ListView):
         else:
             context["filtered_by"] = 'tag'
 
-            tag = Tag.objects.filter(name__iexact=self.kwargs['tag_name']).first()
-            context["tag"] = tag
-
-            qs_context = {"type": 'tag', "tag": tag}
+            context["tag"] = Tag.objects.filter(name__iexact=self.kwargs['tag_name']).first()
 
             context["filtered_url"] = self.kwargs['tag_name']
 
@@ -115,6 +120,7 @@ class PostListView(ListView):
         context["title"] = "Blog"
         context["navbar_active"] = "blog"
         context["archive"] = False
+        context["tags"] = Tag.objects.all().order_by("name")
 
         # Archived year_month
         if self.request.user.is_authenticated:

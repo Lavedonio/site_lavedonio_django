@@ -38,7 +38,7 @@
 		<section class="container mt-5 px-md-1">
 			<div class="row">
 				<div class="col-12 col-md-8 col-lg-9">
-					<h2 class="light-text font-poppins">Publicações{% if filtering %}{% if filtered_by == "archive" %} de {{ year_month_date|date:"F" }} de {{ year_month_date|date:"Y" }}{% else %} com a Tag {{ tag.name }}{% endif %}{% endif %}{% if page_obj.has_previous %} (Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}){% endif %}</h2>
+					<h2 class="light-text font-poppins">Publicações{% if filtering %}{% if filtered_by == "archive" %} de {{ year_month_date|date:"F" }} de {{ year_month_date|date:"Y" }}{% else %} com a Tag {{ tag.name }}{% endif %}{% endif %}{% if page_obj.has_previous %} (Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}){% endif %}{% if filtering %}<a href="{{ request.scheme }}://{{ request.get_host }}{% url 'blog' %}"><img class="ml-2"	src="{{ request.scheme }}://{{ request.get_host }}{% static 'img/filter_delete.png' %}" width="auto" height="40px"></a>{% endif %}</h2>
 					<div class="light-line mb-5"></div>
 					{% for post in page_obj %}
 					<article class="mb-5">
@@ -145,10 +145,9 @@
 					{% endif %}
 					<div class="p-3">
 						<h4 class="font-italic font-poppins mb-2">Tags</h4>
-						<div class="tag" style="background-color: #06A900;">Blog</div>
-						<div class="tag" style="background-color: #DADADA; color: #333;">Offtopic</div>
-						<div class="tag" style="background-color: #3F3F3F;">Projeto</div>
-						<div class="tag" style="background-color: #2000AF;">Tutoriais</div>
+						{% for tag_instance in tags %}
+						<a href="{{ request.scheme }}://{{ request.get_host }}{% url 'tag' tag_instance.name|lower %}"><div class="tag" style="background-color: {{ tag_instance.background_color }}; color: {{ tag_instance.color }}">{{ tag_instance.name }}</div></a>
+						{% endfor %}
 					</div>
 					<div class="p-3 mb-3">
 						<h4 class="font-italic font-poppins mb-3">Arquivos</h4>
