@@ -56,8 +56,8 @@
 				</div>
 				{% endif %}
 				<hr>
-				<p class="article-content">{{ post.content|linebreaks }}</p>
-				<a href="{{ request.scheme }}://{{ request.get_host }}{% url 'blog' %}" class="btn btn-primary btn-sm">&laquo; Voltar ao Blog</a>
+				<div class="article-content">{{ post.content|linebreaks }}</div>
+				<a href="{{ request.scheme }}://{{ request.get_host }}{% url 'blog' %}" class="btn btn-info btn-sm">&laquo; Voltar ao Blog</a>
 			</div>
 		</article>
 {% endblock %}

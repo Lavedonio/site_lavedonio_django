@@ -38,9 +38,9 @@
 		<section class="container mt-5 px-md-1">
 			<div class="row">
 				<div class="col-12 col-md-8 col-lg-9">
-					<h2 class="light-text font-poppins">Publicações{% if filtering %}{% if filtered_by == "archive" %} de {{ year_month_date|date:"F" }} de {{ year_month_date|date:"Y" }}{% else %} com a Tag {{ tag.name }}{% endif %}{% endif %}{% if page_obj.has_previous %} (Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}){% endif %}{% if filtering %}<a href="{{ request.scheme }}://{{ request.get_host }}{% url 'blog' %}"><img class="ml-2"	src="{{ request.scheme }}://{{ request.get_host }}{% static 'img/filter_delete.png' %}" width="auto" height="40px"></a>{% endif %}</h2>
+					<h2 class="light-text font-poppins">Publicações{% if filtering %}{% if filtered_by == "archive" %} de {{ year_month_date|date:"F" }} de {{ year_month_date|date:"Y" }}{% else %} com a Tag <div class="tag-title" style="background-color: {{ tag.background_color }}; color: {{ tag.color }}">{{ tag.name }}</div>{% endif %}{% endif %}{% if page_obj.has_previous %} (Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}){% endif %}{% if filtering %}<a href="{{ request.scheme }}://{{ request.get_host }}{% url 'blog' %}"><img class="ml-2"	src="{{ request.scheme }}://{{ request.get_host }}{% static 'img/filter_delete.png' %}" width="auto" height="40px"></a>{% endif %}</h2>
 					<div class="light-line mb-5"></div>
-					{% for post in page_obj %}
+					{% if page_obj %}{% for post in page_obj %}
 					<article class="mb-5">
 						<h3 class="light-text"><a style="color: inherit;" href="{{ request.scheme }}://{{ request.get_host }}{% url 'post' post.slug %}">{{ post.title }}</a></h3>
 						<p class="mb-0"><a style="color: inherit;" href="{{ request.scheme }}://{{ request.get_host }}{% url 'post' post.slug %}">{{ post.subtitle }}</a></p>
@@ -74,6 +74,8 @@
 						<p class="mb-4"><a class="btn btn-primary btn-sm" href="{{ request.scheme }}://{{ request.get_host }}{% url 'post' post.slug %}" role="button">Continuar lendo &raquo;</a></p>
 					</article>
 					{% endfor %}
+					{% else %}<h3 class="mt-5 light-text">Ops, parece que não há nenhuma publicação ainda que tenha essa tag!</h3>
+					<p class="my-4"><a class="btn btn-info btn-sm" href="{{ request.scheme }}://{{ request.get_host }}{% url 'blog' %}" role="button">&laquo; Voltar</a>{% endif %}
 
 					<!-- Pagination -->
 					{% if page_obj.paginator.num_pages > 1 %}

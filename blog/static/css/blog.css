@@ -38,6 +38,14 @@
   line-height: 1.6;
 }
 
+.tag-title {
+  display: inline-block;
+  margin: 5px 2px;
+  padding: 3px 16px;
+  border-radius: 10px;
+  color: white;
+}
+
 .tag-block {
   font-size: 13px;
 }
