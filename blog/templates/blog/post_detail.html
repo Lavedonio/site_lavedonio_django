@@ -47,12 +47,14 @@
 					<a href="{{ request.scheme }}://{{ request.get_host }}{% url 'post-delete' post.slug %}" class="btn btn-danger btn-sm mb-1">Deletar Publicação</a>
 				</div>
 				{% endif %}
+				{% if post.tag.all %}
 				<div class="tag-block">
 					<span class="mx-1">Tags:</span>
-					<div class="tag" style="background-color: #3F3F3F;">Projeto</div>
-					<div class="tag" style="background-color: #2000AF;">Tutoriais</div>
-					<div class="tag" style="background-color: #06A900;">Blog</div>
+					{% for tag in post.tag.all %}
+					<div class="tag" style="background-color: {{ tag.background_color }}; color: {{ tag.color }}">{{ tag.name }}</div>
+					{% endfor %}
 				</div>
+				{% endif %}
 				<hr>
 				<p class="article-content">{{ post.content|linebreaks }}</p>
 				<a href="{{ request.scheme }}://{{ request.get_host }}{% url 'blog' %}" class="btn btn-primary btn-sm">&laquo; Voltar ao Blog</a>

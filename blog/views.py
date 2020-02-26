@@ -4,8 +4,8 @@ from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.db.models import Count
-from .models import Post
+from django.db.models import Count, Q
+from .models import Post, Tag
 
 
 class PostFilterListView(ListView):
@@ -13,7 +13,7 @@ class PostFilterListView(ListView):
     context_object_name = "posts"
     paginate_by = 5
 
-    def get_queryset(self):
+    def get_queryset(self, **kwargs):
         year_month_str = self.kwargs.get('year_month')
         year_month = datetime.date(
             year=int(year_month_str[:4]),
@@ -21,27 +21,65 @@ class PostFilterListView(ListView):
             day=1
         )
 
-        return Post.objects.filter(date_posted_year_month=year_month).order_by('-date_posted')
+        if self.request.user.is_authenticated:
+            return Post.objects.filter(date_posted_year_month=year_month).order_by('-date_posted')
+        else:
+            return Post.objects.filter(Q(date_posted_year_month=year_month) & Q(published=True)).order_by('-date_posted')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["title"] = "Blog"
         context["navbar_active"] = "blog"
         context["featured"] = False
-        context["archive"] = True
-        context["archive_year_month_url"] = self.kwargs['year_month']
+        context["filtering"] = True
 
-        year_month_str = self.kwargs['year_month']
-        context["year_month_date"] = datetime.date(
-            year=int(year_month_str[:4]),
-            month=int(year_month_str[-2:]),
-            day=1
-        )
+        # Getting info of archive or tag, acording to the kwargs
+        if self.kwargs.get('year_month') is not None:
+            context["filtered_by"] = 'archive'
 
-        queryset_archive = Post.objects.values('date_posted_year_month') \
-            .order_by('-date_posted_year_month') \
-            .annotate(num_posts=Count('date_posted_year_month'))
-        context["archive_queryset"] = queryset_archive
+            year_month_str = self.kwargs['year_month']
+            context["filtered_url"] = year_month_str
+
+            qs_context = {"type": 'archive'}
+
+            context["year_month_date"] = datetime.date(
+                year=int(year_month_str[:4]),
+                month=int(year_month_str[-2:]),
+                day=1
+            )
+        else:
+            context["filtered_by"] = 'tag'
+
+            tag = Tag.objects.filter(name__iexact=self.kwargs['tag_name']).first()
+            context["tag"] = tag
+
+            qs_context = {"type": 'tag', "tag": tag}
+
+            context["filtered_url"] = self.kwargs['tag_name']
+
+        if self.request.user.is_authenticated:
+            # Getting distinct years for template
+            distinct_year_months_queryset = Post.objects.values_list('date_posted_year_month').distinct()
+
+            context["archive_queryset_years"] = sorted(list({str(x[0].year) for x in distinct_year_months_queryset}), reverse=True)
+
+            # Getting total posts for each year_month
+            context["archive_queryset"] = Post.objects \
+                .values('date_posted_year_month') \
+                .order_by('-date_posted_year_month') \
+                .annotate(num_posts=Count('date_posted_year_month'))
+
+        else:
+            # Getting distinct years for template
+            distinct_year_months_queryset = Post.objects.filter(published=True).values_list('date_posted_year_month').distinct()
+
+            context["archive_queryset_years"] = sorted(list({str(x[0].year) for x in distinct_year_months_queryset}), reverse=True)
+
+            # Getting total posts for each year_month
+            context["archive_queryset"] = Post.objects.filter(published=True) \
+                .values('date_posted_year_month') \
+                .order_by('-date_posted_year_month') \
+                .annotate(num_posts=Count('date_posted_year_month'))
 
         posts = self.get_queryset()
         page = self.request.GET.get('pagina')
@@ -66,6 +104,12 @@ class PostListView(ListView):
     ordering = ["-date_posted"]
     paginate_by = 5
 
+    def get_queryset(self, **kwargs):
+        if self.request.user.is_authenticated:
+            return Post.objects.all().order_by('-date_posted')
+        else:
+            return Post.objects.filter(published=True).order_by('-date_posted')
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["title"] = "Blog"
@@ -73,15 +117,32 @@ class PostListView(ListView):
         context["archive"] = False
 
         # Archived year_month
-        queryset_archive = Post.objects.values('date_posted_year_month').annotate(num_posts=Count('date_posted_year_month'))
-        context["archive_queryset"] = queryset_archive
+        if self.request.user.is_authenticated:
+            # Getting distinct years for template
+            distinct_year_months_queryset = Post.objects.values_list('date_posted_year_month').distinct()
+
+            context["archive_queryset_years"] = sorted(list({str(x[0].year) for x in distinct_year_months_queryset}), reverse=True)
+
+            # Getting total posts for each year_month
+            context["archive_queryset"] = Post.objects.values('date_posted_year_month').annotate(num_posts=Count('date_posted_year_month'))
+        else:
+            # Getting distinct years for template
+            distinct_year_months_queryset = Post.objects.filter(published=True).values_list('date_posted_year_month').distinct()
+
+            context["archive_queryset_years"] = sorted(list({str(x[0].year) for x in distinct_year_months_queryset}), reverse=True)
+
+            # Getting total posts for each year_month
+            context["archive_queryset"] = Post.objects.filter(published=True).values('date_posted_year_month').annotate(num_posts=Count('date_posted_year_month'))
 
         # Featured Posts
         has_featured = Post.objects.filter(featured=True).count() > 0
         context["featured"] = has_featured
 
         if has_featured:
-            context["posts_featured"] = Post.objects.filter(featured=True).order_by('-date_posted')[:2]
+            if self.request.user.is_authenticated:
+                context["posts_featured"] = Post.objects.filter(featured=True).order_by('-date_posted')[:2]
+            else:
+                context["posts_featured"] = Post.objects.filter(Q(featured=True) & Q(published=True)).order_by('-date_posted')[:2]
 
         # Pagination
         posts = self.get_queryset()
@@ -120,6 +181,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
     fields = [
         "title",
         "subtitle",
+        "tag",
         "main_image",
         "featured",
         "published",
@@ -143,6 +205,7 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     fields = [
         "title",
         "subtitle",
+        "tag",
         "main_image",
         "featured",
         "published",

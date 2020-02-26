@@ -23,4 +23,5 @@ urlpatterns = [
     path('post/<slug:slug>/editar/', PostUpdateView.as_view(), name="post-update"),
     path('post/<slug:slug>/deletar/', PostDeleteView.as_view(), name="post-delete"),
     path('arquivo/<str:year_month>/', PostFilterListView.as_view(), name="archive"),
+    path('tag/<str:tag_name>/', PostFilterListView.as_view(), name="tag"),
 ]
