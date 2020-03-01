@@ -178,7 +178,6 @@ class PostDetailView(DetailView):
         post = get_object_or_404(Post, slug=self.kwargs['slug'])
         context["title"] = post.title + " - Blog"
         context["navbar_active"] = "blog"
-        context["no_container"] = True
         return context
 
 
