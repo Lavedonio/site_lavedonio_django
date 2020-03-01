@@ -43,7 +43,7 @@
 					{% if page_obj %}{% for post in page_obj %}
 					<article class="mb-5">
 						<h3 class="light-text"><a style="color: inherit;" href="{{ request.scheme }}://{{ request.get_host }}{% url 'post' post.slug %}">{{ post.title }}</a></h3>
-						<p class="mb-0"><a style="color: inherit;" href="{{ request.scheme }}://{{ request.get_host }}{% url 'post' post.slug %}">{{ post.subtitle }}</a></p>
+						<p class="mb-1"><a style="color: inherit;" href="{{ request.scheme }}://{{ request.get_host }}{% url 'post' post.slug %}">{{ post.subtitle }}</a></p>
 						<div class="background-img font-poppins light-color-text d-flex align-items-stretch" style="background-image: url({{ request.scheme }}://{{ request.get_host }}{{ post.main_image.url }}); width: 100%; height: 300px;"></div>
 						<div class="media content-section mt-3 mb-2">
 							<img class="rounded-circle author-image mr-2" src="{{ request.scheme }}://{{ request.get_host }}{% static 'img/eu.jpg' %}" alt="Foto de {{ post.author }}">
@@ -70,7 +70,7 @@
 							{% endfor %}
 						</div>
 						{% endif %}
-						<p class="mt-2">{{ post.content|linebreaks|truncatewords:50 }}</p>
+						<div class="my-2">{{ post.content|safe|truncatewords_html:50 }}</div>
 						<p class="mb-4"><a class="btn btn-primary btn-sm" href="{{ request.scheme }}://{{ request.get_host }}{% url 'post' post.slug %}" role="button">Continuar lendo &raquo;</a></p>
 					</article>
 					{% endfor %}

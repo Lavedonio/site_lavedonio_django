@@ -1,24 +1,13 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block canonical %}<link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{% url 'post' post.id %}">{% endblock %}
+{% block canonical %}<link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{% url 'post' post.slug %}">{% endblock %}
 
 {% block stylesheet %}
 	<link rel="stylesheet" type="text/css" href="{{ request.scheme }}://{{ request.get_host }}{% static 'css/blog.css' %}">
-
-	<!-- Full width image: https://stackoverflow.com/questions/12991351/css-force-image-resize-and-keep-aspect-ratio -->
-	<style>
-		div.main-image {
-			background-image: url("{{ request.scheme }}://{{ request.get_host }}{{ post.main_image.url }}");
-			background-size: cover;
-			background-repeat: no-repeat;
-			background-position: center;
-			min-height: 75%;
-		}
-	</style>
 {% endblock %}
 
 {% block main_section %}
-		<section class="post-main-img background-img font-poppins light-color-text d-flex align-items-stretch" style="background-image: linear-gradient(63deg, rgba(40, 34, 62, 0.8) 50%, rgba(255, 255, 255, 0.3) 100%), url({{ request.scheme }}://{{ request.get_host }}{{ post.main_image.url }});">
+		<section class="main-img background-img font-poppins light-color-text d-flex align-items-stretch" style="background-image: linear-gradient(63deg, rgba(40, 34, 62, 0.8) 50%, rgba(255, 255, 255, 0.3) 100%), url({{ request.scheme }}://{{ request.get_host }}{{ post.main_image.url }});">
 			<div class="container main-img-padding pb-2 d-flex align-items-end">
 				<div class="d-block">
 					<h1 class="light-text">{{ post.title }}</h1>
@@ -56,7 +45,7 @@
 				</div>
 				{% endif %}
 				<hr>
-				<div class="article-content">{{ post.content|linebreaks }}</div>
+				<div class="d-block mb-4">{{ post.content|safe }}</div>
 				<a href="{{ request.scheme }}://{{ request.get_host }}{% url 'blog' %}" class="btn btn-info btn-sm">&laquo; Voltar ao Blog</a>
 			</div>
 		</article>
