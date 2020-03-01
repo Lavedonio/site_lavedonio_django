@@ -124,7 +124,7 @@ h2.regular-bootstrap {
 .project-display {
 	padding: 20px 15px;
 	color: #E7F6FF;
-	max-width: 400px;
+	max-width: 450px;
 	background-color: rgba(0, 0, 0, 0.71);
 	-webkit-box-shadow: 14px 14px 13px 4px rgba(81, 84, 85, 0.22);
 	-moz-box-shadow: 14px 14px 13px 4px rgba(81, 84, 85, 0.22);
@@ -159,7 +159,7 @@ h2.regular-bootstrap {
 	box-shadow: 11px 11px 14px -5px black;
 }
 
-.project-display > h3 {
+.post-display > h3 {
 	font-weight: normal;
 }
 
@@ -169,6 +169,10 @@ h2.regular-bootstrap {
 
 .main-img {
 	min-height: 40vh;
+}
+
+.main-img-wider {
+	min-height: 50vh;
 }
 
 .main-img-padding {
@@ -191,4 +195,22 @@ h2.regular-bootstrap {
 .smaller-heading {
 	font-size: 40px;
 	font-size: 2.5rem;
+}
+
+@media screen and (min-width: 768px) {
+	.project-display {
+		max-width: 220px;
+	}
+}
+
+@media screen and (min-width: 992px) {
+	.project-display {
+		max-width: 300px;
+	}
+}
+
+@media screen and (min-width: 1200px) {
+	.project-display {
+		max-width: 350px;
+	}
 }
