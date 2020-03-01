@@ -4,64 +4,88 @@
 	<link rel="stylesheet" type="text/css" href="{{ request.scheme }}://{{ request.get_host }}{% static 'css/blog.css' %}">
 {% endblock %}
 
-{% block content %}
+{% block main_section %}
+		<section class="background-img font-poppins main-img light-color-text d-flex align-items-stretch" style="background-image: linear-gradient(63deg, rgba(6, 8, 31, 0.8) 50%, rgba(255, 255, 255, 0.3) 100%), url({% static 'img/dan-dimmock-research-unsplash.jpg' %});">
+			<div class="container d-flex align-items-end">
+				<div class="d-block mb-4">
+					<h1 class="light-text">Pesquisa</h1>
+					<div class="line" style="border-color: #E7F6FF;"></div>
+				</div>
+			</div>
+		</section>
+		<section class="container pb-5">
 			{% if query %}
-			<h1 class="display-3 mt-5 mb-3 border-bottom">Resultados da pesquisa: <em>{{ query }}</em></h1>
+			<h2 class="light-text font-poppins mt-3 mb-1">Resultados da pesquisa: <em>{{ query }}</em></h2>
+			<div class="line"></div>
 
 			{% if project_search %}
-			<div class="projects mt-3 mb-5">
-				<h2 class="display-4">Projetos</h2>
-				{% for project in project_search %}
-				<div class="mt-5">
-					<h3 class="card-title text-left"><a class="text-primary" href="{{ request.scheme }}://{{ request.get_host }}/projetos/{{ project.slug }}/">{{ project.title }}</a></h3>
-					<hr>
-					<p class="card-text">{{ project.description }}</p>
-					<p class="card-text"><small class="text-muted">Downloads: {{ project.downloads }}</small></p>
-				</div>
-				{% endfor %}
-			</div>
-			<hr style="border-color: inherit">
-			{% endif %}
-
-			{% if post_search %}
-			<div class="blog-posts mt-3 mb-5">
-				<h2 class="display-4 mb-5">Publicações</h2>
-				<div class="blog-main">
-					{% for post in post_search %}
-					<!-- <img src="{{ request.scheme }}://{{ request.get_host }}{{ post.main_image.url }}" class="main-img img-fluid w-100" alt="Article Image"> -->
-					<article class="mb-5 rounded article-list blog-post">
-						<div class="rounded-top" style="background-image: url('{{ request.scheme }}://{{ request.get_host }}{{ post.main_image.url }}'); background-size: cover; background-repeat: no-repeat; background-position: center; min-height: 75%;">
-							<div class="container pt-5 pb-3 {% if post.light_title_text %} light-text{% endif %}">
-								<h1 class="header-img display-4"><a class="title" href="{{ request.scheme }}://{{ request.get_host }}{% url 'post' post.id %}">#{{ post.id }} {{ post.title }}</a></h1>
-								<h2 class="h4 article-title"><a class="title" href="{{ request.scheme }}://{{ request.get_host }}{% url 'post' post.id %}">{{ post.subtitle }}</a></h2>
-							</div>
-						</div>
-						<div class="container mt-4">
-							<div class="media content-section">
-
-								<img class="rounded-circle author-image mr-2" src="{{ request.scheme }}://{{ request.get_host }}{% static 'eu.jpg' %}" alt="Foto de {{ post.author }}">
-								<div class="media-body">
-									<div class="article-metadata">
-										<p class="mb-0">Publicado por <a href="{{ request.scheme }}://{{ request.get_host }}{% url 'about' %}">{{ post.author }}</a></p>
-										<p class="mt-1 mb-0"><small class="text-muted">Criado em {{ post.date_posted|date }} às {{ post.date_posted|time:"H:i" }}</small></p>
-										{% if not post.lt_one_minute_between_creation_and_update %}<p class="mt-0 mb-0"><small class="text-muted">Última atualização em {{ post.last_updated|date }} às {{ post.last_updated|time:"H:i" }}</small></p>{% endif %}
-									</div>
-								</div>
-								<span class="badge badge-dark">Projeto</span>
-								{% if post.draft %}<span class="badge badge-danger ml-1">Rascunho</span>{% endif %}
-							</div>
-							<hr>
-							<p class="article-content">{{ post.content|linebreaks|truncatewords:50 }}</p>
-							<p><a href="{{ request.scheme }}://{{ request.get_host }}{% url 'post' post.id %}">Continuar lendo...</a></p>
-						</div>
-					</article>
+			<div class="mt-3 mb-5">
+				<h2 class="font-poppins light-text">Projetos</h2>
+				<div class="light-line"></div>
+				<div class="row d-md-flex flew-row-reverse justify-content-md-start justify-content-center">
+					{% for project in project_search %}
+					<div class="project-display d-flex flex-column mx-2 my-4" style="background-color: rgba(0, 0, 0, 0.9);">
+						<h3 class="regular-bootstrap pl-2">{{ project.title }}</h3>
+						<div class="light-line ml-2 mt-0 mb-2" style="border-color: white;"></div>
+						{% if project.category.all %}<div class="ml-2 mt-2">{% for category in project.category.all %}<div class="d-inline-block mr-3">{{ category.abbreviation }}</div>{% endfor %}</div>{% endif %}
+						<div class="image-container my-2"><img class="img-fluid" src="{{ project.main_image.url }}" alt="Imagem do projeto {{ project.title }}"></div>
+						<p class="my-auto">{{ project.description }}</p>
+						<p class="mx-0 mb-0 mt-3"><a class="btn btn-primary btn-sm" href="{{ request.scheme }}://{{ request.get_host }}{% url 'project' project.slug %}" role="button">Ver mais &raquo;</a></p>
+					</div>
 					{% endfor %}
 				</div>
 			</div>
-			<hr>
 			{% endif %}
+
+			{% if post_search %}
+			<div class="col-12 col-xl-9 mt-3 mb-5 px-0">
+				<h2 class="light-text font-poppins">Publicações</h2>
+				<div class="light-line mb-5"></div>
+				{% for post in post_search %}
+				<article class="mb-5">
+					<h3 class="light-text"><a style="color: inherit;" href="{{ request.scheme }}://{{ request.get_host }}{% url 'post' post.slug %}">{{ post.title }}</a></h3>
+					<p class="mb-1"><a style="color: inherit;" href="{{ request.scheme }}://{{ request.get_host }}{% url 'post' post.slug %}">{{ post.subtitle }}</a></p>
+					<div class="background-img font-poppins light-color-text d-flex align-items-stretch" style="background-image: url({{ request.scheme }}://{{ request.get_host }}{{ post.main_image.url }}); width: 100%; height: 300px;"></div>
+					<div class="media content-section mt-3 mb-2">
+						<img class="rounded-circle author-image mr-2" src="{{ request.scheme }}://{{ request.get_host }}{% static 'img/eu.jpg' %}" alt="Foto de {{ post.author }}">
+						<div class="media-body">
+							<div class="article-metadata">
+								<p class="mb-0">Publicado por <a href="{{ request.scheme }}://{{ request.get_host }}{% url 'about' %}">{{ post.author }}</a>{% if not post.published %} <span class="ml-2 badge badge-danger">Não Publicado</span>{% endif %}</p></p>
+								<p class="mt-1 mb-0"><small class="text-muted">Criado em {{ post.date_posted|date }} às {{ post.date_posted|time:"H:i" }}</small></p>
+								{% if not post.lt_one_minute_between_creation_and_update %}<p class="mt-0 mb-0"><small class="text-muted">Última atualização em {{ post.last_updated|date }} às {{ post.last_updated|time:"H:i" }}</small></p>{% endif %}
+							</div>
+						</div>
+					</div>
+					{% if user.is_authenticated %}
+					<div class="mb-2">
+						<div class="d-block mb-1">Controles de administrador:</div>
+						<a href="{{ request.scheme }}://{{ request.get_host }}{% url 'post-update' post.slug %}" class="btn btn-primary btn-sm mb-1">Editar Publicação</a>
+						<a href="{{ request.scheme }}://{{ request.get_host }}{% url 'post-delete' post.slug %}" class="btn btn-danger btn-sm mb-1">Deletar Publicação</a>
+					</div>
+					{% endif %}
+					{% if post.tag.all %}
+					<div class="tag-block">
+						<span class="mx-1">Tags:</span>
+						{% for tag in post.tag.all %}
+						<div class="tag" style="background-color: {{ tag.background_color }}; color: {{ tag.color }}">{{ tag.name }}</div>
+						{% endfor %}
+					</div>
+					{% endif %}
+					<div class="my-2">{{ post.content|safe|truncatewords_html:50 }}</div>
+					<p class="mb-4"><a class="btn btn-primary btn-sm" href="{{ request.scheme }}://{{ request.get_host }}{% url 'post' post.slug %}" role="button">Continuar lendo &raquo;</a></p>
+				</article>
+				{% endfor %}
+			</div>
+			{% endif %}
+			<a href="{{ request.scheme }}://{{ request.get_host }}{% url 'homepage' %}" class="btn btn-info btn-sm">&laquo; Voltar à página inicial</a>
 			{% else %}
-			<h1 class="display-3 mt-5 mb-3 border-bottom">Ops, tem algo de estranho aí!</h1>
-			<h4>Parece que você não colocou nada na pesquisa. Tente pesquisar novamente, ou volte para a <a href="{{ request.scheme }}://{{ request.get_host }}{% url 'homepage' %}">homepage</a>.</h4>
+			<h2 class="light-text font-poppins mt-5">Ops, tem algo de estranho aí!</em></h2>
+			<div class="line mt-3"></div>
+			<h4 class="light-text mt-3 mb-5">Parece que você não colocou nada na pesquisa. Tente pesquisar novamente, ou volte para a <a href="{{ request.scheme }}://{{ request.get_host }}{% url 'homepage' %}">página inicial</a>.</h4>
 			{% endif %}
+		</section>
+{% endblock %}
+
+{% block credits %}
+			<span class="d-block mt-1 footer-info">Foto no topo desta página por <a href="https://unsplash.com/@dandimmock?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Dan Dimmock</a> em <a href="https://unsplash.com/s/photos/research?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a></span>
 {% endblock %}
