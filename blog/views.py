@@ -186,7 +186,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
     fields = [
         "title",
         "subtitle",
-        "tag",
+        "tags",
         "main_image",
         "featured",
         "published",
@@ -210,7 +210,7 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     fields = [
         "title",
         "subtitle",
-        "tag",
+        "tags",
         "main_image",
         "featured",
         "published",
