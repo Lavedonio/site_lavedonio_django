@@ -36,10 +36,10 @@
 		</section>
 		<article class="pt-3 pb-5"{%if project.dark_background %} style="background-color: #11121C;"{% endif %}>
 			<div class="container{%if project.dark_background %} light-color-text{% endif %}">
-				{% if project.category.all %}
+				{% if project.categories.all %}
 					<div class="mt-2">
 						<span class="mx-1">Categorias:</span>
-						{% for category in project.category.all %}
+						{% for category in project.categories.all %}
 						<div class="d-inline-block mr-3" style="{%if project.dark_background %}color: #DE4B4B;{% else %}color: #C11111;{% endif %}">{{ category.name }}</div>
 						{% endfor %}
 					</div>

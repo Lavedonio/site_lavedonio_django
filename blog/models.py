@@ -27,14 +27,14 @@ class Post(models.Model):
     title = models.CharField(max_length=128, verbose_name=_('Title'))
     subtitle = models.CharField(max_length=512, blank=True, verbose_name=_('Subtitle'))
     slug = models.SlugField(max_length=128, unique=True, default=uuid.uuid4, verbose_name=_('Slug'))
-    tag = models.ManyToManyField(Tag, blank=True)
+    tags = models.ManyToManyField(Tag, blank=True, verbose_name=_('Tags'))
     main_image = models.ImageField(default='default_post_img.jpg', upload_to='posts', verbose_name=_('Main Image'))
     author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, verbose_name=_('Author'))
     featured = models.BooleanField(default=False, verbose_name=_('Featured'))
     published = models.BooleanField(default=True, verbose_name=_('Published'))
     date_posted = models.DateTimeField(default=timezone.now, verbose_name=_('Date Posted'))
     last_updated = models.DateTimeField(auto_now=True, verbose_name=_('Last Updated'))
-    date_posted_year_month = models.DateField(default=timezone.now)
+    date_posted_year_month = models.DateField(default=timezone.now, verbose_name=_('Date Posted Year/Month'))
     content = models.TextField(verbose_name=_('Content'))
 
     @property

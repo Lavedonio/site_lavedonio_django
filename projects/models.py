@@ -22,7 +22,7 @@ class Project(models.Model):
     featured = models.BooleanField(default=False, verbose_name=_('Featured'))
     dark_background = models.BooleanField(default=False, verbose_name=_('Dark Background'))
     published = models.BooleanField(default=True, verbose_name=_('Published'))
-    category = models.ManyToManyField(Category, blank=True)
+    categories = models.ManyToManyField(Category, blank=True, verbose_name=_('Categories'))
     main_image = models.ImageField(default='default_project_img.jpg', upload_to='projects', verbose_name=_('Main Image'))
     description = models.CharField(max_length=128, verbose_name=_('Description'))
     content = models.TextField(verbose_name=_('Content'))

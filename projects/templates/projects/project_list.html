@@ -24,7 +24,7 @@
 					<div class="project-display d-flex flex-column mx-2 my-4">
 						<h3 class="regular-bootstrap pl-2">{{ project_featured.title }}</h3>
 						<div class="light-line ml-2 mt-0 mb-2" style="border-color: white;"></div>
-						{% if project_featured.category.all %}<div class="ml-2 mt-2">{% for category in project_featured.category.all %}<div class="d-inline-block mr-3">{{ category.abbreviation }}</div>{% endfor %}</div>{% endif %}
+						{% if project_featured.categories.all %}<div class="ml-2 mt-2">{% for category in project_featured.categories.all %}<div class="d-inline-block mr-3">{{ category.abbreviation }}</div>{% endfor %}</div>{% endif %}
 						<div class="image-container my-2"><img class="img-fluid" src="{{ project_featured.main_image.url }}" alt="Imagem do projeto {{ project_featured.title }}"></div>
 						<p class="my-auto">{{ project_featured.description }}</p>
 						<p class="mx-0 mb-0 mt-3"><a class="btn btn-primary btn-sm" href="{{ request.scheme }}://{{ request.get_host }}{% url 'project' project_featured.slug %}" role="button">Ver mais &raquo;</a></p>
@@ -44,7 +44,7 @@
 					<div class="project-display d-flex flex-column mx-2 my-4" style="background-color: rgba(0, 0, 0, 0.9);">
 						<h3 class="regular-bootstrap pl-2">{{ project.title }}</h3>
 						<div class="light-line ml-2 mt-0 mb-2" style="border-color: white;"></div>
-						{% if project.category.all %}<div class="ml-2 mt-2">{% for category in project.category.all %}<div class="d-inline-block mr-3">{{ category.abbreviation }}</div>{% endfor %}</div>{% endif %}
+						{% if project.categories.all %}<div class="ml-2 mt-2">{% for category in project.categories.all %}<div class="d-inline-block mr-3">{{ category.abbreviation }}</div>{% endfor %}</div>{% endif %}
 						<div class="image-container my-2"><img class="img-fluid" src="{{ project.main_image.url }}" alt="Imagem do projeto {{ project.title }}"></div>
 						<p class="my-auto">{{ project.description }}</p>
 						<p class="mx-0 mb-0 mt-3"><a class="btn btn-primary btn-sm" href="{{ request.scheme }}://{{ request.get_host }}{% url 'project' project.slug %}" role="button">Ver mais &raquo;</a></p>

@@ -62,10 +62,10 @@
 							<a href="{{ request.scheme }}://{{ request.get_host }}{% url 'post-delete' post.slug %}" class="btn btn-danger btn-sm mb-1">Deletar Publicação</a>
 						</div>
 						{% endif %}
-						{% if post.tag.all %}
+						{% if post.tags.all %}
 						<div class="tag-block">
 							<span class="mx-1">Tags:</span>
-							{% for tag in post.tag.all %}
+							{% for tag in post.tags.all %}
 							<div class="tag" style="background-color: {{ tag.background_color }}; color: {{ tag.color }}">{{ tag.name }}</div>
 							{% endfor %}
 						</div>
