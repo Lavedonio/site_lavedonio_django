@@ -47,6 +47,41 @@
 }
 
 .author-image {
-	width: 64px;
-	height: auto;
+  width: 64px;
+  height: auto;
+}
+
+.share {
+  width: 32px;
+  height: 32px;
+  -webkit-filter: grayscale(70%);
+  filter: grayscale(70%);
+  -webkit-transition: -webkit-filter 200ms ease;
+  -moz-transition: -moz-filter 200ms ease;
+  -ms-transition: -ms-filter 200ms ease;
+  -o-transition: -o-filter 200ms ease;
+  transition: filter 200ms ease, -webkit-filter 200ms ease;
+}
+
+.share:hover {
+  width: 32px;
+  height: 32px;
+  -webkit-filter: none;
+  filter: none;
+}
+
+@media screen and (min-width: 768px) {
+  .share {
+    width: 48px;
+    height: 48px;
+  }
+
+  .share:hover {
+    width: 48px;
+    height: 48px;
+  }
+
+  .share-holder {
+    margin-top: 10rem;
+  }
 }

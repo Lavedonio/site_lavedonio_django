@@ -1,10 +1,11 @@
 import datetime
-from django.shortcuts import get_object_or_404
-from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Count, Q
+from django.shortcuts import get_object_or_404
+from django.template.defaultfilters import urlencode
+from django.urls import reverse_lazy
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import Post, Tag
 
 
@@ -173,11 +174,35 @@ class PostDetailView(DetailView):
     model = Post
     context_object_name = "post"
 
+    def tweetify(self, post):
+        TWITTER_MAX_NUMBER_OF_CHARACTERS = 140
+        TWITTER_LINK_LENGTH = 23  # "A URL of any length will be altered to 23 characters, even if the link itself is less than 23 characters long.
+
+        # Compute length of the tweet
+        total_length = len(post.title) + 1 + TWITTER_LINK_LENGTH
+
+        # Check that the text respects the max number of characters for a tweet
+        if total_length > TWITTER_MAX_NUMBER_OF_CHARACTERS:
+            text = post.title[:(TWITTER_MAX_NUMBER_OF_CHARACTERS - TWITTER_LINK_LENGTH - 1)] + "…"  # len("…") == 1
+        else:
+            text = post.title
+
+        return text
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         post = get_object_or_404(Post, slug=self.kwargs['slug'])
         context["title"] = post.title + " - Blog"
         context["navbar_active"] = "blog"
+
+        url = self.request.build_absolute_uri(post.get_absolute_url())
+        tweet = self.tweetify(post)
+        context['twitter_url'] = "https://twitter.com/share?text={}&url={}".format(tweet, urlencode(url))
+        context['facebook_url'] = "https://www.facebook.com/sharer/sharer.php?u={}".format(urlencode(url))
+        context['linkedin_url'] = "https://www.linkedin.com/shareArticle?mini=true&title={}&url={}".format(post.title, urlencode(url))
+        context['reddit_url'] = "https://www.reddit.com/submit?title={}&url={}".format(post.title, urlencode(url))
+        context['whatsapp_url'] = "https://wa.me/?text={}".format(urlencode(url))
+        context['telegram_url'] = "https://t.me/share/url?text={}&url={}".format(post.title, urlencode(url))
         return context
 
 

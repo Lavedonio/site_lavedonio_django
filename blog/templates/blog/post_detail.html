@@ -16,37 +16,60 @@
 				</div>
 			</div>
 		</section>
-		<article class="mt-3 mb-5">
-			<div class="container">
-				<div class="media content-section">
-
-					<img class="rounded-circle author-image mr-2" src="{{ request.scheme }}://{{ request.get_host }}{% static 'img/eu.jpg' %}" alt="Foto de {{ post.author }}">
-					<div class="media-body">
-						<div class="article-metadata">
-							<p class="mb-0">Publicado por <a href="{{ request.scheme }}://{{ request.get_host }}{% url 'about' %}">{{ post.author }}</a>{% if not post.published %} <span class="ml-2 badge badge-danger">Não Publicado</span>{% endif %}</p>
-							<p class="mt-1 mb-0"><small class="text-muted">Criado em {{ post.date_posted|date }} às {{ post.date_posted|time:"H:i" }}</small></p>
-							{% if not post.lt_one_minute_between_creation_and_update %}<p class="mt-0"><small class="text-muted">Última atualização em {{ post.last_updated|date }} às {{ post.last_updated|time:"H:i" }}</small></p>{% endif %}
-						</div>
+		<article class="mt-3 mb-5 container">
+			<div class="row">
+				<div class="col-12 col-md-2 col-xl-1 d-none d-md-block">
+					<div class="share-holder">
+						<div class="d-inline-block mb-1"><span style="font-size: 13px;">Compartilhe:</span></div>
+						<div class="d-inline-block d-md-block share mt-1"><a href="{{ facebook_url }}" target="_blank" rel="noopener noreferrer"><img src="{% static 'img/icons/circle_svg/Facebook.svg' %}" alt="Facebook"></a></div>
+						<div class="d-inline-block d-md-block share mt-1"><a href="{{ twitter_url }}" target="_blank" rel="noopener noreferrer"><img src="{% static 'img/icons/circle_svg/Twitter.svg' %}" alt="Twitter"></a></div>
+						<div class="d-inline-block d-md-block share mt-1"><a href="{{ linkedin_url }}" target="_blank" rel="noopener noreferrer"><img src="{% static 'img/icons/circle_svg/LinkedIn.svg' %}" alt="LinkedIn"></a></div>
+						<div class="d-inline-block d-md-block share mt-1"><a href="{{ whatsapp_url }}" target="_blank" rel="noopener noreferrer"><img src="{% static 'img/icons/circle_svg/WhatsApp.svg' %}" alt="WhatsApp"></a></div>
 					</div>
 				</div>
-				{% if user.is_authenticated %}
-				<div class="mb-2">
-					<div class="d-block mb-1">Controles de administrador:</div>
-					<a href="{{ request.scheme }}://{{ request.get_host }}{% url 'post-update' post.slug %}" class="btn btn-primary btn-sm mb-1">Editar Publicação</a>
-					<a href="{{ request.scheme }}://{{ request.get_host }}{% url 'post-delete' post.slug %}" class="btn btn-danger btn-sm mb-1">Deletar Publicação</a>
+				<div class="col-12 col-md-10">
+					<div class="media content-section">
+
+						<img class="rounded-circle author-image mr-2" src="{{ request.scheme }}://{{ request.get_host }}{% static 'img/eu.jpg' %}" alt="Foto de {{ post.author }}">
+						<div class="media-body">
+							<div class="article-metadata">
+								<p class="mb-0">Publicado por <a href="{{ request.scheme }}://{{ request.get_host }}{% url 'about' %}">{{ post.author }}</a>{% if not post.published %} <span class="ml-2 badge badge-danger">Não Publicado</span>{% endif %}</p>
+								<p class="mt-1 mb-0"><small class="text-muted">Criado em {{ post.date_posted|date }} às {{ post.date_posted|time:"H:i" }}</small></p>
+								{% if not post.lt_one_minute_between_creation_and_update %}<p class="mt-0"><small class="text-muted">Última atualização em {{ post.last_updated|date }} às {{ post.last_updated|time:"H:i" }}</small></p>{% endif %}
+							</div>
+						</div>
+					</div>
+					{% if user.is_authenticated %}
+					<div class="mb-2">
+						<div class="d-block mb-1">Controles de administrador:</div>
+						<a href="{{ request.scheme }}://{{ request.get_host }}{% url 'post-update' post.slug %}" class="btn btn-primary btn-sm mb-1">Editar Publicação</a>
+						<a href="{{ request.scheme }}://{{ request.get_host }}{% url 'post-delete' post.slug %}" class="btn btn-danger btn-sm mb-1">Deletar Publicação</a>
+					</div>
+					{% endif %}
+					{% if post.tags.all %}
+					<div class="tag-block">
+						<span class="mx-1">Tags:</span>
+						{% for tag in post.tags.all %}
+						<div class="tag" style="background-color: {{ tag.background_color }}; color: {{ tag.color }}">{{ tag.name }}</div>
+						{% endfor %}
+					</div>
+					{% endif %}
+					<hr>
+					<div class="share-holder d-md-none my-2">
+						<div class="d-inline-block"><span style="font-size: 13px;">Compartilhe:</span></div>
+						<div class="d-inline-block share"><a href="{{ facebook_url }}" target="_blank" rel="noopener noreferrer"><img src="{% static 'img/icons/circle_svg/Facebook.svg' %}" alt="Facebook"></a></div>
+						<div class="d-inline-block share"><a href="{{ twitter_url }}" target="_blank" rel="noopener noreferrer"><img src="{% static 'img/icons/circle_svg/Twitter.svg' %}" alt="Twitter"></a></div>
+						<div class="d-inline-block share"><a href="{{ linkedin_url }}" target="_blank" rel="noopener noreferrer"><img src="{% static 'img/icons/circle_svg/LinkedIn.svg' %}" alt="LinkedIn"></a></div>
+						<div class="d-inline-block share"><a href="{{ whatsapp_url }}" target="_blank" rel="noopener noreferrer"><img src="{% static 'img/icons/circle_svg/WhatsApp.svg' %}" alt="WhatsApp"></a></div>
+					</div>
+					<hr class="d-md-none">
+					<div class="d-block mb-4">{{ post.content|safe }}</div>
+					<a href="{{ request.scheme }}://{{ request.get_host }}{% url 'blog' %}" class="btn btn-info btn-sm">&laquo; Voltar ao Blog</a>
 				</div>
-				{% endif %}
-				{% if post.tags.all %}
-				<div class="tag-block">
-					<span class="mx-1">Tags:</span>
-					{% for tag in post.tags.all %}
-					<div class="tag" style="background-color: {{ tag.background_color }}; color: {{ tag.color }}">{{ tag.name }}</div>
-					{% endfor %}
-				</div>
-				{% endif %}
-				<hr>
-				<div class="d-block mb-4">{{ post.content|safe }}</div>
-				<a href="{{ request.scheme }}://{{ request.get_host }}{% url 'blog' %}" class="btn btn-info btn-sm">&laquo; Voltar ao Blog</a>
 			</div>
 		</article>
+{% endblock %}
+
+{% block credits %}
+			<span class="d-block mt-1 footer-info">Ícones de redes sociais por <a href="https://pt.vecteezy.com/vetor-gratis/%C3%ADcone-do-tumblr" target="_blank" rel="noopener noreferrer">Vecteezy</a></span>
 {% endblock %}
