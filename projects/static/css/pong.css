@@ -1,15 +1,3 @@
-main {
-	background-color: black!important;
-}
-
-h1 {
-	color: #A5A5A5;
-}
-
-p {
-	color: #E5E5E5;
-}
-
 canvas {
 	margin-top: 3rem;
 	border-width: 1px;

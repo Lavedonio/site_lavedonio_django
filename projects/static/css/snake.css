@@ -1,16 +1,4 @@
-main {
-	background-color: black!important;
-}
-
-h1 {
-	color: #A5A5A5;
-}
-
-p {
-	color: #E5E5E5;
-}
-
-img {
+.snake-img {
 	border-width: 1px;
 	border-style: solid;
 	border-color: white;
