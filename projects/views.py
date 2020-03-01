@@ -1,4 +1,5 @@
-from django.views.generic import ListView, TemplateView
+from django.shortcuts import get_object_or_404
+from django.views.generic import ListView, DetailView
 from .models import Project
 
 
@@ -6,6 +7,12 @@ class ProjectListView(ListView):
     model = Project
     context_object_name = "projects"
     ordering = ["-id"]
+
+    def get_queryset(self, **kwargs):
+        if self.request.user.is_authenticated:
+            return Project.objects.all().order_by('-id')
+        else:
+            return Project.objects.filter(published=True).order_by('-id')
 
     def get_context_data(self):
         context = super().get_context_data()
@@ -22,21 +29,13 @@ class ProjectListView(ListView):
         return context
 
 
-class PongProjectView(TemplateView):
-    template_name = "projects/pong.html"
+class ProjectDetailView(DetailView):
+    model = Project
+    context_object_name = "project"
 
-    def get_context_data(self):
-        context = super().get_context_data()
-        context["title"] = "Pong - Projetos"
-        context["navbar_active"] = "projects"
-        return context
-
-
-class SnakeProjectView(TemplateView):
-    template_name = "projects/snake.html"
-
-    def get_context_data(self):
-        context = super().get_context_data()
-        context["title"] = "Snake - Projetos"
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        project = get_object_or_404(Project, slug=self.kwargs['slug'])
+        context["title"] = project.title + " - Projetos"
         context["navbar_active"] = "projects"
         return context

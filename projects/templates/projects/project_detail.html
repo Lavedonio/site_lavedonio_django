@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block canonical %}<link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{% url 'project' project.slug %}">{% endblock %}
+
+{% block stylesheet %}
+	{% if project.custom_css %}<link rel="stylesheet" type="text/css" href="{{ request.scheme }}://{{ request.get_host }}{% static project.css %}">{% endif %}
+
+	<!-- Font pack: http://www.mattlag.com/bitfonts/ -->
+	<!-- Include fonts in Django: https://stackoverflow.com/questions/21346045/django-new-fonts -->
+	<!-- All font types for all Browsers: https://stackoverflow.com/questions/24990554/how-to-include-a-font-ttf-using-css -->
+	<style>
+		@font-face {
+			font-family: "Bit5x3";
+			src: url('{{ request.scheme }}://{{ request.get_host }}{% static 'fonts/bit5x3/bit5x3.eot' %}'); /* IE9 Compat Modes */
+			src: url('{{ request.scheme }}://{{ request.get_host }}{% static 'fonts/bit5x3/bit5x3.eot?#iefix' %}') format("embedded-opentype"), /* IE6-IE8 */
+				url('{{ request.scheme }}://{{ request.get_host }}{% static 'fonts/bit5x3/bit5x3.otf' %}') format("opentype"), /* Open Type Font */
+				url('{{ request.scheme }}://{{ request.get_host }}{% static 'fonts/bit5x3/bit5x3.svg' %}') format("svg"), /* Legacy iOS */
+				url('{{ request.scheme }}://{{ request.get_host }}{% static 'fonts/bit5x3/bit5x3.ttf' %}') format("truetype"), /* Safari, Android, iOS */
+				url('{{ request.scheme }}://{{ request.get_host }}{% static 'fonts/bit5x3/bit5x3.woff' %}') format("woff"), /* Modern Browsers */
+				url('{{ request.scheme }}://{{ request.get_host }}{% static 'fonts/bit5x3/bit5x3.woff2' %}') format("woff2"); /* Modern Browsers */
+			font-weight: normal;
+			font-style: normal;
+		}
+	</style>
+{% endblock %}
+
+{% block main_section %}
+		<section class="main-img background-img font-poppins light-color-text d-flex align-items-stretch" style="background-image: linear-gradient(63deg, rgba(6, 8, 31, 0.8) 50%, rgba(255, 255, 255, 0.3) 100%), url({{ request.scheme }}://{{ request.get_host }}{{ project.main_image.url }});">
+			<div class="container main-img-padding pb-2 d-flex align-items-end">
+				<div class="d-block">
+					<h1 class="light-text">{{ project.title }}</h1>
+					<div class="line" style="border-color: #E7F6FF;"></div>
+					<p class="light-text">{{ project.description }}</p>
+				</div>
+			</div>
+		</section>
+		<article class="pt-3 pb-5"{%if project.dark_background %} style="background-color: #11121C;"{% endif %}>
+			<div class="container{%if project.dark_background %} light-color-text{% endif %}">
+				{% if project.category.all %}
+					<div class="mt-2">
+						<span class="mx-1">Categorias:</span>
+						{% for category in project.category.all %}
+						<div class="d-inline-block mr-3" style="{%if project.dark_background %}color: #DE4B4B;{% else %}color: #C11111;{% endif %}">{{ category.name }}</div>
+						{% endfor %}
+					</div>
+				<hr>
+				{% endif %}
+				<div class="d-block mb-4">{{ project.content|safe }}</div>
+				<a href="{{ request.scheme }}://{{ request.get_host }}{% url 'projects' %}" class="btn btn-info btn-sm">&laquo; Voltar aos Projetos</a>
+			</div>
+		</article>
+{% endblock %}
+
+{% block javascript %}
+	{% if project.custom_js %}<script src="{{ request.scheme }}://{{ request.get_host }}{% static project.js %}"></script>{% endif %}
+{% endblock %}
