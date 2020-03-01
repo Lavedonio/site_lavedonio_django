@@ -15,7 +15,7 @@
 
 		{% if projects %}
 		<!-- Featured Projects -->
-		<section class="background-img font-poppins pb-3 pb-md-4 d-flex align-items-stretch" style="background-image: url({% static 'img/jeff-sheldon-project-unsplash.jpg' %});">
+		<section class="background-img font-poppins pb-3 pb-md-4 d-flex align-items-stretch" style="background-image: linear-gradient(135deg, rgba(19, 16, 30, 0.8) 0%, rgba(169, 169, 169, 0.3) 100%), url({% static 'img/jeff-sheldon-project-unsplash.jpg' %});">
 			<div class="container">
 				<h2 class="mt-5" style="color: white;">Projetos em destaque</h2>
 				<div class="line" style="border-color: white;"></div>
@@ -23,9 +23,17 @@
 					{% for project in projects %}
 					<div class="project-display d-flex flex-column mx-2 my-4">
 						<h3 class="regular-bootstrap pl-2">{{ project.title }}</h3>
-						<div class="image-container my-2"><img class="img-fluid" src="" alt=""></div>
+						<div class="light-line ml-2 mt-0 mb-2" style="border-color: white;"></div>
+						{% if project.category.all %}
+							<div class="ml-2 mt-2">
+							{% for category in project.category.all %}
+								<div class="d-inline-block mr-3">{{ category.abbreviation }}</div>
+							{% endfor %}
+							</div>
+						{% endif %}
+						<div class="image-container my-2"><img class="img-fluid" src="{{ project.main_image.url }}" alt="Imagem do projeto {{ project.title }}"></div>
 						<p class="my-auto">{{ project.description }}</p>
-						<p class="mx-0 mb-0 mt-3"><a class="btn btn-primary btn-sm" href="{{ request.scheme }}://{{ request.get_host }}/projetos/{{ project.slug }}/" role="button">Ver mais &raquo;</a></p>
+						<p class="mx-0 mb-0 mt-3"><a class="btn btn-primary btn-sm" href="{{ request.scheme }}://{{ request.get_host }}{% url 'project' project.slug %}" role="button">Ver mais &raquo;</a></p>
 					</div>
 					{% endfor %}
 				</div>
@@ -45,7 +53,7 @@
 						<h3 class="regular-bootstrap pl-1">{{ post.title }}</h3>
 						<div class="blog-image-container my-2"><img class="img-fluid" src="{{ request.scheme }}://{{ request.get_host }}{{ post.main_image.url }}" alt="Imagem da publicação"></div>
 						<p class="my-auto">{{ post.subtitle }}</p>
-						<p class="mx-0 mb-0 mt-3"><a class="btn btn-primary btn-sm" href="{{ request.scheme }}://{{ request.get_host }}{% url 'post' post.id %}" role="button">Continuar lendo &raquo;</a></p>
+						<p class="mx-0 mb-0 mt-3"><a class="btn btn-primary btn-sm" href="{{ request.scheme }}://{{ request.get_host }}{% url 'post' post.slug %}" role="button">Continuar lendo &raquo;</a></p>
 					</div>
 					{% endfor %}
 				</div>
