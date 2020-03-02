@@ -4,7 +4,7 @@ from .models import Category, Project
 
 class CategoryAdmin(admin.ModelAdmin):
     '''
-        Admin View for Project
+        Admin View for Category
     '''
     list_display = ('name', 'abbreviation')
     search_fields = ('name', 'abbreviation')
