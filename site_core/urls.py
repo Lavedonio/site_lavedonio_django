@@ -26,6 +26,7 @@ urlpatterns = [
     path('', include('base.urls')),
     path('blog/', include('blog.urls')),
     path('projetos/', include('projects.urls')),
+    path('arquivos/', include('file_tools.urls')),
 ]
 
 if settings.DEBUG:

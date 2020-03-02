@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'base.apps.BaseConfig',
     'blog.apps.BlogConfig',
     'projects.apps.ProjectsConfig',
+    'file_tools.apps.FileToolsConfig',
 
     # Third-Party apps
     'crispy_forms',
