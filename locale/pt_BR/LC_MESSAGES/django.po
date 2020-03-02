@@ -105,8 +105,8 @@ msgid "Posts"
 msgstr "Publicações"
 
 #: file_tools/apps.py:7
-msgid "file tools"
-msgstr "ferramentas de arquivos"
+msgid "File Tools"
+msgstr "Ferramentas de Arquivos"
 
 #: file_tools/models.py:11 file_tools/models.py:17
 msgid "File Upload"
@@ -136,9 +136,9 @@ msgstr "Upload de Imagem"
 msgid "Image Uploads"
 msgstr "Upload de Imagens"
 
-#: projects/apps.py:7
-msgid "projects"
-msgstr "projetos"
+#: projects/apps.py:7 projects/models.py:42
+msgid "Projects"
+msgstr "Projetos"
 
 #: projects/models.py:8
 msgid "Abbreviation"
@@ -167,10 +167,6 @@ msgstr "JavaScript Personalizado"
 #: projects/models.py:41
 msgid "Project"
 msgstr "Projeto"
-
-#: projects/models.py:42
-msgid "Projects"
-msgstr "Projetos"
 
 #: site_core/settings.py:122
 msgid "Brazilian Portuguese"
