@@ -1,10 +1,11 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404, redirect
 from django.views.generic import ListView
 from django.views import View
 from .models import FileUpload, ImageUpload
 
 
-class FileUploadListView(ListView):
+class FileUploadListView(LoginRequiredMixin, ListView):
     model = FileUpload
     context_object_name = "files"
     ordering = ["-id"]
@@ -17,7 +18,7 @@ class FileUploadListView(ListView):
         return context
 
 
-class ImageUploadListView(ListView):
+class ImageUploadListView(LoginRequiredMixin, ListView):
     model = ImageUpload
     context_object_name = "images"
     ordering = ["-id"]
@@ -30,7 +31,7 @@ class ImageUploadListView(ListView):
         return context
 
 
-class ImageUploadDetailView(View):
+class ImageUploadRedirectView(View):
 	def get(self, request, slug):
 		image = get_object_or_404(ImageUpload, slug=slug)
 		return redirect(image.image_upload.url)
