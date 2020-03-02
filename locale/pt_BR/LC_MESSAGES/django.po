@@ -18,7 +18,8 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: base/forms.py:7 blog/models.py:12 projects/models.py:7
+#: base/forms.py:7 blog/models.py:12 file_tools/models.py:9
+#: file_tools/models.py:29 projects/models.py:7
 msgid "Name"
 msgstr "Nome"
 
@@ -58,7 +59,8 @@ msgstr "Título"
 msgid "Subtitle"
 msgstr "Subtítulo"
 
-#: blog/models.py:29 projects/models.py:21
+#: blog/models.py:29 file_tools/models.py:10 file_tools/models.py:30
+#: projects/models.py:21
 msgid "Slug"
 msgstr "Slug"
 
@@ -102,6 +104,38 @@ msgstr "Publicação"
 msgid "Posts"
 msgstr "Publicações"
 
+#: file_tools/apps.py:7
+msgid "file tools"
+msgstr "ferramentas de arquivos"
+
+#: file_tools/models.py:11 file_tools/models.py:17
+msgid "File Upload"
+msgstr "Upload de Arquivo"
+
+#: file_tools/models.py:12 file_tools/models.py:32 projects/models.py:27
+msgid "Description"
+msgstr "Descrição"
+
+#: file_tools/models.py:13 file_tools/models.py:33
+msgid "Created At"
+msgstr "Criado Em"
+
+#: file_tools/models.py:14 file_tools/models.py:34
+msgid "Updated At"
+msgstr "Atualizado Em"
+
+#: file_tools/models.py:18
+msgid "File Uploads"
+msgstr "Upload de Arquivos"
+
+#: file_tools/models.py:31 file_tools/models.py:37
+msgid "Image Upload"
+msgstr "Upload de Imagem"
+
+#: file_tools/models.py:38
+msgid "Image Uploads"
+msgstr "Upload de Imagens"
+
 #: projects/apps.py:7
 msgid "projects"
 msgstr "projetos"
@@ -122,10 +156,6 @@ msgstr "Categorias"
 msgid "Dark Background"
 msgstr "Fundo Escuro"
 
-#: projects/models.py:27
-msgid "Description"
-msgstr "Descrição"
-
 #: projects/models.py:29
 msgid "Custom CSS"
 msgstr "CSS Personalizado"
@@ -142,11 +172,11 @@ msgstr "Projeto"
 msgid "Projects"
 msgstr "Projetos"
 
-#: site_core/settings.py:121
+#: site_core/settings.py:122
 msgid "Brazilian Portuguese"
 msgstr "Português Brasileiro"
 
-#: site_core/settings.py:122
+#: site_core/settings.py:123
 msgid "English - US"
 msgstr "Inglês - EUA"
 
