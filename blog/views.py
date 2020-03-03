@@ -32,9 +32,9 @@ class PostFilterListView(ListView):
             tag = Tag.objects.filter(name__iexact=self.kwargs['tag_name']).first()
 
             if self.request.user.is_authenticated:
-                return Post.objects.filter(tag=tag).order_by('-date_posted')
+                return Post.objects.filter(tags=tag).order_by('-date_posted')
             else:
-                return Post.objects.filter(Q(tag=tag) & Q(published=True)).order_by('-date_posted')
+                return Post.objects.filter(Q(tags=tag) & Q(published=True)).order_by('-date_posted')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
