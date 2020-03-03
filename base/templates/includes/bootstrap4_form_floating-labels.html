@@ -13,7 +13,7 @@
 			{% endif %}
 
 			{% for field in form.visible_fields %}
-				<div class="form-label-group">
+				<div class="form-label-group"{% if field.id_for_label == "id_captcha" %} style="overflow: hidden;"{% endif %}>
 
 					{% if form.is_bound %}
 						{% if field.errors %}
@@ -30,7 +30,7 @@
 						{% render_field field class="form-control" placeholder=field.label %}
 					{% endif %}
 
-					{{ field.label_tag }}
+					{% if field.id_for_label != "id_captcha" %}{{ field.label_tag }}{% endif %}
 
 					{% if field.help_text %}
 						<small class="form-text text-muted">{{ field.help_text }}</small>

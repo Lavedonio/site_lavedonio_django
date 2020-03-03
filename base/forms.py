@@ -1,3 +1,4 @@
+from captcha import fields, widgets
 from django import forms
 from django.core.mail import send_mail
 from django.utils.translation import gettext_lazy as _
@@ -8,6 +9,7 @@ class ContactForm(forms.Form):
     subject = forms.CharField(label=_("Subject"))
     email = forms.EmailField(label=_("E-mail"))
     message = forms.CharField(widget=forms.Textarea, label=_("Message"))
+    captcha = fields.ReCaptchaField(widget=widgets.ReCaptchaV2Checkbox(attrs={'data-theme': 'light'}))
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
