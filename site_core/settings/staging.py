@@ -28,7 +28,7 @@ SECRET_KEY = config["SECRET_KEY"]
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['45.79.220.173']
+ALLOWED_HOSTS = ['staging.lavedonio.com.br', '45.79.220.173']
 
 
 # Database
