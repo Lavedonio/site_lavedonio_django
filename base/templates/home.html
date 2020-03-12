@@ -3,7 +3,7 @@
 {% block main_section %}
 		<!-- Hero section -->
 		<section class="hero-main background-img font-poppins d-flex align-items-stretch" style="background-image: url({{ request.scheme }}://{{ request.get_host }}{% static 'img/yancy-min-code-unsplash.jpg' %});">
-			<div class="container d-flex align-items-center my-sm-0 my-5">
+			<div class="container d-flex align-items-center my-5 my-md-0">
 				<div class="d-block hero-main-card" style="width: 100%;">
 					<h1>Olá!</h1>
 					<div class="line" style="border-color: #E7F6FF;"></div>
@@ -47,9 +47,9 @@
 			<div class="container">
 				<h2 class="mt-5">Publicações em destaque</h2>
 				<div class="line"></div>
-				<div class="row d-md-flex flew-row justify-content-md-around justify-content-center">
+				<div class="d-md-flex flew-row justify-content-md-around">
 					{% for post in posts %}
-					<div class="post-display d-flex flex-column mx-0 my-4">
+					<div class="post-display d-flex flex-column mx-0 mx-md-2 my-4">
 						<h3 class="regular-bootstrap pl-1"><a style="color: inherit;" href="{{ request.scheme }}://{{ request.get_host }}{% url 'post' post.slug %}">{{ post.title }}</a></h3>
 						<div class="blog-image-container my-2"><img class="img-fluid" src="{{ request.scheme }}://{{ request.get_host }}{{ post.main_image.url }}" alt="Imagem da publicação"></div>
 						<p class="my-auto">{{ post.subtitle }}</p>

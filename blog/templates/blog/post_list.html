@@ -21,9 +21,9 @@
 			<div class="container">
 				<h2 class="light-text light-color-text">Publicações em destaque</h2>
 				<div class="light-line" style="border-color: #E7F6FF;"></div>
-				<div class="row d-md-flex flew-row justify-content-md-around justify-content-center">
+				<div class="d-md-flex flew-row justify-content-md-around">
 					{% for post_featured in posts_featured %}
-					<div class="post-display d-flex flex-column border mx-0 my-4">
+					<div class="post-display d-flex flex-column border mx-0 mx-md-2 my-4">
 						<h3 class="regular-bootstrap pl-1"><a style="color: inherit;" href="{{ request.scheme }}://{{ request.get_host }}{% url 'post' post_featured.slug %}">{{ post_featured.title }}</a></h3>
 						<div class="image-container my-2"><img class="img-fluid" src="{{ request.scheme }}://{{ request.get_host }}{{ post_featured.main_image.url }}" alt="Imagem da publicação"></div>
 						<p class="my-auto">{{ post_featured.subtitle }}</p>
