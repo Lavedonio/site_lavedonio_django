@@ -2,7 +2,7 @@
 {% load static %}
 {% block main_section %}
 		<!-- Hero section -->
-		<section class="hero-main background-img font-poppins d-flex align-items-stretch" style="background-image: url({% static 'img/yancy-min-code-unsplash.jpg' %});">
+		<section class="hero-main background-img font-poppins d-flex align-items-stretch" style="background-image: url({{ request.scheme }}://{{ request.get_host }}{% static 'img/yancy-min-code-unsplash.jpg' %});">
 			<div class="container d-flex align-items-center my-sm-0 my-5">
 				<div class="d-block hero-main-card" style="width: 100%;">
 					<h1>Olá!</h1>
@@ -15,7 +15,7 @@
 
 		{% if projects %}
 		<!-- Featured Projects -->
-		<section class="background-img font-poppins pb-3 pb-md-4 d-flex align-items-stretch" style="background-image: linear-gradient(135deg, rgba(19, 16, 30, 0.8) 0%, rgba(169, 169, 169, 0.3) 100%), url({% static 'img/jeff-sheldon-project-unsplash.jpg' %});">
+		<section class="background-img font-poppins pb-3 pb-md-4 d-flex align-items-stretch" style="background-image: linear-gradient(135deg, rgba(19, 16, 30, 0.8) 0%, rgba(169, 169, 169, 0.3) 100%), url({{ request.scheme }}://{{ request.get_host }}{% static 'img/jeff-sheldon-project-unsplash.jpg' %});">
 			<div class="container">
 				<h2 class="mt-5" style="color: white;">Projetos em destaque</h2>
 				<div class="line" style="border-color: white;"></div>
@@ -43,7 +43,7 @@
 
 		{% if posts %}
 		<!-- Featured Blog Posts -->
-		<section class="background-img font-poppins pb-3 pb-md-5 d-flex align-items-stretch" style="background-image: url({% static 'img/emile-perron-code-unsplash.jpg' %});">
+		<section class="background-img font-poppins pb-3 pb-md-5 d-flex align-items-stretch" style="background-image: url({{ request.scheme }}://{{ request.get_host }}{% static 'img/emile-perron-code-unsplash.jpg' %});">
 			<div class="container">
 				<h2 class="mt-5">Publicações em destaque</h2>
 				<div class="line"></div>

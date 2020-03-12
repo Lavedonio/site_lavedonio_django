@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block main_section %}
-		<section class="background-img font-poppins main-img light-color-text d-flex align-items-stretch" style="background-image: linear-gradient(63deg, rgba(6, 8, 31, 0.8) 50%, rgba(255, 255, 255, 0.3) 100%), url({% static 'img/dan-dimmock-research-unsplash.jpg' %});">
+		<section class="background-img font-poppins main-img light-color-text d-flex align-items-stretch" style="background-image: linear-gradient(63deg, rgba(6, 8, 31, 0.8) 50%, rgba(255, 255, 255, 0.3) 100%), url({{ request.scheme }}://{{ request.get_host }}{% static 'img/dan-dimmock-research-unsplash.jpg' %});">
 			<div class="container d-flex align-items-end">
 				<div class="d-block mb-4">
 					<h1 class="light-text">Pesquisa</h1>
@@ -28,7 +28,7 @@
 						<h3 class="regular-bootstrap pl-2">{{ project.title }}</h3>
 						<div class="light-line ml-2 mt-0 mb-2" style="border-color: white;"></div>
 						{% if project.category.all %}<div class="ml-2 mt-2">{% for category in project.category.all %}<div class="d-inline-block mr-3">{{ category.abbreviation }}</div>{% endfor %}</div>{% endif %}
-						<div class="image-container my-2"><img class="img-fluid" src="{{ project.main_image.url }}" alt="Imagem do projeto {{ project.title }}"></div>
+						<div class="image-container my-2"><img class="img-fluid" src="{{ request.scheme }}://{{ request.get_host }}{{ project.main_image.url }}" alt="Imagem do projeto {{ project.title }}"></div>
 						<p class="my-auto">{{ project.description }}</p>
 						<p class="mx-0 mb-0 mt-3"><a class="btn btn-primary btn-sm" href="{{ request.scheme }}://{{ request.get_host }}{% url 'project' project.slug %}" role="button">Ver mais &raquo;</a></p>
 					</div>

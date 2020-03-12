@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block main_section %}
-		<section class="background-img font-poppins light-color-text d-flex align-items-stretch" style="background-image: url({% static 'img/carlyson-oliveira-avenida-paulista-unsplash.jpg' %});">
+		<section class="background-img font-poppins light-color-text d-flex align-items-stretch" style="background-image: url({{ request.scheme }}://{{ request.get_host }}{% static 'img/carlyson-oliveira-avenida-paulista-unsplash.jpg' %});">
 			<div class="container main-img-padding d-flex align-items-end">
 				<div class="d-block">
 					<h1 class="light-text">Contato</h1>
@@ -27,7 +27,7 @@
 					<div class="col-12 col-md-5 col-lg-4 pl-xl-4">
 						<h3 class="light-text text-left mb-3 ml-xl-n4 contact-secondary-headings">... ou pelas redes sociais</h3>
 
-						<div class="mt-1 text-center text-md-left"><a href="https://github.com/Lavedonio/"><img src="{% static 'img/github.svg' %}" alt="GitHub" height="32px" width="32px"></a></div>
+						<div class="mt-1 text-center text-md-left"><a href="https://github.com/Lavedonio/"><img src="{{ request.scheme }}://{{ request.get_host }}{% static 'img/github.svg' %}" alt="GitHub" height="32px" width="32px"></a></div>
 
 						<div class="mt-2 text-center text-md-left"><a href="https://twitter.com/Lavedonio?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-size="large" data-lang="pt" data-show-count="false">Follow @Lavedonio</a></div>
 

@@ -21,10 +21,10 @@
 				<div class="col-12 col-md-2 col-xl-1 d-none d-md-block">
 					<div class="share-holder">
 						<div class="d-inline-block mb-1"><span style="font-size: 13px;">Compartilhe:</span></div>
-						<div class="d-inline-block d-md-block share mt-1"><a href="{{ facebook_url }}" target="_blank" rel="noopener noreferrer"><img src="{% static 'img/icons/circle_svg/Facebook.svg' %}" alt="Facebook"></a></div>
-						<div class="d-inline-block d-md-block share mt-1"><a href="{{ twitter_url }}" target="_blank" rel="noopener noreferrer"><img src="{% static 'img/icons/circle_svg/Twitter.svg' %}" alt="Twitter"></a></div>
-						<div class="d-inline-block d-md-block share mt-1"><a href="{{ linkedin_url }}" target="_blank" rel="noopener noreferrer"><img src="{% static 'img/icons/circle_svg/LinkedIn.svg' %}" alt="LinkedIn"></a></div>
-						<div class="d-inline-block d-md-block share mt-1"><a href="{{ whatsapp_url }}" target="_blank" rel="noopener noreferrer"><img src="{% static 'img/icons/circle_svg/WhatsApp.svg' %}" alt="WhatsApp"></a></div>
+						<div class="d-inline-block d-md-block share mt-1"><a href="{{ facebook_url }}" target="_blank" rel="noopener noreferrer"><img src="{{ request.scheme }}://{{ request.get_host }}{% static 'img/icons/circle_svg/Facebook.svg' %}" alt="Facebook"></a></div>
+						<div class="d-inline-block d-md-block share mt-1"><a href="{{ twitter_url }}" target="_blank" rel="noopener noreferrer"><img src="{{ request.scheme }}://{{ request.get_host }}{% static 'img/icons/circle_svg/Twitter.svg' %}" alt="Twitter"></a></div>
+						<div class="d-inline-block d-md-block share mt-1"><a href="{{ linkedin_url }}" target="_blank" rel="noopener noreferrer"><img src="{{ request.scheme }}://{{ request.get_host }}{% static 'img/icons/circle_svg/LinkedIn.svg' %}" alt="LinkedIn"></a></div>
+						<div class="d-inline-block d-md-block share mt-1"><a href="{{ whatsapp_url }}" target="_blank" rel="noopener noreferrer"><img src="{{ request.scheme }}://{{ request.get_host }}{% static 'img/icons/circle_svg/WhatsApp.svg' %}" alt="WhatsApp"></a></div>
 					</div>
 				</div>
 				<div class="col-12 col-md-10">
@@ -57,10 +57,10 @@
 					<hr>
 					<div class="share-holder d-md-none my-2">
 						<div class="d-inline-block"><span style="font-size: 13px;">Compartilhe:</span></div>
-						<div class="d-inline-block share"><a href="{{ facebook_url }}" target="_blank" rel="noopener noreferrer"><img src="{% static 'img/icons/circle_svg/Facebook.svg' %}" alt="Facebook"></a></div>
-						<div class="d-inline-block share"><a href="{{ twitter_url }}" target="_blank" rel="noopener noreferrer"><img src="{% static 'img/icons/circle_svg/Twitter.svg' %}" alt="Twitter"></a></div>
-						<div class="d-inline-block share"><a href="{{ linkedin_url }}" target="_blank" rel="noopener noreferrer"><img src="{% static 'img/icons/circle_svg/LinkedIn.svg' %}" alt="LinkedIn"></a></div>
-						<div class="d-inline-block share"><a href="{{ whatsapp_url }}" target="_blank" rel="noopener noreferrer"><img src="{% static 'img/icons/circle_svg/WhatsApp.svg' %}" alt="WhatsApp"></a></div>
+						<div class="d-inline-block share"><a href="{{ facebook_url }}" target="_blank" rel="noopener noreferrer"><img src="{{ request.scheme }}://{{ request.get_host }}{% static 'img/icons/circle_svg/Facebook.svg' %}" alt="Facebook"></a></div>
+						<div class="d-inline-block share"><a href="{{ twitter_url }}" target="_blank" rel="noopener noreferrer"><img src="{{ request.scheme }}://{{ request.get_host }}{% static 'img/icons/circle_svg/Twitter.svg' %}" alt="Twitter"></a></div>
+						<div class="d-inline-block share"><a href="{{ linkedin_url }}" target="_blank" rel="noopener noreferrer"><img src="{{ request.scheme }}://{{ request.get_host }}{% static 'img/icons/circle_svg/LinkedIn.svg' %}" alt="LinkedIn"></a></div>
+						<div class="d-inline-block share"><a href="{{ whatsapp_url }}" target="_blank" rel="noopener noreferrer"><img src="{{ request.scheme }}://{{ request.get_host }}{% static 'img/icons/circle_svg/WhatsApp.svg' %}" alt="WhatsApp"></a></div>
 					</div>
 					<hr class="d-md-none">
 					<div class="d-block mb-4">{{ post.content|safe }}</div>

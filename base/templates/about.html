@@ -3,7 +3,7 @@
 {% block canonical %}<link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{% url 'about' %}">{% endblock %}
 
 {% block main_section %}
-		<section class="background-img font-poppins main-img d-flex align-items-stretch" style="background-image: url({% static 'img/art-lasovsky-pen-unsplash.jpg' %});">
+		<section class="background-img font-poppins main-img d-flex align-items-stretch" style="background-image: url({{ request.scheme }}://{{ request.get_host }}{% static 'img/art-lasovsky-pen-unsplash.jpg' %});">
 			<div class="container d-flex align-items-end">
 				<div class="d-block">
 					<h1 class="light-text">Sobre</h1>
