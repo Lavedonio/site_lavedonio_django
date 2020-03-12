@@ -3,7 +3,7 @@
 {% block canonical %}<link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{% url 'projects' %}">{% endblock %}
 
 {% block main_section %}
-		<section class="background-img font-poppins main-img-wider light-color-text d-flex align-items-stretch" style="background-image: url({% static 'img/ales-nesetril-technology-unsplash.jpg' %});">
+		<section class="background-img font-poppins main-img-wider light-color-text d-flex align-items-stretch" style="background-image: linear-gradient(63deg, rgba(0, 0, 0, 0.3) 0%, rgba(128, 128, 128, 0.2) 100%), url({{ request.scheme }}://{{ request.get_host }}{% static 'img/ales-nesetril-technology-unsplash.jpg' %});">
 			<div class="container d-flex align-items-end">
 				<div class="d-block">
 					<h1 class="light-text">Projetos</h1>
@@ -25,7 +25,7 @@
 						<h3 class="regular-bootstrap pl-2">{{ project_featured.title }}</h3>
 						<div class="light-line ml-2 mt-0 mb-2" style="border-color: white;"></div>
 						{% if project_featured.categories.all %}<div class="ml-2 mt-2">{% for category in project_featured.categories.all %}<div class="d-inline-block mr-3">{{ category.abbreviation }}</div>{% endfor %}</div>{% endif %}
-						<div class="image-container my-2"><img class="img-fluid" src="{{ project_featured.main_image.url }}" alt="Imagem do projeto {{ project_featured.title }}"></div>
+						<div class="image-container my-2"><img class="img-fluid" src="{{ request.scheme }}://{{ request.get_host }}{{ project_featured.main_image.url }}" alt="Imagem do projeto {{ project_featured.title }}"></div>
 						<p class="my-auto">{{ project_featured.description }}</p>
 						<p class="mx-0 mb-0 mt-3"><a class="btn btn-primary btn-sm" href="{{ request.scheme }}://{{ request.get_host }}{% url 'project' project_featured.slug %}" role="button">Ver mais &raquo;</a></p>
 					</div>
@@ -45,7 +45,7 @@
 						<h3 class="regular-bootstrap pl-2">{{ project.title }}</h3>
 						<div class="light-line ml-2 mt-0 mb-2" style="border-color: white;"></div>
 						{% if project.categories.all %}<div class="ml-2 mt-2">{% for category in project.categories.all %}<div class="d-inline-block mr-3">{{ category.abbreviation }}</div>{% endfor %}</div>{% endif %}
-						<div class="image-container my-2"><img class="img-fluid" src="{{ project.main_image.url }}" alt="Imagem do projeto {{ project.title }}"></div>
+						<div class="image-container my-2"><img class="img-fluid" src="{{ request.scheme }}://{{ request.get_host }}{{ project.main_image.url }}" alt="Imagem do projeto {{ project.title }}"></div>
 						<p class="my-auto">{{ project.description }}</p>
 						<p class="mx-0 mb-0 mt-3"><a class="btn btn-primary btn-sm" href="{{ request.scheme }}://{{ request.get_host }}{% url 'project' project.slug %}" role="button">Ver mais &raquo;</a></p>
 					</div>
