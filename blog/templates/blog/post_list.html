@@ -24,7 +24,7 @@
 				<div class="d-md-flex flew-row justify-content-md-around">
 					{% for post_featured in posts_featured %}
 					<div class="post-display d-flex flex-column border mx-0 mx-md-2 my-4">
-						<h3 class="regular-bootstrap pl-1"><a style="color: inherit;" href="{{ request.scheme }}://{{ request.get_host }}{% url 'post' post_featured.slug %}">{{ post_featured.title }}</a></h3>
+						<h3 class="pl-1"><a style="color: inherit;" href="{{ request.scheme }}://{{ request.get_host }}{% url 'post' post_featured.slug %}">{{ post_featured.title }}</a></h3>
 						<div class="image-container my-2"><img class="img-fluid" src="{{ request.scheme }}://{{ request.get_host }}{{ post_featured.main_image.url }}" alt="Imagem da publicação"></div>
 						<p class="my-auto">{{ post_featured.subtitle }}</p>
 						<p class="mx-0 mb-0 mt-3"><a class="btn btn-primary btn-sm" href="{{ request.scheme }}://{{ request.get_host }}{% url 'post' post_featured.slug %}" role="button">Continuar lendo &raquo;</a></p>

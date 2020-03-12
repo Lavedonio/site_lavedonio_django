@@ -25,7 +25,7 @@
 				<div class="row d-md-flex flew-row-reverse justify-content-md-start justify-content-center">
 					{% for project in project_search %}
 					<div class="project-display d-flex flex-column mx-2 my-4" style="background-color: rgba(0, 0, 0, 0.9);">
-						<h3 class="regular-bootstrap pl-2">{{ project.title }}</h3>
+						<h3 class="pl-2">{{ project.title }}</h3>
 						<div class="light-line ml-2 mt-0 mb-2" style="border-color: white;"></div>
 						{% if project.category.all %}<div class="ml-2 mt-2">{% for category in project.category.all %}<div class="d-inline-block mr-3">{{ category.abbreviation }}</div>{% endfor %}</div>{% endif %}
 						<div class="image-container my-2"><img class="img-fluid" src="{{ request.scheme }}://{{ request.get_host }}{{ project.main_image.url }}" alt="Imagem do projeto {{ project.title }}"></div>
