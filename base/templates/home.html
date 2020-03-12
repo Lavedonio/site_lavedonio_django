@@ -50,7 +50,7 @@
 				<div class="row d-md-flex flew-row justify-content-md-around justify-content-center">
 					{% for post in posts %}
 					<div class="post-display d-flex flex-column mx-0 my-4">
-						<h3 class="regular-bootstrap pl-1">{{ post.title }}</h3>
+						<h3 class="regular-bootstrap pl-1"><a style="color: inherit;" href="{{ request.scheme }}://{{ request.get_host }}{% url 'post' post.slug %}">{{ post.title }}</a></h3>
 						<div class="blog-image-container my-2"><img class="img-fluid" src="{{ request.scheme }}://{{ request.get_host }}{{ post.main_image.url }}" alt="Imagem da publicação"></div>
 						<p class="my-auto">{{ post.subtitle }}</p>
 						<p class="mx-0 mb-0 mt-3"><a class="btn btn-primary btn-sm" href="{{ request.scheme }}://{{ request.get_host }}{% url 'post' post.slug %}" role="button">Continuar lendo &raquo;</a></p>
