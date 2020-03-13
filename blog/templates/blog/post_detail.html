@@ -10,7 +10,7 @@
 		<section class="main-img background-img font-poppins light-color-text d-flex align-items-stretch" style="background-image: linear-gradient(63deg, rgba(40, 34, 62, 0.8) 50%, rgba(255, 255, 255, 0.3) 100%), url({{ request.scheme }}://{{ request.get_host }}{{ post.main_image.url }});">
 			<div class="container main-img-padding pb-2 d-flex align-items-end">
 				<div class="d-block">
-					<h1 class="light-text">{{ post.title }}</h1>
+					<h1 class="light-text content-title text-break">{{ post.title }}</h1>
 					<div class="line" style="border-color: #E7F6FF;"></div>
 					<p class="light-text">{{ post.subtitle }}</p>
 				</div>

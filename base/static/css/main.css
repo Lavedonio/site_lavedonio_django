@@ -198,6 +198,11 @@ h2 {
 	font-size: 2.5rem;
 }
 
+.content-title {
+	font-size: 48px;
+	font-size: 3rem;
+}
+
 @media screen and (min-width: 576px) {
 	.hero-text {
 		font-size: 22px;
@@ -213,6 +218,11 @@ h2 {
 	.hero-text {
 		font-size: 24px;
 		font-size: 1.5rem;
+	}
+
+	.content-title {
+		font-size: 60px;
+		font-size: 3.75rem;
 	}
 }
 
