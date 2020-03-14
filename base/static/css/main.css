@@ -125,7 +125,6 @@ h2 {
 .project-display {
 	padding: 20px 15px;
 	color: #E7F6FF;
-	max-width: 450px;
 	background-color: rgba(0, 0, 0, 0.71);
 	-webkit-box-shadow: 14px 14px 13px 4px rgba(81, 84, 85, 0.22);
 	-moz-box-shadow: 14px 14px 13px 4px rgba(81, 84, 85, 0.22);
@@ -139,6 +138,10 @@ h2 {
 .project-display > p {
 	font-size: 14px;
 	font-size: 0.8750rem;
+}
+
+.double-project-layout, .triple-project-layout {
+	max-width: 450px;
 }
 
 .image-container {
@@ -211,7 +214,11 @@ h2 {
 }
 
 @media screen and (min-width: 768px) {
-	.project-display {
+	.double-project-layout {
+		max-width: 320px;
+	}
+
+	.triple-project-layout {
 		max-width: 220px;
 	}
 
@@ -227,7 +234,11 @@ h2 {
 }
 
 @media screen and (min-width: 992px) {
-	.project-display {
+	.double-project-layout {
+		max-width: 400px;
+	}
+
+	.triple-project-layout {
 		max-width: 300px;
 	}
 
@@ -238,7 +249,11 @@ h2 {
 }
 
 @media screen and (min-width: 1200px) {
-	.project-display {
+	.double-project-layout {
+		max-width: 450px;
+	}
+
+	.triple-project-layout {
 		max-width: 350px;
 	}
 }

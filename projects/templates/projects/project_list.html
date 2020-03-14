@@ -21,7 +21,7 @@
 				<div class="light-line" style="border-color: #E7F6FF;"></div>
 				<div class="row d-md-flex flew-row justify-content-md-around justify-content-center">
 					{% for project_featured in projects_featured %}
-					<div class="project-display d-flex flex-column mx-2 my-4">
+					<div class="project-display {% if projects_featured.count == 3 %}triple{% else %}double{% endif %}-project-layout d-flex flex-column mx-2 my-4">
 						<h3 class="pl-2 overflow-hidden"><a class="text-decoration-none text-reset" href="{{ request.scheme }}://{{ request.get_host }}{% url 'project' project_featured.slug %}" role="button">{{ project_featured.title }}</a></h3>
 						<div class="light-line ml-2 mt-0 mb-2" style="border-color: white;"></div>
 						{% if project_featured.categories.all %}<div class="ml-2 mt-2">{% for category in project_featured.categories.all %}<div class="d-inline-block mr-3">{{ category.abbreviation }}</div>{% endfor %}</div>{% endif %}
@@ -39,9 +39,9 @@
 			<div class="container">
 				<h2 class="font-poppins light-text">Todos os projetos</h2>
 				<div class="light-line"></div>
-				<div class="row d-md-flex flew-row-reverse justify-content-md-start justify-content-center">
+				<div class="row mx-xl-auto d-md-flex flew-row-reverse justify-content-md-start justify-content-center">
 					{% for project in projects %}
-					<div class="project-display d-flex flex-column mx-2 my-4" style="background-color: rgba(0, 0, 0, 0.9);">
+					<div class="project-display triple-project-layout d-flex flex-column mx-2 my-4" style="background-color: rgba(0, 0, 0, 0.9);">
 						<h3 class="pl-2 overflow-hidden"><a class="text-decoration-none text-reset" href="{{ request.scheme }}://{{ request.get_host }}{% url 'project' project.slug %}" role="button">{{ project.title }}</a></h3>
 						<div class="light-line ml-2 mt-0 mb-2" style="border-color: white;"></div>
 						{% if project.categories.all %}<div class="ml-2 mt-2">{% for category in project.categories.all %}<div class="d-inline-block mr-3">{{ category.abbreviation }}</div>{% endfor %}</div>{% endif %}

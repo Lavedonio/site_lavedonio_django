@@ -21,7 +21,7 @@
 				<div class="line" style="border-color: white;"></div>
 				<div class="row d-md-flex flew-row justify-content-md-around justify-content-center">
 					{% for project in projects %}
-					<div class="project-display d-flex flex-column mx-2 my-4">
+					<div class="project-display {% if projects.count == 3 %}triple{% else %}double{% endif %}-project-layout d-flex flex-column mx-2 my-4">
 						<h3 class="pl-2 overflow-hidden"><a class="text-decoration-none text-reset" href="{{ request.scheme }}://{{ request.get_host }}{% url 'project' project.slug %}" role="button">{{ project.title }}</a></h3>
 						<div class="light-line ml-2 mt-0 mb-2" style="border-color: white;"></div>
 						{% if project.category.all %}
