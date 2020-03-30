@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     'blog.apps.BlogConfig',
     'projects.apps.ProjectsConfig',
     'file_tools.apps.FileToolsConfig',
+    'admin_dashboard.apps.AdminDashboardConfig',
 
     # Third-Party apps
     'crispy_forms',
@@ -124,7 +125,7 @@ STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 
 LOGIN_URL = 'login'
-LOGIN_REDIRECT_URL = 'homepage'
+LOGIN_REDIRECT_URL = 'dashboard'
 
 
 # Third-Party apps settings

@@ -1,0 +1,129 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR" class="h-100">
+<head>
+	<!-- Required meta tags -->
+	<meta charset="UTF-8">
+	<meta name="author" content="Daniel Lavedonio de Lima">
+	<meta name="description" content="Site pessoal">
+	<meta name="robots" content="noindex">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	{% block canonical %}<link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{% url 'homepage' %}">{% endblock %}
+
+	<link rel="icon" href="{{ request.scheme }}://{{ request.get_host }}{% static 'img/icons/favicon.ico' %}" type="image/x-icon"/>
+	<link rel="shortcut icon" href="{{ request.scheme }}://{{ request.get_host }}{% static 'img/favicon.ico' %}" type="image/x-icon"/>
+
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+	<link href="https://fonts.googleapis.com/css?family=Dancing+Script|Poppins&display=swap" rel="stylesheet">
+
+	<link rel="stylesheet" type="text/css" href="{{ request.scheme }}://{{ request.get_host }}{% static 'css/admin_main.css' %}">
+
+	{% block stylesheet %}{% endblock %}
+
+	{% block title_custom %}<title>{% if title %}{{ title }} - {% endif %}Admin Dashboard - Daniel Lavedonio de Lima</title>{% endblock %}
+
+</head>
+<body class="d-flex flex-column h-100">
+	<aside class="nav-body">
+		<div class="wrapper">
+			<h1 class="mb-0 text-center aside-navbar-font"><a href="#" class="brand-font nav-top-brand">Lavedonio</a></h1>
+			<h1 class="text-center aside-navbar-font"><a href="#" class="brand-font nav-top-brand">Admin</a></h1>
+			<h2 class="h5 light-text">Teste</h2>
+			<ul class="menulevel1">
+				<li>Projetos</li>
+				<li>Projetos</li>
+				<li>Projetos</li>
+				<li>Projetos</li>
+				<li>Projetos</li>
+				<li>Projetos</li>
+				<li>Projetos</li>
+				<li>Post</li>
+				<li>Projetos</li>
+				<li>Projetos</li>
+				<li>Projetos</li>
+				<li>Projetos</li>
+				<li>Projetos</li>
+				<li>Post</li>
+				<li>Projetos</li>
+				<li>Projetos</li>
+				<li>Projetos</li>
+				<li>Projetos</li>
+				<li>Projetos</li>
+				<li>Projetos</li>
+				<li>Projetos</li>
+				<li>Post</li>
+				<li>Projetos</li>
+				<li>Projetos</li>
+				<li>Projetos</li>
+				<li>Projetos</li>
+				<li>Projetos</li>
+				<li>Post</li>
+				<li>Projetos</li>
+				<li>Projetos</li>
+				<li>Projetos</li>
+				<li>Projetos</li>
+				<li>abc</li>
+			</ul>
+		</div>
+	</aside>
+
+	<section class="d-flex flex-column h-100 main-section high-z">
+		<header class="fixed-nav-margin">
+			<nav class="navbar-top">
+				<button id="main-page-toggle" class="nav-toggler" data-toggle="collapse" data-target="#vertical-navbar"><span class="nav-toggler-icon">&rarr;</span></button>
+				<a href="{{ request.scheme }}://{{ request.get_host }}{% url 'dashboard' %}" class="nav-top-brand brand-font main-navbar-font">Lavedonio - Admin</a>
+
+				<div class="d-none d-md-inline-block ml-auto mr-2">
+					<ul class="navbar-nav">
+						<li class="nav-item nav-list{% if navbar_active == 'home' %} active{% endif %}">
+							<a class="nav-link" style="color: #2CA20E;" href="{{ request.scheme }}://{{ request.get_host }}{% url 'homepage' %}">Ver Site</a>
+						</li>
+					</ul>
+				</div>
+			</nav>
+		</header>
+
+		<!-- Page content -->
+		<main role="main" class="flex-shrink-0">
+			<div class="container">
+				<h1>Teste</h1>
+				<div class="d-block mb-4">
+					<p class="article-content">Finalmente chegou o grande momento de abrir o site para o mundo. Ainda tenho que testar diversas funcionalidades e garanto que há muita gambiarra potencialmente perigosa por trás, mas pelo menos você agora pode ver o que eu demorei tanto para fazer.</p>
+
+					<p class="article-content">A ideia deste site é ser um repositório de projetos que eu faço e também ser uma ferramenta de testes de marketing digital, backend de desenvolvimento, entre outras.</p>
+
+					<p class="article-content">Deveria estar estudando para o testinho de amanhã? Ou melhor, estar dormindo agora que estou exausto? Com certeza deveria, mas só quem programa entende essa mistura de teimosia e esperança de achar que o próximo problema será o último e conseguiremos finalmente fazer essa porcaria funcionar (e só nós sabemos a satisfação dessa conquista após essas barreiras serem ultrapassadas).</p>
+
+					<p class="article-content">Deveria estar estudando para o testinho de amanhã? Ou melhor, estar dormindo agora que estou exausto? Com certeza deveria, mas só quem programa entende essa mistura de teimosia e esperança de achar que o próximo problema será o último e conseguiremos finalmente fazer essa porcaria funcionar (e só nós sabemos a satisfação dessa conquista após essas barreiras serem ultrapassadas).</p>
+
+					<p class="article-content">Tenho que admitir que estou nervoso pois estou desabafando praticamente neste post, mas ainda não tenho ideia se isso irá funcionar mesmo ou não. Se vocês estão vendo esse post é porque deu certo. Dedos cruzados... PUBLICAR!</p>
+				</div>
+			</div>
+		{% block main_section %}{% endblock %}
+		</main>
+
+		<footer class="footer custom-footer mt-auto">
+			<div class="container text-center px-xl-5">
+
+				<div class="brand-font mb-2">
+					<h5 class="footer-menu-brand">Daniel Lavedonio de Lima</h5>
+				</div>
+
+				{% block credits %}{% endblock %}
+				<span class="d-block mt-3 footer-info">Este site é um projeto <i>open-source</i>. Veja o código fonte <a href="https://github.com/Lavedonio/site_lavedonio_django/" target="_blank" rel="noopener noreferrer">aqui</a>.</span>
+				<span class="d-block mt-1 footer-info">Daniel Lavedonio de Lima - 2020</span>
+			</div>
+		</footer>
+	</section>
+
+	<!-- Optional JavaScript -->
+	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+	<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+	<script src="{% static 'js/admin_main.js' %}"></script>
+	{% block javascript %}{% endblock %}
+</body>
+</html>

@@ -27,6 +27,7 @@ urlpatterns = [
     path('blog/', include('blog.urls')),
     path('projetos/', include('projects.urls')),
     path('arquivos/', include('file_tools.urls')),
+    path('dashboard/', include('admin_dashboard.urls')),
 ]
 
 if settings.DEBUG:
