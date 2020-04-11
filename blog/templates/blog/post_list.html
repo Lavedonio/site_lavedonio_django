@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block main_section %}
-		<section class="main-section{% if filtering or page_obj.has_previous %}-filtered{% endif %} background-img font-poppins light-color-text d-flex align-items-stretch" style="background-image: linear-gradient(63deg, rgba(40, 34, 62, 0.8) 0%, rgba(255, 255, 255, 0.3) 100%), url({{ request.scheme }}://{{ request.get_host }}{% static 'img/ali-yahya-notebook-unsplash.jpg' %});">
+		<section class="main-section{% if filtering or page_obj.has_previous or not posts_featured %}-filtered{% endif %} background-img font-poppins light-color-text d-flex align-items-stretch" style="background-image: linear-gradient(63deg, rgba(40, 34, 62, 0.8) 0%, rgba(255, 255, 255, 0.3) 100%), url({{ request.scheme }}://{{ request.get_host }}{% static 'img/ali-yahya-notebook-unsplash.jpg' %});">
 			<div class="container main-img-padding pb-2 d-flex align-items-end">
 				<div class="d-block">
 					<h1 class="light-text">Blog</h1>
@@ -16,7 +16,7 @@
 				</div>
 			</div>
 		</section>
-		{% if not filtering and not page_obj.has_previous %}
+		{% if not filtering and not page_obj.has_previous and posts_featured %}
 		<section class="font-poppins mb-3">
 			<div class="container">
 				<h2 class="light-text light-color-text">Publicações em destaque</h2>
