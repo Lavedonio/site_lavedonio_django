@@ -9,7 +9,7 @@ class ContactForm(forms.Form):
     subject = forms.CharField(label=_("Subject"))
     email = forms.EmailField(label=_("E-mail"))
     message = forms.CharField(widget=forms.Textarea, label=_("Message"))
-    captcha = fields.ReCaptchaField(widget=widgets.ReCaptchaV2Checkbox(attrs={'data-theme': 'light'}))
+    captcha = fields.ReCaptchaField(widget=widgets.ReCaptchaV3())
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

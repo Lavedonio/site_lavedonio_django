@@ -51,6 +51,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
 # Third-Party apps settings
-# RECAPTCHA_PUBLIC_KEY = ''
-# RECAPTCHA_PRIVATE_KEY = ''
-SILENCED_SYSTEM_CHECKS = ['captcha.recaptcha_test_key_error']
+RECAPTCHA_PUBLIC_KEY = config["RECAPTCHA_PUBLIC_KEY"]
+RECAPTCHA_PRIVATE_KEY = config["RECAPTCHA_PRIVATE_KEY"]
+# SILENCED_SYSTEM_CHECKS = ['captcha.recaptcha_test_key_error']

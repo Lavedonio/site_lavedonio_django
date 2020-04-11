@@ -12,4 +12,6 @@ config = {
     "DB_NAME": "",
     "DB_USER": "",
     "DB_PASS": "",
+    "RECAPTCHA_PUBLIC_KEY": "",
+    "RECAPTCHA_PRIVATE_KEY": "",
 }
