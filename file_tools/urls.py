@@ -19,5 +19,5 @@ from .views import FileUploadListView, ImageUploadListView, ImageUploadRedirectV
 urlpatterns = [
     path('', FileUploadListView.as_view(), name="files"),
     path('imagens/', ImageUploadListView.as_view(), name="images"),
-    path('imagens/redirecionar/<slug:slug>/', ImageUploadRedirectView.as_view(), name="image"),
+    path('imagens/<slug:slug>/', ImageUploadRedirectView.as_view(), name="image"),
 ]
