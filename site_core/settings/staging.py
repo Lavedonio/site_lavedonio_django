@@ -50,6 +50,11 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
+# E-mail configuration
+EMAIL_HOST_USER = config.get("EMAIL_USER")
+EMAIL_HOST_PASSWORD = config.get("EMAIL_PASS")
+
+
 # Third-Party apps settings
 RECAPTCHA_PUBLIC_KEY = config["RECAPTCHA_PUBLIC_KEY"]
 RECAPTCHA_PRIVATE_KEY = config["RECAPTCHA_PRIVATE_KEY"]

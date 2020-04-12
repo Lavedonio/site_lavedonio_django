@@ -1,5 +1,7 @@
 import operator
 from functools import reduce
+from django.core.mail import send_mail
+from django.conf import settings
 from django.db.models import Q
 from django.views.generic import TemplateView
 from django.views.generic.edit import FormView
@@ -44,7 +46,17 @@ class ContactView(FormView):
         return context
 
     def form_valid(self, form):
-        form.send_email()
+        # Sending email
+        name = form.cleaned_data.get('name')
+        subject = form.cleaned_data.get('subject')
+        email = form.cleaned_data.get('email')
+        raw_message = form.cleaned_data.get('message')
+
+        message = "Mensagem de {0}, e-mail {1}:\n\n{2}".format(name, email, raw_message)
+
+        from_email = settings.EMAIL_HOST_USER
+        send_mail(subject, message, from_email, [settings.EMAIL_HOST_USER, email], fail_silently=False)
+
         return super().form_valid(form)
 
 
