@@ -25,7 +25,7 @@
 					{% for post_featured in posts_featured %}
 					<div class="post-display d-flex flex-column border mx-0 mx-md-2 my-4">
 						<h3 class="pl-1"><a class="text-reset" href="{{ request.scheme }}://{{ request.get_host }}{% url 'post' post_featured.slug %}">{{ post_featured.title }}</a></h3>
-						<div class="image-container my-2"><img class="img-fluid" src="{{ request.scheme }}://{{ request.get_host }}{{ post_featured.main_image.url }}" alt="Imagem da publicação"></div>
+						<div class="image-container my-2"><img class="img-fluid" src="{{ post_featured.main_image.url }}" alt="Imagem da publicação"></div>
 						<p class="my-auto">{{ post_featured.subtitle }}</p>
 						<p class="mx-0 mb-0 mt-3"><a class="btn btn-primary btn-sm" href="{{ request.scheme }}://{{ request.get_host }}{% url 'post' post_featured.slug %}" role="button">Continuar lendo &raquo;</a></p>
 					</div>
@@ -44,7 +44,7 @@
 					<article class="mb-5">
 						<h3 class="light-text"><a class="text-reset" href="{{ request.scheme }}://{{ request.get_host }}{% url 'post' post.slug %}">{{ post.title }}</a></h3>
 						<p class="mb-1"><a class="text-reset" href="{{ request.scheme }}://{{ request.get_host }}{% url 'post' post.slug %}">{{ post.subtitle }}</a></p>
-						<div class="background-img font-poppins light-color-text d-flex align-items-stretch" style="background-image: url({{ request.scheme }}://{{ request.get_host }}{{ post.main_image.url }}); width: 100%; height: 300px;"></div>
+						<div class="background-img font-poppins light-color-text d-flex align-items-stretch" style="background-image: url({{ post.main_image.url }}); width: 100%; height: 300px;"></div>
 						<div class="media content-section mt-3 mb-2">
 							<img class="rounded-circle author-image mr-2" src="{{ request.scheme }}://{{ request.get_host }}{% static 'img/eu.jpg' %}" alt="Foto de {{ post.author }}">
 							<div class="media-body">
