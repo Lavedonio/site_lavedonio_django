@@ -55,6 +55,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
 # E-mail configuration
+DEFAULT_FROM_EMAIL = config.get("EMAIL_USER")
 EMAIL_HOST_USER = config.get("EMAIL_USER")
 EMAIL_HOST_PASSWORD = config.get("EMAIL_PASS")
 
