@@ -21,12 +21,16 @@
 				<div class="p-3 row">
 					<div class="col-12 col-md-7 col-lg-8">
 						<h3 class="light-text mb-3 contact-secondary-headings">Entre em contato pelo formulário...</h3>
-						<form method="POST" class="mb-5" style="max-width: 600px;">
+						<form id="contactform" method="POST" class="mb-5" style="max-width: 600px;">
 							{% csrf_token %}
 							<!-- <fieldset class="form-group">
 								{{ form|crispy }}
 							</fieldset> -->
 							{% include 'includes/bootstrap4_form_floating-labels.html' with form=form %}
+
+							<!-- Hidden input for recaptcha v3 info -->
+							<input type="hidden" name="g-recaptcha-response" id='recaptcha'>
+
 							<button class="btn btn-primary btn-md" type="submit">Enviar</button>
 						</form>
 					</div>
@@ -49,6 +53,19 @@
 {% endblock %}
 
 {% block javascript %}
+	<script src="https://www.google.com/recaptcha/api.js?render={{ recaptcha_public_key }}"></script>
+	<script>
+		grecaptcha.ready(function() {
+			$('#contactform').submit(function(e){
+				var form = this;
+				e.preventDefault();
+				grecaptcha.execute('{{ recaptcha_public_key }}', {action: 'contactform'}).then(function(token) {
+					$('#recaptcha').val(token);
+					form.submit();
+				});
+			});
+		});
+	 </script>
 	<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 	<script type="text/javascript" src="https://platform.linkedin.com/badges/js/profile.js" async defer></script>
 {% endblock %}

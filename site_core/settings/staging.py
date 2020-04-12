@@ -55,7 +55,6 @@ EMAIL_HOST_USER = config.get("EMAIL_USER")
 EMAIL_HOST_PASSWORD = config.get("EMAIL_PASS")
 
 
-# Third-Party apps settings
+# RECAPTCHA settings
 RECAPTCHA_PUBLIC_KEY = config["RECAPTCHA_PUBLIC_KEY"]
 RECAPTCHA_PRIVATE_KEY = config["RECAPTCHA_PRIVATE_KEY"]
-# SILENCED_SYSTEM_CHECKS = ['captcha.recaptcha_test_key_error']

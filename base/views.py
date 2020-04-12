@@ -1,4 +1,5 @@
 import operator
+import requests
 from functools import reduce
 from django.core.mail import send_mail
 from django.conf import settings
@@ -43,16 +44,41 @@ class ContactView(FormView):
         context = super().get_context_data(**kwargs)
         context["title"] = "Contato"
         context["navbar_active"] = "contact"
+        context["recaptcha_public_key"] = settings.RECAPTCHA_PUBLIC_KEY
         return context
+
+    def post(self, request, *args, **kwargs):
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+
+        # captcha verification based on: https://medium.com/@mihfazhillah/how-to-implement-google-recaptcha-v3-on-your-django-app-3e4cc5b65013
+        data = {
+            'response': request.POST.get('g-recaptcha-response'),
+            'secret': settings.RECAPTCHA_PRIVATE_KEY
+        }
+        resp = requests.post('https://www.google.com/recaptcha/api/siteverify', data=data)
+        result_json = resp.json()
+
+        # Sets minimum score to pass validation
+        try:
+            threshold = settings.RECAPTCHA_REQUIRED_SCORE
+        except AttributeError:
+            threshold = 0.5
+
+        if form.is_valid() and result_json.get("success") and result_json.get("score") >= threshold:
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form, **kwargs)
 
     def form_valid(self, form):
         # Sending email
         name = form.cleaned_data.get('name')
-        subject = form.cleaned_data.get('subject')
+        raw_subject = form.cleaned_data.get('subject')
         email = form.cleaned_data.get('email')
         raw_message = form.cleaned_data.get('message')
 
-        message = "Mensagem de {0}, e-mail {1}:\n\n{2}".format(name, email, raw_message)
+        subject = "[Via lavedonio.com.br] {0}".format(raw_subject)
+        message = "Mensagem de {0};\nE-mail {1}:\n\n{2}".format(name, email, raw_message)
 
         from_email = settings.EMAIL_HOST_USER
         send_mail(subject, message, from_email, [settings.EMAIL_HOST_USER, email], fail_silently=False)

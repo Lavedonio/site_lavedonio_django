@@ -32,7 +32,6 @@ INSTALLED_APPS = [
     # Third-Party apps
     'crispy_forms',
     'widget_tweaks',  # https://simpleisbetterthancomplex.com/article/2017/08/19/how-to-render-django-form-manually.html
-    'captcha',
 
     # Django default
     'django.contrib.admin',
@@ -138,5 +137,3 @@ EMAIL_HOST_PASSWORD = ''
 
 # Third-Party apps settings
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
-
-RECAPTCHA_DOMAIN = 'www.recaptcha.net'
