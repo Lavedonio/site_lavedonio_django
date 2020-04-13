@@ -44,7 +44,15 @@ class ContactView(FormView):
         context = super().get_context_data(**kwargs)
         context["title"] = "Contato"
         context["navbar_active"] = "contact"
-        context["recaptcha_public_key"] = settings.RECAPTCHA_PUBLIC_KEY
+
+        # Sets public key and, if not found, uses a test one publicly made available by Google
+        # Docs: https://developers.google.com/recaptcha/docs/faq
+        try:
+            site_key = settings.RECAPTCHA_PUBLIC_KEY
+        except AttributeError:
+            site_key = "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
+
+        context["recaptcha_public_key"] = site_key
         return context
 
     def post(self, request, *args, **kwargs):
@@ -52,9 +60,17 @@ class ContactView(FormView):
         form = self.get_form(form_class)
 
         # captcha verification based on: https://medium.com/@mihfazhillah/how-to-implement-google-recaptcha-v3-on-your-django-app-3e4cc5b65013
+
+        # Sets private key and, if not found, uses a test one publicly made available by Google
+        # Docs: https://developers.google.com/recaptcha/docs/faq
+        try:
+            secret_key = settings.RECAPTCHA_PRIVATE_KEY
+        except AttributeError:
+            secret_key = "6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe"
+
         data = {
             'response': request.POST.get('g-recaptcha-response'),
-            'secret': settings.RECAPTCHA_PRIVATE_KEY
+            'secret': secret_key
         }
         resp = requests.post('https://www.google.com/recaptcha/api/siteverify', data=data)
         result_json = resp.json()
