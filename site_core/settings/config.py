@@ -1,11 +1,10 @@
 import os
-import json
 
 
 try:
-    with open("secrets.json", 'r') as stream:
-        config = json.load(stream)
-except FileNotFoundError:
+    from .secrets import secrets
+    config = secrets
+except ModuleNotFoundError:
 
     config = {}
 
