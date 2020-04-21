@@ -1,15 +1,11 @@
-# Tries to import configuration file. If it fails (probably because it doesn't exist),
-# it defaults to the development settings.
+# Imports the configuration file. If nothing is set, defaults to the development settings.
 
-try:
-	from .config import config
-except ModuleNotFoundError:
-	config = {"ENVIRONMENT": "development"}
+from .config import config
 
 # Imports base settings and environment specific settings
 from .base import *
 
 if config["ENVIRONMENT"] == "development":
-	from .development import *
+    from .development import *
 else:
-	from .staging import *
+    from .staging import *

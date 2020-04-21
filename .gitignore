@@ -9,7 +9,7 @@ __pycache__/
 local_settings.py
 db.sqlite3
 media
-config.py
+secrets.json
 static
 migrations/
 !migrations/__init__.py
