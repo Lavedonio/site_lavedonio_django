@@ -29,6 +29,8 @@ class Post(models.Model):
     slug = models.SlugField(max_length=128, unique=True, default=uuid.uuid4, verbose_name=_('Slug'))
     tags = models.ManyToManyField(Tag, blank=True, verbose_name=_('Tags'))
     main_image = models.ImageField(default='default_post_img.jpg', upload_to='posts', verbose_name=_('Main Image'))
+    article_images = models.ManyToManyField('file_tools.ImageUpload', blank=True, verbose_name=_('Article Images'))
+    credits = models.CharField(max_length=1024, blank=True, verbose_name=_('Credits'))
     author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, verbose_name=_('Author'))
     featured = models.BooleanField(default=False, verbose_name=_('Featured'))
     published = models.BooleanField(default=True, verbose_name=_('Published'))
