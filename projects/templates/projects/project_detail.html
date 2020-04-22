@@ -51,6 +51,10 @@
 		</article>
 {% endblock %}
 
+{% block credits %}
+			{% if project.credits %}<span class="d-block mt-1 mb-3 footer-info">{{ project.credits }}</span>{% endif %}
+{% endblock %}
+
 {% block javascript %}
 	{% if project.custom_js %}<script src="{{ request.scheme }}://{{ request.get_host }}{% static project.js %}"></script>{% endif %}
 {% endblock %}
