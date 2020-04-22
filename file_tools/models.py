@@ -33,6 +33,8 @@ class ImageUpload(models.Model):
     name = models.CharField(max_length=128, verbose_name=_('Name'))
     slug = models.SlugField(max_length=128, unique=True, default=uuid.uuid4, verbose_name=_('Slug'))
     image_upload = models.ImageField(upload_to="images/", verbose_name=_('Image Upload'))
+    resize_image = models.BooleanField(default=True, verbose_name=_('Resize Image'))
+    max_size = models.IntegerField(default=800, verbose_name=_('Maximum Size (px)'))
     description = models.CharField(max_length=128, blank=True, verbose_name=_('Description'))
     created_at = models.DateTimeField(auto_now_add=True, verbose_name=_('Created At'))
     updated_at = models.DateTimeField(auto_now=True, verbose_name=_('Updated At'))
@@ -56,8 +58,8 @@ class ImageUpload(models.Model):
         return reverse('image', kwargs={'slug': self.slug})
 
     def save(self, *args, **kwargs):
-        # If image has changed, compress it and save.
-        if self.image_upload != self.__previous_image_upload:
+        # If image has changed and resizing is activated, compress it and save.
+        if self.image_upload != self.__previous_image_upload and self.resize_image:
             with Image.open(BytesIO(self.image_upload.read())) as img:
 
                 # Convert to RGB
@@ -65,7 +67,7 @@ class ImageUpload(models.Model):
                     img = img.convert('RGB')
 
                 # Resizing
-                size = (800, 800)
+                size = (self.max_size, self.max_size)
                 img.thumbnail(size, Image.ANTIALIAS)
 
                 # Reattributing resized file
