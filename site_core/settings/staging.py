@@ -76,3 +76,9 @@ AWS_S3_FILE_OVERWRITE = False
 AWS_DEFAULT_ACL = None
 AWS_S3_REGION_NAME = 'us-east-2'
 S3_USE_SIGV4 = True
+
+
+# Heroku settings
+if config.get("SERVER_TYPE") == "heroku":
+	import django_heroku
+	django_heroku.settings(locals())

@@ -12,6 +12,7 @@ secrets = {
     "ENVIRONMENT": "development",
     "SECRET_KEY": "",
     "DEBUG_VALUE": "True",
+    "SERVER_TYPE": "",
     "DB_NAME": "",
     "DB_USER": "",
     "DB_PASS": "",

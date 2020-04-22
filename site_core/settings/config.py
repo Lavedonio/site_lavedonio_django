@@ -11,6 +11,7 @@ except ModuleNotFoundError:
     config["ENVIRONMENT"] = os.environ.get("ENVIRONMENT")
     config["SECRET_KEY"] = os.environ.get("SECRET_KEY")
     config["DEBUG_VALUE"] = os.environ.get("DEBUG_VALUE")
+    config["SERVER_TYPE"] = os.environ.get("SERVER_TYPE")
     config["DB_NAME"] = os.environ.get("DB_NAME")
     config["DB_USER"] = os.environ.get("DB_USER")
     config["DB_PASS"] = os.environ.get("DB_PASS")
