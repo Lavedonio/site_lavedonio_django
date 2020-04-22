@@ -32,6 +32,7 @@ class ImageUploadListView(LoginRequiredMixin, ListView):
 
 
 class ImageUploadRedirectView(View):
-	def get(self, request, slug):
-		image = get_object_or_404(ImageUpload, slug=slug)
-		return redirect(image.image_upload.url)
+
+    def get(self, request, slug):
+        image = get_object_or_404(ImageUpload, slug=slug)
+        return redirect(image.image_upload.url)
