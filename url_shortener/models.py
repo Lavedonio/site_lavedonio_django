@@ -9,8 +9,8 @@ class URLShortener(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=32, verbose_name=_('Name'))
     slug = models.SlugField(max_length=128, unique=True, default=uuid.uuid4, verbose_name=_('Slug'))
-    custom = models.BooleanField(verbose_name=_('Custom slug'))
-    full_uri = models.CharField(max_length=1024, verbose_name=_('Full URI'))
+    custom = models.BooleanField(verbose_name=_('Custom Slug'))
+    full_uri = models.URLField(max_length=1024, verbose_name=_('Full URI'))
     created_at = models.DateTimeField(auto_now_add=True, verbose_name=_('Created At'))
     updated_at = models.DateTimeField(auto_now=True, verbose_name=_('Updated At'))
 
