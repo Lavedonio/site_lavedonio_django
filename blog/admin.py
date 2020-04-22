@@ -2,6 +2,16 @@ from django.contrib import admin
 from .models import Post, Tag
 
 
+class TagAdmin(admin.ModelAdmin):
+    '''
+        Admin View for Category
+    '''
+    list_display = ('name', 'color', 'background_color')
+    search_fields = ('name',)
+
+admin.site.register(Tag, TagAdmin)
+
+
 class PostAdmin(admin.ModelAdmin):
     '''
         Admin View for Post
@@ -11,5 +21,3 @@ class PostAdmin(admin.ModelAdmin):
     search_fields = ('title',)
 
 admin.site.register(Post, PostAdmin)
-
-admin.site.register(Tag)
