@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     'blog.apps.BlogConfig',
     'projects.apps.ProjectsConfig',
     'file_tools.apps.FileToolsConfig',
+    'url_shortener.apps.UrlShortenerConfig',
     'admin_dashboard.apps.AdminDashboardConfig',
 
     # Third-Party apps
