@@ -1,2 +1,2 @@
-release: ./release-tasks.sh
+release: bash ./release-tasks.sh
 web: gunicorn site_core.wsgi
