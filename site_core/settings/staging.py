@@ -14,7 +14,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 from .config import config
-from .base import INSTALLED_APPS
+from .base import *
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -39,27 +39,6 @@ ALLOWED_HOSTS = [
 
 # Custom Installed apps
 INSTALLED_APPS += ['storages']
-
-
-# Heroku settings
-if config.get("SERVER_TYPE") == "heroku":
-    pass
-    # import django_heroku
-    # django_heroku.settings(locals())
-else:
-    # Database
-    # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
-
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': config["DB_NAME"],
-            'USER': config["DB_USER"],
-            'PASSWORD': config["DB_PASS"],
-            'HOST': "localhost",
-            'PORT': "",
-        }
-    }
 
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
@@ -88,3 +67,23 @@ AWS_S3_FILE_OVERWRITE = False
 AWS_DEFAULT_ACL = None
 AWS_S3_REGION_NAME = 'us-east-2'
 S3_USE_SIGV4 = True
+
+
+if config.get("SERVER_TYPE") == "heroku":
+    # Heroku settings
+    import django_heroku
+    django_heroku.settings(locals())
+else:
+    # Database
+    # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
+
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': config["DB_NAME"],
+            'USER': config["DB_USER"],
+            'PASSWORD': config["DB_PASS"],
+            'HOST': "localhost",
+            'PORT': "",
+        }
+    }
