@@ -30,29 +30,35 @@ SECRET_KEY = config["SECRET_KEY"]
 DEBUG = (str(config["DEBUG_VALUE"]) == "True")
 
 ALLOWED_HOSTS = [
-	'staging.lavedonio.com.br',         # .com.br domain
-	'staging.lavedonio.com',            # .com domain
-	'lavedonio-staging.herokuapp.com',  # Heroku app default domain
-	'45.79.220.173'                     # Linode IP Address
+    'staging.lavedonio.com.br',         # .com.br domain
+    'staging.lavedonio.com',            # .com domain
+    'lavedonio-staging.herokuapp.com',  # Heroku app default domain
+    '45.79.220.173'                     # Linode IP Address
 ]
 
 
 # Custom Installed apps
 INSTALLED_APPS += ['storages']
 
-# Database
-# https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config["DB_NAME"],
-        'USER': config["DB_USER"],
-        'PASSWORD': config["DB_PASS"],
-        'HOST': "localhost",
-        'PORT': "",
+# Heroku settings
+if config.get("SERVER_TYPE") == "heroku":
+    import django_heroku
+    django_heroku.settings(locals())
+else:
+    # Database
+    # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
+
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': config["DB_NAME"],
+            'USER': config["DB_USER"],
+            'PASSWORD': config["DB_PASS"],
+            'HOST': "localhost",
+            'PORT': "",
+        }
     }
-}
 
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
@@ -81,9 +87,3 @@ AWS_S3_FILE_OVERWRITE = False
 AWS_DEFAULT_ACL = None
 AWS_S3_REGION_NAME = 'us-east-2'
 S3_USE_SIGV4 = True
-
-
-# Heroku settings
-if config.get("SERVER_TYPE") == "heroku":
-	import django_heroku
-	django_heroku.settings(locals())
