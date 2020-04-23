@@ -43,8 +43,9 @@ INSTALLED_APPS += ['storages']
 
 # Heroku settings
 if config.get("SERVER_TYPE") == "heroku":
-    import django_heroku
-    django_heroku.settings(locals())
+    pass
+    # import django_heroku
+    # django_heroku.settings(locals())
 else:
     # Database
     # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
