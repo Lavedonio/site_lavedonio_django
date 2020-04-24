@@ -70,6 +70,16 @@ AWS_S3_REGION_NAME = 'us-east-2'
 S3_USE_SIGV4 = True
 
 
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': config["DB_NAME"],
+        'USER': config["DB_USER"],
+        'PASSWORD': config["DB_PASS"],
+        'HOST': "localhost",
+        'PORT': "",
+    }
+}
 # Heroku settings
 import django_heroku
 django_heroku.settings(locals())
