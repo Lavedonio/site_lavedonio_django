@@ -1,5 +1,5 @@
 """
-Django settings for site_lavedonio_django project.
+Django development settings for site_lavedonio_django project.
 
 Created based on 'django-admin startproject' command using Django 2.2.10.
 
