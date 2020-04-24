@@ -70,10 +70,15 @@ AWS_S3_REGION_NAME = 'us-east-2'
 S3_USE_SIGV4 = True
 
 
+# Heroku settings
+import django_heroku
+django_heroku.settings(locals())
+
 if config.get("SERVER_TYPE") == "heroku":
-    # Heroku settings
-    import django_heroku
-    django_heroku.settings(locals())
+    pass
+    # # Heroku settings
+    # import django_heroku
+    # django_heroku.settings(locals())
 else:
     # Database
     # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
