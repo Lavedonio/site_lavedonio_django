@@ -22,6 +22,7 @@ except ModuleNotFoundError:
     config["AWS_ACCESS_KEY_ID"] = os.environ.get("AWS_ACCESS_KEY_ID")
     config["AWS_SECRET_ACCESS_KEY"] = os.environ.get("AWS_SECRET_ACCESS_KEY")
     config["AWS_STORAGE_BUCKET_NAME"] = os.environ.get("AWS_STORAGE_BUCKET_NAME")
+    config["HTTPS_TRAFFIC_ONLY"] = os.environ.get("HTTPS_TRAFFIC_ONLY")
 
     if config["ENVIRONMENT"] is None:
         config["ENVIRONMENT"] = "development"

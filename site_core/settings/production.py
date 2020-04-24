@@ -88,3 +88,8 @@ else:
             'PORT': "",
         }
     }
+
+# Enforcing HTTPS traffic
+if str(config.get("HTTPS_TRAFFIC_ONLY")) == "True":
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SECURE_SSL_REDIRECT = True
