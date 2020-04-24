@@ -30,10 +30,11 @@ SECRET_KEY = config["SECRET_KEY"]
 DEBUG = (str(config["DEBUG_VALUE"]) == "True")
 
 ALLOWED_HOSTS = [
-    'staging.lavedonio.com.br',         # .com.br domain
-    'staging.lavedonio.com',            # .com domain
-    'lavedonio-staging.herokuapp.com',  # Heroku app default domain
-    '45.79.220.173'                     # Linode IP Address
+    'www.lavedonio.com.br',     # Main .com.br domain
+    'lavedonio.com.br',         # Root .com.br domain
+    'www.lavedonio.com',        # Main .com domain
+    'lavedonio.com',            # Root .com domain
+    'lavedonio.herokuapp.com',  # Heroku app default domain
 ]
 
 
