@@ -55,6 +55,9 @@ EMAIL_HOST_PASSWORD = config.get("EMAIL_PASS")
 RECAPTCHA_PUBLIC_KEY = config["RECAPTCHA_PUBLIC_KEY"]
 RECAPTCHA_PRIVATE_KEY = config["RECAPTCHA_PRIVATE_KEY"]
 
+# Google Analytics
+ANALYTICS_ID = config.get("ANALYTICS_ID")
+
 
 # Storage settings
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'

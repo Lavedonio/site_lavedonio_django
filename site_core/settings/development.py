@@ -56,3 +56,6 @@ EMAIL_HOST_PASSWORD = config["EMAIL_PASS"]
 # RECAPTCHA settings
 RECAPTCHA_PUBLIC_KEY = config.get("RECAPTCHA_PUBLIC_KEY")
 RECAPTCHA_PRIVATE_KEY = config.get("RECAPTCHA_PRIVATE_KEY")
+
+# Google Analytics
+ANALYTICS_ID = None  # Set to None in development

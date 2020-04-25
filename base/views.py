@@ -19,6 +19,7 @@ class HomepageView(TemplateView):
         context = super().get_context_data(**kwargs)
         context["title"] = "Homepage"
         context["navbar_active"] = "home"
+        context["analytics_id"] = settings.ANALYTICS_ID
 
         context["posts"] = Post.objects.filter(featured=True).order_by('-date_posted')[:3]
         context["projects"] = Project.objects.filter(featured=True).order_by('-pk')[:3]
@@ -32,6 +33,7 @@ class AboutView(TemplateView):
         context = super().get_context_data(**kwargs)
         context["title"] = "Sobre"
         context["navbar_active"] = "about"
+        context["analytics_id"] = settings.ANALYTICS_ID
         return context
 
 
@@ -44,6 +46,7 @@ class ContactView(FormView):
         context = super().get_context_data(**kwargs)
         context["title"] = "Contato"
         context["navbar_active"] = "contact"
+        context["analytics_id"] = settings.ANALYTICS_ID
 
         # Sets public key and, if not found, uses a test one publicly made available by Google
         # Docs: https://developers.google.com/recaptcha/docs/faq
@@ -109,6 +112,7 @@ class ContactSuccessView(TemplateView):
         context = super().get_context_data(**kwargs)
         context["title"] = "Contato"
         context["navbar_active"] = "contact"
+        context["analytics_id"] = settings.ANALYTICS_ID
         return context
 
 
@@ -139,6 +143,7 @@ class SearchView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["title"] = "Pesquisa"
+        context["analytics_id"] = settings.ANALYTICS_ID
 
         context["query"] = self.request.GET.get("q")
 

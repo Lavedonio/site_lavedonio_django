@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.shortcuts import get_object_or_404
 from django.views.generic import ListView, DetailView
 from .models import Project
@@ -18,6 +19,7 @@ class ProjectListView(ListView):
         context = super().get_context_data()
         context["title"] = "Projetos"
         context["navbar_active"] = "projects"
+        context["analytics_id"] = settings.ANALYTICS_ID
 
         # Featured Projects
         has_featured = Project.objects.filter(featured=True).count() > 0
@@ -38,4 +40,5 @@ class ProjectDetailView(DetailView):
         project = get_object_or_404(Project, slug=self.kwargs['slug'])
         context["title"] = project.title + " - Projetos"
         context["navbar_active"] = "projects"
+        context["analytics_id"] = settings.ANALYTICS_ID
         return context

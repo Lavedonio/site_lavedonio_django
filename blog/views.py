@@ -1,4 +1,5 @@
 import datetime
+from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Count, Q
@@ -40,6 +41,7 @@ class PostFilterListView(ListView):
         context = super().get_context_data(**kwargs)
         context["title"] = "Blog"
         context["navbar_active"] = "blog"
+        context["analytics_id"] = settings.ANALYTICS_ID
         context["featured"] = False
         context["filtering"] = True
         context["tags"] = Tag.objects.all().order_by("name")
@@ -120,6 +122,7 @@ class PostListView(ListView):
         context = super().get_context_data(**kwargs)
         context["title"] = "Blog"
         context["navbar_active"] = "blog"
+        context["analytics_id"] = settings.ANALYTICS_ID
         context["archive"] = False
         context["tags"] = Tag.objects.all().order_by("name")
 
@@ -194,6 +197,7 @@ class PostDetailView(DetailView):
         post = get_object_or_404(Post, slug=self.kwargs['slug'])
         context["title"] = post.title + " - Blog"
         context["navbar_active"] = "blog"
+        context["analytics_id"] = settings.ANALYTICS_ID
 
         url = self.request.build_absolute_uri(post.get_absolute_url())
         tweet = self.tweetify(post)

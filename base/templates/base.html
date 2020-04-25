@@ -24,6 +24,18 @@
 
 	{% block title_custom %}<title>{% if title %}{{ title }} - {% endif %}Daniel Lavedonio de Lima</title>{% endblock %}
 
+	{% if analytics_id %}
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id={{ analytics_id }}"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+
+		gtag('config', '{{ analytics_id }}');
+		console.log("Page tracked");
+	</script>
+	{% endif %}
 </head>
 <body class="d-flex flex-column h-100">
 	<header>

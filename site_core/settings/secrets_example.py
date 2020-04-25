@@ -23,5 +23,6 @@ secrets = {
     "AWS_ACCESS_KEY_ID": "",
     "AWS_SECRET_ACCESS_KEY": "",
     "AWS_STORAGE_BUCKET_NAME": "",
-    "HTTPS_TRAFFIC_ONLY": ""
+    "HTTPS_TRAFFIC_ONLY": "",
+    "ANALYTICS_ID": ""
 }
