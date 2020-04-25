@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.urls import reverse
 
@@ -27,6 +28,8 @@ class Project(models.Model):
     description = models.CharField(max_length=128, verbose_name=_('Description'))
     article_images = models.ManyToManyField('file_tools.ImageUpload', blank=True, verbose_name=_('Article Images'))
     credits = models.CharField(max_length=1024, blank=True, verbose_name=_('Credits'))
+    date_posted = models.DateTimeField(default=timezone.now, verbose_name=_('Date Posted'))
+    last_updated = models.DateTimeField(auto_now=True, verbose_name=_('Last Updated'))
     content = models.TextField(verbose_name=_('Content'))
     custom_css = models.BooleanField(default=False, verbose_name=_('Custom CSS'))
     custom_js = models.BooleanField(default=False, verbose_name=_('Custom JavaScript'))
