@@ -199,14 +199,16 @@ class PostDetailView(DetailView):
         context["navbar_active"] = "blog"
         context["analytics_id"] = settings.ANALYTICS_ID
 
+        # Setting sharable links
         url = self.request.build_absolute_uri(post.get_absolute_url())
         tweet = self.tweetify(post)
-        context['twitter_url'] = "https://twitter.com/share?text={}&url={}".format(tweet, urlencode(url))
-        context['facebook_url'] = "https://www.facebook.com/sharer/sharer.php?u={}".format(urlencode(url))
-        context['linkedin_url'] = "https://www.linkedin.com/shareArticle?mini=true&title={}&url={}".format(post.title, urlencode(url))
-        context['reddit_url'] = "https://www.reddit.com/submit?title={}&url={}".format(post.title, urlencode(url))
-        context['whatsapp_url'] = "https://wa.me/?text={}".format(urlencode(url))
-        context['telegram_url'] = "https://t.me/share/url?text={}&url={}".format(post.title, urlencode(url))
+        tracking = "?utm_source={source}&utm_medium=share&utm_campaign=blog-post"
+        context['twitter_url'] = "https://twitter.com/share?text={}&url={}".format(tweet, urlencode(url + tracking.format(source="twitter")))
+        context['facebook_url'] = "https://www.facebook.com/sharer/sharer.php?u={}".format(urlencode(url + tracking.format(source="facebook")))
+        context['linkedin_url'] = "https://www.linkedin.com/shareArticle?mini=true&title={}&url={}".format(post.title, urlencode(url + tracking.format(source="linkedin")))
+        context['reddit_url'] = "https://www.reddit.com/submit?title={}&url={}".format(post.title, urlencode(url + tracking.format(source="reddit")))
+        context['whatsapp_url'] = "https://wa.me/?text={}".format(urlencode(url + tracking.format(source="whatsapp")))
+        context['telegram_url'] = "https://t.me/share/url?text={}&url={}".format(post.title, urlencode(url + tracking.format(source="telegram")))
         return context
 
 
