@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-03-01 05:15-0300\n"
-"PO-Revision-Date: 2020-04-22 04:07-0300\n"
+"PO-Revision-Date: 2020-04-25 16:41-0300\n"
 "Last-Translator: Daniel Lavedonio de Lima <daniel.lavedonio@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: pt-br\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: base/forms.py:6 blog/models.py:12 file_tools/models.py:13
-#: file_tools/models.py:33 projects/models.py:7 url_shortener/models.py:10
+#: file_tools/models.py:33 projects/models.py:8 url_shortener/models.py:10
 msgid "Name"
 msgstr "Nome"
 
@@ -51,7 +51,7 @@ msgstr "Tag"
 msgid "Tags"
 msgstr "Tags"
 
-#: blog/models.py:27 projects/models.py:20
+#: blog/models.py:27 projects/models.py:21
 msgid "Title"
 msgstr "Título"
 
@@ -60,19 +60,19 @@ msgid "Subtitle"
 msgstr "Subtítulo"
 
 #: blog/models.py:29 file_tools/models.py:14 file_tools/models.py:34
-#: projects/models.py:21 url_shortener/models.py:11
+#: projects/models.py:22 url_shortener/models.py:11
 msgid "Slug"
 msgstr "Slug"
 
-#: blog/models.py:31 projects/models.py:26
+#: blog/models.py:31 projects/models.py:27
 msgid "Main Image"
 msgstr "Imagem Principal"
 
-#: blog/models.py:32 projects/models.py:28
+#: blog/models.py:32 projects/models.py:29
 msgid "Article Images"
 msgstr "Imagens do Artigo"
 
-#: blog/models.py:33 projects/models.py:29
+#: blog/models.py:33 projects/models.py:30
 msgid "Credits"
 msgstr "Créditos"
 
@@ -80,19 +80,19 @@ msgstr "Créditos"
 msgid "Author"
 msgstr "Autor"
 
-#: blog/models.py:35 projects/models.py:22
+#: blog/models.py:35 projects/models.py:23
 msgid "Featured"
 msgstr "Destaque"
 
-#: blog/models.py:36 projects/models.py:24
+#: blog/models.py:36 projects/models.py:25
 msgid "Published"
 msgstr "Publicado"
 
-#: blog/models.py:37
+#: blog/models.py:37 projects/models.py:31
 msgid "Date Posted"
 msgstr "Data de Publicação"
 
-#: blog/models.py:38
+#: blog/models.py:38 projects/models.py:32
 msgid "Last Updated"
 msgstr "Última Atualização"
 
@@ -100,7 +100,7 @@ msgstr "Última Atualização"
 msgid "Date Posted Year/Month"
 msgstr "Data de Publicação Ano/Mês"
 
-#: blog/models.py:40 projects/models.py:30
+#: blog/models.py:40 projects/models.py:33
 msgid "Content"
 msgstr "Conteúdo"
 
@@ -120,15 +120,15 @@ msgstr "Ferramentas de Arquivos"
 msgid "File Upload"
 msgstr "Upload de Arquivo"
 
-#: file_tools/models.py:16 file_tools/models.py:38 projects/models.py:27
+#: file_tools/models.py:16 file_tools/models.py:38 projects/models.py:28
 msgid "Description"
 msgstr "Descrição"
 
-#: file_tools/models.py:17 file_tools/models.py:33 url_shortener/models.py:14
+#: file_tools/models.py:17 file_tools/models.py:39 url_shortener/models.py:14
 msgid "Created At"
 msgstr "Criado Em"
 
-#: file_tools/models.py:18 file_tools/models.py:34 url_shortener/models.py:15
+#: file_tools/models.py:18 file_tools/models.py:40 url_shortener/models.py:15
 msgid "Updated At"
 msgstr "Atualizado Em"
 
@@ -152,35 +152,35 @@ msgstr "Tamanho Máximo (px)"
 msgid "Image Uploads"
 msgstr "Upload de Imagens"
 
-#: projects/apps.py:7 projects/models.py:44
+#: projects/apps.py:7 projects/models.py:47
 msgid "Projects"
 msgstr "Projetos"
 
-#: projects/models.py:8
+#: projects/models.py:9
 msgid "Abbreviation"
 msgstr "Abreviação"
 
-#: projects/models.py:11
+#: projects/models.py:12
 msgid "Category"
 msgstr "Categoria"
 
-#: projects/models.py:12 projects/models.py:25
+#: projects/models.py:13 projects/models.py:26
 msgid "Categories"
 msgstr "Categorias"
 
-#: projects/models.py:23
+#: projects/models.py:24
 msgid "Dark Background"
 msgstr "Fundo Escuro"
 
-#: projects/models.py:31
+#: projects/models.py:34
 msgid "Custom CSS"
 msgstr "CSS Personalizado"
 
-#: projects/models.py:32
+#: projects/models.py:35
 msgid "Custom JavaScript"
 msgstr "JavaScript Personalizado"
 
-#: projects/models.py:43
+#: projects/models.py:46
 msgid "Project"
 msgstr "Projeto"
 
