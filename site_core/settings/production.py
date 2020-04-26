@@ -27,7 +27,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fil
 SECRET_KEY = config["SECRET_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = (str(config["DEBUG_VALUE"]) == "True")
+DEBUG = (str(config.get("DEBUG_VALUE")) == "True")
 
 ALLOWED_HOSTS = [
     'www.lavedonio.com.br',     # Main .com.br domain
@@ -84,9 +84,9 @@ else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
-            'NAME': config["DB_NAME"],
-            'USER': config["DB_USER"],
-            'PASSWORD': config["DB_PASS"],
+            'NAME': config.get("DB_NAME"),
+            'USER': config.get("DB_USER"),
+            'PASSWORD': config.get("DB_PASS"),
             'HOST': "localhost",
             'PORT': "",
         }
