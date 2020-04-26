@@ -14,11 +14,11 @@ secrets = {
     "SECRET_KEY": "",
     "DEBUG_VALUE": "True",
     "SERVER_TYPE": "",
+    "HTTPS_TRAFFIC_ONLY": "",
 
     # E-mail
     "EMAIL_USER": "",
     "EMAIL_PASS": "",
-    "HTTPS_TRAFFIC_ONLY": "",
 
     # RECAPTCHA
     "RECAPTCHA_PUBLIC_KEY": "",
