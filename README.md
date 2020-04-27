@@ -4,7 +4,7 @@
 This is the source code for [lavedonio.com](https://www.lavedonio.com/) and [lavedonio.com.br](https://www.lavedonio.com.br/) (pt-br) Django Websites. To see the english version of this README, [click here](#index).
 
 #### [BRAZILIAN PORTUGUESE / PORTUGUÊS BRASILEIRO]
-Este é o código fonte para os sites Django  [lavedonio.com](https://www.lavedonio.com/) e [lavedonio.com.br](https://www.lavedonio.com.br/) (pt-br). Para ver a versão em português deste arquivo README (LEIAME), [clique aqui](#sumário).
+Este é o código fonte para os sites Django [lavedonio.com](https://www.lavedonio.com/) e [lavedonio.com.br](https://www.lavedonio.com.br/) (pt-br). Para ver a versão em português deste arquivo README (LEIAME), [clique aqui](#sumário).
 
 # LEIAME - Português Brasileiro (pt-br)
 
@@ -94,7 +94,7 @@ Apesar de não ser a melhor recomendação, alguns serviços de hospedagem obrig
 2. Digite o comando `sudo nano .bashrc` e em seguida digite sua senha;
 3. Para cada chave do dicionário *secrets* dentro do arquivo `secrets_example.py` (localizado na pasta `site_core/settings`), digite ao final do arquivo o seguinte comando:
 `export KEY="VALUE"`
-Lembrando de substituir KEY pelo valor da chave que será adicionada (ex.: ENVIRONMENT, SECRET_KEY, SERVER_TYPE, etc...), VALUE pelo valor correspondente  (sempre estando entre parênteses) e de não deixar espaços entre o sinal de igual. Coloque um comando por linha.
+Lembrando de substituir KEY pelo valor da chave que será adicionada (ex.: ENVIRONMENT, SECRET_KEY, SERVER_TYPE, etc...), VALUE pelo valor correspondente (sempre estando entre parênteses) e de não deixar espaços entre o sinal de igual. Coloque um comando por linha.
 4. Salve o arquivo usando `Ctrl-X`, em seguida aperte `Y` e depois Enter para salvar as alterações;
 5. Reinicie o terminal.
 
@@ -114,7 +114,7 @@ Neste caso, não insira diretamente as variáveis no terminal. Procure como adic
 ### Variáveis de segredo
 Cada variável possui um propósito específico dentro do projeto. Elas estão especificadas abaixo, classificadas de acordo com seu tipo.
 
-#### Django:
+#### Categoria 1: Django
 
 ##### ENVIRONMENT
 Esta variável serve para especificar qual ambiente o programa está rodando e, portanto, qual conjunto de configurações deve ser importado.
@@ -153,7 +153,7 @@ Ela serve para forçar o tráfego do site a usar o protocolo HTTPS em vez do HTT
 
 Valores possíveis: **True**, **False**.
 
-#### E-mail:
+#### Categoria 2: E-mail
 
 ##### EMAIL_USER
 É o usuário de e-mail do qual partirá o envio da mensagem no formulário de Contato. O código está configurado para e-mails do gmail. Para outros provedores, é necessário alterar o código.
@@ -164,7 +164,7 @@ A senha de acesso do seu e-mail. Para o Gmail, existem 2 formas de se fazer:
 1. Ativando senhas de app (veja como [aqui](https://support.google.com/accounts/answer/185833?hl=pt)) e utilizando a senha gerada.
 2. Ativando login por apps menos seguros e utilizando sua senha de acesso padrão (não recomendado).
 
-#### RECAPTCHA:
+#### Categoria 3: RECAPTCHA
 Entre no [site do RECAPTCHA](https://www.google.com/recaptcha) e adicione um site no console. Preencha o que for pedido e certifique-se que estará usando a versão 3. Adicione `localhost` e `127.0.0.1` na seção de sites para que seja possível testar em ambiente de desenvolvimento. Você irá ter 2 chaves, que devem ser utilizadas nas variáveis a seguir.
 
 **ATENÇÃO:** este site utiliza a versão 3. Se você criar chaves pra versão 2, a autenticação irá falhar.
@@ -175,7 +175,7 @@ No console do RECAPTCHA, esta variável deve ser preenchida com o valor de `site
 ##### RECAPTCHA_PRIVATE_KEY
 No console do RECAPTCHA, esta variável deve ser preenchida com o valor de `secret_key`.
 
-#### Banco de Dados Postgres:
+#### Categoria 4: Banco de Dados Postgres
 Nos ambientes de *staging* e produção, recomenda-se usar um banco de dados mais robusto que o sqlite3 que é colocado por padrão no Django. Este projeto está configurado para usar o Postgres fora do ambiente de desenvolvimento.
 
 Caso esteja rodando no Heroku, estas variáveis não serão utilizadas e podem ser deixadas em branco.
@@ -193,7 +193,7 @@ Nome do usuário de acesso.
 ##### DB_PASS
 Senha para o usuário da variável acima.
 
-#### AWS (Amazon Web Services)
+#### Categoria 5: AWS (Amazon Web Services)
 Para melhorar o desempenho do site e para contornar limitações impostas por serviços como o Heroku, é necessário utilizar um serviço externo para entregar os arquivos de mídia registrado pelos usuários.
 
 Para criar uma conta e configurá-la, recomendo assistir este tutorial: [Python Django Tutorial: Full-Featured Web App Part 13 - Using AWS S3 for File Uploads](https://www.youtube.com/watch?v=kt3ZtW9MXhw).
@@ -209,7 +209,7 @@ Nas credenciais baixadas do usuário, procure a chave correspondente ao mesmo no
 ##### AWS_STORAGE_BUCKET_NAME
 Nome do *Bucket* devidamente configurado onde o Django deverá colocar os arquivos.
 
-#### Google Analytics
+#### Categoria 6: Google Analytics
 Recomendado para o ambiente de produção, apesar de estar disponível para *staging*, se julgar necessário verificar a utilização deste site também.
 
 Entre na página do [Google Analytics](https://analytics.google.com/analytics/web/) e crie um novo projeto. Não é necessário copiar o código, apenas o ID de acompanhamento. Use-o para configurar a variável a seguir:
