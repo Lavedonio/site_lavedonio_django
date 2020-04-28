@@ -41,7 +41,9 @@ Afazeres:
  - Dashboard customizável;
  - Template da página de Login;
  - Editor WYSIWYG para Blog e Projetos;
- - Sendgrid como email de envio para Contato.
+ - Sendgrid como email de envio para Contato;
+ - Tradução do site em inglês baseado em domínio;
+ - Páginas de erro customizadas (404, 500, 403, etc...).
 
 ## Requisitos
 
