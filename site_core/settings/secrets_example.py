@@ -9,7 +9,7 @@
 
 
 secrets = {
-    #Django
+    # Django
     "ENVIRONMENT": "development",
     "SECRET_KEY": "",
     "DEBUG_VALUE": "True",
