@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.shortcuts import get_object_or_404
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, TemplateView
 from .models import Project
 
 
@@ -41,4 +41,27 @@ class ProjectDetailView(DetailView):
         context["title"] = project.title + " - Projetos"
         context["navbar_active"] = "projects"
         context["analytics_id"] = settings.ANALYTICS_ID
+        return context
+
+
+class ProjectTestView(TemplateView):
+    template_name = "projects/testing.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = "Teste de novo projeto - Projetos"
+        context["navbar_active"] = "projects"
+
+        # Project specific settings
+        project_manual_settings = {
+            "title": "Pong",
+            "description": "Um jogo de Pong em JavaScript que eu fiz",
+            "dark_background": True,
+            "credits": "Imagem retirada da internet",
+            "categories": ["Games"],
+            "css": "css/pong.css",
+            "js": "js/pong.js"
+        }
+
+        context["project"] = project_manual_settings
         return context

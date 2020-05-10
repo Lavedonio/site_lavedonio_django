@@ -14,9 +14,16 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.urls import path
-from .views import ProjectListView, ProjectDetailView
+from django.conf import settings
+from .views import ProjectListView, ProjectDetailView, ProjectTestView
 
 urlpatterns = [
     path('', ProjectListView.as_view(), name="projects"),
     path('<slug:slug>/', ProjectDetailView.as_view(), name="project"),
 ]
+
+if settings.ENVIRONMENT != "production":
+    # Slug url must be the last item of the list because Django isn't able to access the items after it
+    # So that's why the slug path is removed from the list and then added again.
+    slug = urlpatterns.pop()
+    urlpatterns += [path('testing/', ProjectTestView.as_view(), name="project-testing"), slug]
