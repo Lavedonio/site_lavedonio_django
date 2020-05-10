@@ -20,6 +20,10 @@ from .base import *
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 
+# Setting environment name to escape unfinnished or testing pages
+ENVIRONMENT = "staging"
+
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
@@ -41,6 +45,7 @@ ALLOWED_HOSTS = [
 INSTALLED_APPS += ['storages']
 
 
+# Root location
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 

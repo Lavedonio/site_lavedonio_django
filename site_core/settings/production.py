@@ -20,7 +20,11 @@ from .base import *
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 
-# Quick-start development settings - unsuitable for production
+# Setting environment name to escape unfinnished or testing pages
+ENVIRONMENT = "production"
+
+
+# Before lauching, check Django's production checklist
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
@@ -42,6 +46,7 @@ ALLOWED_HOSTS = [
 INSTALLED_APPS += ['storages']
 
 
+# Root location
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
