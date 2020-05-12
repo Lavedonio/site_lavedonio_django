@@ -57,7 +57,7 @@ class ProjectTestView(TemplateView):
             "title": "Pong",
             "description": "Um jogo de Pong em JavaScript que eu fiz",
             "dark_background": True,
-            "credits": "Imagem retirada da internet",
+            "credits": 'Ícone feito por <a href="https://www.flaticon.com/authors/alfredo-hernandez" title="Alfredo Hernandez">Alfredo Hernandez</a> em <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>',
             "categories": ["Games"],
             "css": "css/pong.css",
             "js": "js/pong.js"
