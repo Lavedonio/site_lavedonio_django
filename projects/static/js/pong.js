@@ -2,8 +2,8 @@ var canvas;
 var canvasContext;
 var controls;
 
-const NAVBAR_HEIGHT = 56;
-const CANVAS_HEIGHT_PADDING = 20;
+const SETTINGS_HEIGHT = 150;
+const CANVAS_HEIGHT_PADDING = 70;
 
 var DEFAULT_WIDTH;
 var DEFAULT_HEIGHT;
@@ -23,6 +23,24 @@ function calculateMousePos(evt) {
 	return {
 		x:mouseX,
 		y:mouseY
+	};
+}
+
+function calculateTouchPos(evt) {
+	var rect = canvas.getBoundingClientRect(); // retorna o tamanho e a posição em relação ao canvas dentro da janela visível ao usuário da página (não em relação ao documento HTML como um todo)
+	var root = document.documentElement;
+
+	var e = (typeof evt.originalEvent === 'undefined') ? evt : evt.originalEvent;
+	// Idea from StackOverflow: https://stackoverflow.com/a/41993300/11981524
+	var touch = e.touches[0] || e.changedTouches[0];
+
+	//considera as posições X e Y relativas e não totais, desconsiderando o scroll e os outros elementos da página (texto, parágrafos, divs...)
+	var touchX = touch.pageX - rect.left; // - root.scrollLeft;
+	var touchY = touch.pageY - rect.top; // - root.scrollTop;
+
+	return {
+		x:touchX,
+		y:touchY
 	};
 }
 
@@ -53,7 +71,7 @@ function reset_game(ball, player1, computer, game_settings) {
 }
 
 function displaySettings(reload, reset, game_settings, ball=null, player1=null, computer=null) {
-	var available_height = window.innerHeight - NAVBAR_HEIGHT - CANVAS_HEIGHT_PADDING;
+	var available_height = window.innerHeight - SETTINGS_HEIGHT - CANVAS_HEIGHT_PADDING;
 
 	if(window.innerWidth < 575) {
 		if(available_height < window.innerWidth - 50 && (4 * available_height) / 3 < window.innerWidth - 50) {
@@ -107,7 +125,7 @@ function displaySettings(reload, reset, game_settings, ball=null, player1=null, 
 		if(available_height < DEFAULT_HEIGHT) {
 			canvas.height = available_height;
 			canvas.width = (4 * canvas.height) / 3;
-			controls.style.width = available_height.toString() + "px";
+			controls.style.width = (canvas.width).toString() + "px";
 		}
 		else {
 			canvas.width = DEFAULT_WIDTH;
@@ -170,6 +188,14 @@ window.onload = function() {
 			var mousePos = calculateMousePos(evt);
 			if(mousePos.y > player1.height / 2 && mousePos.y < canvas.height - player1.height / 2) {
 				player1.y = mousePos.y - (player1.height / 2);
+			}
+		});
+
+	canvas.addEventListener('touchmove', // http://www.w3schools.com/jsref/dom_obj_event.asp
+		function(evt) {
+			var touchPos = calculateTouchPos(evt);
+			if(touchPos.y > player1.height / 2 && touchPos.y < canvas.height - player1.height / 2) {
+				player1.y = touchPos.y - (player1.height / 2);
 			}
 		});
 
