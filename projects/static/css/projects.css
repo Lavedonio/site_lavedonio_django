@@ -1,0 +1,39 @@
+.btn-fullscreen {
+	font-family: inherit;
+	font-size: 24px;
+	padding: 7px 10px 10px 10px;
+	color: #EFEFEF;
+	line-height: 1;
+	background-color: rgba(0, 0, 0, 0.7);
+}
+
+.btn-fullscreen:hover {
+	text-decoration: none;
+	color: #EFEFEF;
+}
+
+.fullscreen {
+	margin-top: 0;
+	position: fixed;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	z-index: 2;
+	background-color: #11121C;
+}
+
+.fill-background {
+	position: fixed;
+	left: 0;
+	top: 0;
+	height: 100%;
+	width: 100%;
+	z-index: 1;
+	background-color: #11121C;
+}
+
+.close {
+	margin: 10px 0;
+	padding-top: 10px;
+	cursor: pointer;
+}
