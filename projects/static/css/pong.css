@@ -1,8 +1,5 @@
 canvas {
-	margin-top: 3rem;
-	border-width: 1px;
-	border-style: solid;
-	border-color: white;
+	border: 1px solid white;
 }
 
 #controls {
@@ -15,4 +12,8 @@ canvas {
 
 .no-space-bottom {
 	margin-bottom: 0;
+}
+
+.game {
+	margin-top: 0.5rem;
 }
