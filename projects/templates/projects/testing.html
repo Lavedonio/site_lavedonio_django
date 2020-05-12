@@ -3,6 +3,7 @@
 {% block canonical %}<link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{% url 'projects' %}">{% endblock %}
 
 {% block stylesheet %}
+	<link rel="stylesheet" type="text/css" href="{{ request.scheme }}://{{ request.get_host }}{% static 'css/projects.css' %}">
 	{% if project.css %}<link rel="stylesheet" type="text/css" href="{{ request.scheme }}://{{ request.get_host }}{% static project.css %}">{% endif %}
 
 	<!-- Font pack: http://www.mattlag.com/bitfonts/ -->
@@ -34,7 +35,7 @@
 				</div>
 			</div>
 		</section>
-		<article class="pt-3 pb-5"{%if project.dark_background %} style="background-color: #11121C;"{% endif %}>
+		<article class="pt-3 pb-5"{% if project.dark_background %} style="background-color: #11121C;"{% endif %}>
 			<div class="container{%if project.dark_background %} light-color-text{% endif %}">
 				{% if project.categories %}
 					<div class="mt-2">
@@ -48,33 +49,41 @@
 				<div class="d-block mb-4">
 					<p class="lead">Esta é uma recriação de um jogo clássico de fliperama ou, como as pessoas da minha geração conhecem, sites de minigames online.</p>
 
-					<p class="text-center mx-auto no-space-bottom"><canvas id="gameCanvas" class="mx-auto" width="800" height="600"></canvas></p>
+					<p class="text-center mb-3"><a class="btn-fullscreen" id="lockpage" href="#" role="button">Tela cheia</a></p>
 
-					<div id="controls" class="row mx-auto">
-						<div class="col-sm-12">
-							<p class="lead">Ajustes</p>
+					<div id="backgroundfill" class=""></div>
+					<div id="lockframe" class="game">
+						<div id="closeicon" class="d-none close mx-auto">
+							<span class="light-color-text">Fechar <img src="{{ request.scheme }}://{{ request.get_host }}{% static 'img/x_icon.svg' %}" class="ml-2" width="24px" alt="Exit Fullscreen"></span>
 						</div>
-						<div class="col-sm-6">
-							<p>Pontuação máxima:
-								<select id="max-score" class="custom-select custom-select-sm">
-									<option value="1">1 ponto</option>
-									<option value="3">3 pontos</option>
-									<option value="5" selected>5 pontos</option>
-									<option value="10">10 pontos</option>
-									<option value="15">15 pontos</option>
-									<option value="20">20 pontos</option>
-									<option value="0">Sem limite de pontos</option>
-								</select>
-							</p>
-						</div>
-						<div class="col-sm-6">
-							<p>Dificuldade:
-								<select id="difficulty" class="custom-select custom-select-sm">
-									<option value="easy" selected>Fácil</option>
-									<option value="medium">Médio</option>
-									<option value="hard">Difícil</option>
-								</select>
-							</p>
+						<p class="text-center mx-auto no-space-bottom"><canvas id="gameCanvas" class="mx-auto" width="800" height="600"></canvas></p>
+
+						<div id="controls" class="row mx-auto">
+							<div class="col-sm-12">
+								<p class="lead">Ajustes</p>
+							</div>
+							<div class="col-sm-6">
+								<p>Pontuação máxima:
+									<select id="max-score" class="custom-select custom-select-sm">
+										<option value="1">1 ponto</option>
+										<option value="3">3 pontos</option>
+										<option value="5" selected>5 pontos</option>
+										<option value="10">10 pontos</option>
+										<option value="15">15 pontos</option>
+										<option value="20">20 pontos</option>
+										<option value="0">Sem limite de pontos</option>
+									</select>
+								</p>
+							</div>
+							<div class="col-sm-6">
+								<p>Dificuldade:
+									<select id="difficulty" class="custom-select custom-select-sm">
+										<option value="easy" selected>Fácil</option>
+										<option value="medium">Médio</option>
+										<option value="hard">Difícil</option>
+									</select>
+								</p>
+							</div>
 						</div>
 					</div>
 
@@ -86,9 +95,10 @@
 {% endblock %}
 
 {% block credits %}
-			{% if project.credits %}<span class="d-block mt-1 mb-3 footer-info">{{ project.credits }}</span>{% endif %}
+			{% if project.credits %}<span class="d-block mt-1 mb-3 footer-info">{{ project.credits|safe }}</span>{% endif %}
 {% endblock %}
 
 {% block javascript %}
+	<script src="{{ request.scheme }}://{{ request.get_host }}{% static 'js/projects.js' %}"></script>
 	{% if project.js %}<script src="{{ request.scheme }}://{{ request.get_host }}{% static project.js %}"></script>{% endif %}
 {% endblock %}
