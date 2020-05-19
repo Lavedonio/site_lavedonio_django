@@ -64,6 +64,10 @@ function enableScroll() {
 	close.classList.add("d-none");
 }
 
+function isTouchScreen() {
+	return window.matchMedia('(hover: none)').matches;
+}
+
 
 // Event listeners
 lock.addEventListener("click", function(event) {
