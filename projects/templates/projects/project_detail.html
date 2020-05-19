@@ -3,7 +3,8 @@
 {% block canonical %}<link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{% url 'project' project.slug %}">{% endblock %}
 
 {% block stylesheet %}
-	{% if project.custom_css %}<link rel="stylesheet" type="text/css" href="{{ request.scheme }}://{{ request.get_host }}{% static project.css %}">{% endif %}
+	<link rel="stylesheet" type="text/css" href="{{ request.scheme }}://{{ request.get_host }}{% static 'css/projects.css' %}">
+	{% if project.custom_css %}<link rel="stylesheet" type="text/css" href="{{ request.scheme }}://{{ request.get_host }}{% static project.css %}?last_update={{ project.last_updated|date:'Y-m-d' }}">{% endif %}
 
 	<!-- Font pack: http://www.mattlag.com/bitfonts/ -->
 	<!-- Include fonts in Django: https://stackoverflow.com/questions/21346045/django-new-fonts -->
@@ -34,13 +35,13 @@
 				</div>
 			</div>
 		</section>
-		<article class="pt-3 pb-5"{%if project.dark_background %} style="background-color: #11121C;"{% endif %}>
+		<article class="pt-3 pb-5{% if project.dark_background %} dark-background{% else %} light-background{% endif %}">
 			<div class="container{%if project.dark_background %} light-color-text{% endif %}">
 				{% if project.categories.all %}
 					<div class="mt-2">
 						<span class="mx-1">Categorias:</span>
 						{% for category in project.categories.all %}
-						<div class="d-inline-block mr-3" style="{%if project.dark_background %}color: #DE4B4B;{% else %}color: #C11111;{% endif %}">{{ category.name }}</div>
+						<div class="d-inline-block mr-3" style="{% if project.dark_background %}color: #DE4B4B;{% else %}color: #C11111;{% endif %}">{{ category.name }}</div>
 						{% endfor %}
 					</div>
 				<hr>
@@ -52,9 +53,10 @@
 {% endblock %}
 
 {% block credits %}
-			{% if project.credits %}<span class="d-block mt-1 mb-3 footer-info">{{ project.credits }}</span>{% endif %}
+			{% if project.credits %}<span class="d-block mt-1 mb-3 footer-info">{{ project.credits|safe }}</span>{% endif %}
 {% endblock %}
 
 {% block javascript %}
-	{% if project.custom_js %}<script src="{{ request.scheme }}://{{ request.get_host }}{% static project.js %}"></script>{% endif %}
+	<script src="{{ request.scheme }}://{{ request.get_host }}{% static 'js/projects.js' %}"></script>
+	{% if project.custom_js %}<script src="{{ request.scheme }}://{{ request.get_host }}{% static project.js %}?last_update={{ project.last_updated|date:'Y-m-d' }}"></script>{% endif %}
 {% endblock %}
