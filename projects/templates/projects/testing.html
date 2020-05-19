@@ -35,26 +35,70 @@
 				</div>
 			</div>
 		</section>
-		<article class="pt-3 pb-5"{% if project.dark_background %} style="background-color: #11121C;"{% endif %}>
+		<article class="pt-3 pb-5{% if project.dark_background %} dark-background{% else %} light-background{% endif %}">
 			<div class="container{%if project.dark_background %} light-color-text{% endif %}">
 				{% if project.categories %}
 					<div class="mt-2">
 						<span class="mx-1">Categorias:</span>
 						{% for category in project.categories %}
-						<div class="d-inline-block mr-3" style="{%if project.dark_background %}color: #DE4B4B;{% else %}color: #C11111;{% endif %}">{{ category }}</div>
+						<div class="d-inline-block mr-3" style="{% if project.dark_background %}color: #DE4B4B;{% else %}color: #C11111;{% endif %}">{{ category }}</div>
 						{% endfor %}
 					</div>
 				<hr>
 				{% endif %}
 				<div class="d-block mb-4">
-					<p class="lead">Esta é uma recriação de um jogo clássico de fliperama ou, como as pessoas da minha geração conhecem, sites de minigames online.</p>
+					<p class="lead mb-4">Esta é a recriação do primeiro jogo da Atari, feito em 1972, que foi um dos grandes responsáveis pelo nascimento da indústria do videogame como conhecemos.</p>
+
+					<p class="text-center mb-1"><img class="img-fluid sample-gif" src="https://upload.wikimedia.org/wikipedia/commons/6/62/Pong_Game_Test2.gif" alt="Jogo acontecendo no fliperama original"></p>
+					<p class="text-center img-description">Você veria isso se estivesse jogando em 1972</p>
+
+					<p class="article-content">Como queria aprender mais sobre a liguagem de programação <em>Javascript</em> e <em>frontend</em> em geral, decidi ir além do <em>Hello World</em> e recriar esse clássico em HTML5/CSS3 e Javascript modernos.</p>
+
+					<p class="article-content">Quando o jogo foi lançado, precisava de todo um equipamento e circuito digital feito especificamente para rodá-lo. Depois, este jogo passou para diversas gerações de consoles que podiam ser jogados em casa, e finalmente para PC. Várias versões foram feitas, muitas em <i>Flash</i>, mas poucas com implementação moderna.</p>
+
+					<p class="article-content">Para este primeiro jogo, me baseei neste <a href="https://www.udemy.com/code-your-first-game/" target="_blank" rel="noopener noreferrer">curso da Udemy</a>, mas indo além e tornando-o responsível, de forma com que ele possa ser jogado não só no computador, mas também em tablets e smartphones (ou quaisquer dispositivos com telas <i>touch</i> e que consigam acessar essa página).</p>
+
+					<p class="article-content mb-4">Este projeto ainda não está completo. Pretendo ainda implementar outros modos de jogo em breve. Caso queira baixar esses arquivos visite meu <a href="#">repositório de jogos no GitHub</a>.</p>
+
+					<ul class="nav nav-tabs mb-md-2" id="myTab" role="tablist">
+						<li class="nav-item" role="presentation">
+							<a class="nav-link active" id="classic-tab" data-toggle="tab" href="#classic" role="tab" aria-controls="classic" aria-selected="true">Clássico</a>
+						</li>
+						<li class="nav-item" role="presentation">
+							<a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Profile</a>
+						</li>
+						<li class="nav-item" role="presentation">
+							<a class="nav-link disabled" href="#" role="tab" tabindex="-1" aria-disabled="true"><em>Tênis (em breve)</em></a>
+						</li>
+						<li class="nav-item" role="presentation">
+							<a class="nav-link disabled" href="#" role="tab" tabindex="-1" aria-disabled="true"><em>Futebol (em breve)</em></a>
+						</li>
+					</ul>
+					<div class="tab-content mb-3" id="myTabContent">
+						<div class="tab-pane fade show active" id="classic" role="tabpanel" aria-labelledby="classic-tab">
+							<p>Este é o jogo clássico do Pong (para 1 jogador), no qual você controla a raquete da <strong>esquerda</strong>.</p>
+							<h3>Instruções</h3>
+							<ol>
+								<li>Você deve evitar que a bola passe a sua raquete. Se isso ocorrer, resultará em um ponto para o adversário e vice-versa.</li>
+								<li>Ao ultrapassar a pontuação máxima de 5 pontos (podendo ser alterada nos ajustes abaixo do jogo), quem tiver a maior pontuação ganha.</li>
+								<li>Há 3 níveis de dificuldade (também podendo ser alterado nos ajustes abaixo do jogo), sendo que cada um irá alterar a proporção entre o tamanho da sua raquete em relação a de seu adversário.</li>
+								<li>Para tornar o jogo mais desafiador, com o passar do tempo a bola vai ficando cada vez mais rápida.</li>
+							</ol>
+							<h3>Controles</h3>
+							<p>Se você está usando um mouse, utilize o cursor para guiar a raquete; caso esteja numa tela touch, utilize seu dedo. A raquete irá acompanhar seu cursor/dedo desde que o movimento esteja sendo feito <strong>dentro dos limites da área do jogo</strong> (dentro da borda branca). Recomendo jogar em <strong>tela cheia</strong> clicando/tocando no botão de mesmo nome.</p>
+							<h4>Bom jogo! ;)</h4>
+						</div>
+						<div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">...</div>
+					</div>
+
+					<p class="article-content mb-5"><strong style="color: #DE4B4B;">Aviso:</strong> para telas <em>touch</em>, você precisará entrar em modo de tela cheia para jogar.</p>
 
 					<p class="text-center mb-3"><a class="btn-fullscreen" id="lockpage" href="#" role="button">Tela cheia</a></p>
 
-					<div id="backgroundfill" class=""></div>
-					<div id="lockframe" class="game">
+					<div id="backgroundfill" class="dark-background"></div>
+					<div id="lockframe" class="mb-3 game dark-background">
 						<div id="closeicon" class="d-none close mx-auto">
-							<span class="light-color-text">Fechar <img src="{{ request.scheme }}://{{ request.get_host }}{% static 'img/x_icon.svg' %}" class="ml-2" width="24px" alt="Exit Fullscreen"></span>
+							<span class="light-color-text">Fechar <img src="http://localhost:8000/static/img/x_icon.svg" class="ml-2" width="24px" alt="Exit Fullscreen"></span>
 						</div>
 						<p class="text-center mx-auto no-space-bottom"><canvas id="gameCanvas" class="mx-auto" width="800" height="600"></canvas></p>
 
@@ -78,16 +122,14 @@
 							<div class="col-sm-6">
 								<p>Dificuldade:
 									<select id="difficulty" class="custom-select custom-select-sm">
-										<option value="easy" selected>Fácil</option>
-										<option value="medium">Médio</option>
+										<option value="easy">Fácil</option>
+										<option value="medium" selected>Médio</option>
 										<option value="hard">Difícil</option>
 									</select>
 								</p>
 							</div>
 						</div>
 					</div>
-
-					<p class="mb-3">Fiz esse jogo a partir desse tutorial: <a href="https://www.udemy.com/code-your-first-game/">Curso Udemy</a>.</p>
 				</div>
 				<a href="{{ request.scheme }}://{{ request.get_host }}{% url 'projects' %}" class="btn btn-info btn-sm">&laquo; Voltar aos Projetos</a>
 			</div>
