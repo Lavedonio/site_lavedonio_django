@@ -206,6 +206,12 @@ h2 {
 	font-size: 3rem;
 }
 
+.img-description {
+	font-size: 14px;
+	font-size: 0.875rem;
+	font-style: italic;
+}
+
 @media screen and (min-width: 576px) {
 	.hero-text {
 		font-size: 22px;
