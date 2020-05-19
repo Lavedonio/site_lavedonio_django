@@ -19,7 +19,6 @@
 	top: 50%;
 	transform: translate(-50%, -50%);
 	z-index: 2;
-	background-color: #11121C;
 }
 
 .fill-background {
@@ -29,7 +28,20 @@
 	height: 100%;
 	width: 100%;
 	z-index: 1;
+}
+
+.light-background {
+	background-color: #FFF;
+}
+
+.dark-background {
 	background-color: #11121C;
+}
+
+.sample-gif {
+	border-width: 1px;
+	border-style: solid;
+	border-color: white;
 }
 
 .close {
