@@ -1,6 +1,8 @@
 var canvas;
 var canvasContext;
 var controls;
+var baseTextSize = "2rem";
+var DEFAULT_BALL_SPEED;
 
 const SETTINGS_HEIGHT = 150;
 const CANVAS_HEIGHT_PADDING = 70;
@@ -71,67 +73,90 @@ function reset_game(ball, player1, computer, game_settings) {
 }
 
 function displaySettings(reload, reset, game_settings, ball=null, player1=null, computer=null) {
-	var available_height = window.innerHeight - SETTINGS_HEIGHT - CANVAS_HEIGHT_PADDING;
+	var deviceHeight = document.documentElement.clientHeight;
+	var deviceWidth = document.documentElement.clientWidth;
 
-	if(window.innerWidth < 575) {
-		if(available_height < window.innerWidth - 50 && (4 * available_height) / 3 < window.innerWidth - 50) {
+	var available_height = deviceHeight - SETTINGS_HEIGHT - CANVAS_HEIGHT_PADDING;
+
+	if(deviceWidth < 350) {
+		if(available_height < deviceWidth - 50 && (4 * available_height) / 3 < deviceWidth - 50) {
 			canvas.height = available_height;
 			canvas.width = (4 * canvas.height) / 3;
-			controls.style.width = available_height.toString() + "px";
 		}
 		else {
-			canvas.width = window.innerWidth - 50;
+			canvas.width = deviceWidth - 50;
 			canvas.height = 0.75 * canvas.width;
-			controls.style.width = (canvas.width).toString() + "px";
 		}
+
+		controls.style.width = (canvas.width).toString() + "px";
+		baseTextSize = "1.25rem";
 	}
-	else if(window.innerWidth < 650) {
-		if(available_height < 0.8 * window.innerWidth && (4 * available_height) / 3 < 0.8 * window.innerWidth) {
+	else if(deviceWidth < 575) {
+		if(available_height < deviceWidth - 50 && (4 * available_height) / 3 < deviceWidth - 50) {
 			canvas.height = available_height;
 			canvas.width = (4 * canvas.height) / 3;
-			controls.style.width = available_height.toString() + "px";
 		}
 		else {
-			canvas.width = 0.8 * window.innerWidth;
+			canvas.width = deviceWidth - 50;
 			canvas.height = 0.75 * canvas.width;
-			controls.style.width = (canvas.width).toString() + "px";
 		}
+
+		controls.style.width = (canvas.width).toString() + "px";
+		baseTextSize = "1.5rem";
 	}
-	else if(window.innerWidth < 767) {
-		if(available_height < 0.7 * window.innerWidth && (4 * available_height) / 3 < 0.7 * window.innerWidth) {
+	else if(deviceWidth < 650) {
+		if(available_height < 0.8 * deviceWidth && (4 * available_height) / 3 < 0.8 * deviceWidth) {
 			canvas.height = available_height;
 			canvas.width = (4 * canvas.height) / 3;
-			controls.style.width = available_height.toString() + "px";
 		}
 		else {
-			canvas.width = 0.7 * window.innerWidth;
+			canvas.width = 0.8 * deviceWidth;
 			canvas.height = 0.75 * canvas.width;
-			controls.style.width = (canvas.width).toString() + "px";
 		}
+
+		controls.style.width = (canvas.width).toString() + "px";
+		baseTextSize = "2rem";
 	}
-	else if(window.innerWidth < 990) {
-		if(available_height < 0.6 * window.innerWidth && (4 * available_height) / 3 < 0.6 * window.innerWidth) {
+	else if(deviceWidth < 767) {
+		if(available_height < 0.7 * deviceWidth && (4 * available_height) / 3 < 0.7 * deviceWidth) {
 			canvas.height = available_height;
 			canvas.width = (4 * canvas.height) / 3;
-			controls.style.width = available_height.toString() + "px";
 		}
 		else {
-			canvas.width = 0.6 * window.innerWidth;
+			canvas.width = 0.7 * deviceWidth;
 			canvas.height = 0.75 * canvas.width;
-			controls.style.width = (canvas.width).toString() + "px";
 		}
+		canvas.width = 0.7 * deviceWidth;
+		canvas.height = 0.75 * canvas.width;
+
+		controls.style.width = (canvas.width).toString() + "px";
+		baseTextSize = "2rem";
+	}
+	else if(deviceWidth < 990) {
+		if(available_height < 0.6 * deviceWidth && (4 * available_height) / 3 < 0.6 * deviceWidth) {
+			canvas.height = available_height;
+			canvas.width = (4 * canvas.height) / 3;
+		}
+		else {
+			canvas.width = 0.6 * deviceWidth;
+			canvas.height = 0.75 * canvas.width;
+		}
+
+		controls.style.width = (canvas.width).toString() + "px";
+		baseTextSize = "2rem";
 	}
 	else {
 		if(available_height < DEFAULT_HEIGHT) {
 			canvas.height = available_height;
 			canvas.width = (4 * canvas.height) / 3;
-			controls.style.width = (canvas.width).toString() + "px";
 		}
 		else {
 			canvas.width = DEFAULT_WIDTH;
 			canvas.height = DEFAULT_HEIGHT;
-			controls.style.width = (canvas.width).toString() + "px";
 		}
+
+		controls.style.width = (canvas.width).toString() + "px";
+		baseTextSize = "2rem";
 	}
 
 	if(reload) {
@@ -159,6 +184,11 @@ window.onload = function() {
 
 	DEFAULT_WIDTH = canvas.width;
 	DEFAULT_HEIGHT = canvas.height;
+
+	// Getting ajusted canvas properties
+	displaySettings(false, false, null);
+
+	DEFAULT_BALL_SPEED = 0.015 * canvas.width;
 
 	var framesPerSecond = 30;
 	var ball = new Ball();
@@ -205,6 +235,7 @@ window.onload = function() {
 
 	window.addEventListener("resize", function(event) {
 		displaySettings(true, true, game_settings, ball, player1, computer);
+		DEFAULT_BALL_SPEED = 0.015 * canvas.width;
 
 		// Makes sure the correct computer paddle height is enabled
 		game_settings.set_difficulty(difficulty_selector[difficulty_selector.selectedIndex].value, computer);
@@ -231,7 +262,7 @@ window.onload = function() {
 function Ball() {
 	this.x = 110;
 	this.y = 50;
-	this.x_speed = 12;
+	this.x_speed = DEFAULT_BALL_SPEED;
 	this.y_speed = 4;
 	this.size = 10;
 
@@ -241,6 +272,13 @@ function Ball() {
 
 		if(this.y > canvas.height || this.y < 0) {
 			this.y_speed = -this.y_speed;
+		}
+
+		if(this.x_speed > 0) {
+			this.x_speed += 0.01;
+		}
+		else {
+			this.x_speed -= 0.01;
 		}
 
 		// if(this.x > canvas.width || this.x < 0) {
@@ -253,12 +291,11 @@ function Ball() {
 	}
 
 	this.reset = function(resize=false) {
-		if(resize) {
-			this.x_speed = 12 * (1 * (canvas.width / DEFAULT_WIDTH));
-		}
-		else {
+		this.x_speed = DEFAULT_BALL_SPEED * Math.sign(this.x_speed);
+		if(!resize) {
 			this.x_speed = -this.x_speed;
 		}
+
 		this.y_speed = getRandomArbitrary(-15 * (canvas.height / DEFAULT_HEIGHT), 15 * (canvas.height / DEFAULT_HEIGHT));
 		this.x = canvas.width / 2;
 		this.y = canvas.height / 2;
@@ -351,7 +388,7 @@ function GameSettings() {
 				break;
 
 			default:
-				speed = 0.06;
+				speed = 0.08;
 				break;
 		}
 		return speed;
@@ -412,22 +449,29 @@ function moveEverything(ball, player1, computer, game_settings) {
 		}
 	}
 
-	console.log(ball.x_speed);
+	// console.log(ball.x_speed);
 }
 
 function drawEverything(ball, player1, computer, game_settings) {
 	// next line blanks out the screen with black
 	colorRect(0, 0, canvas.width, canvas.height, 'black');
 
-	canvasContext.font = "2rem Bit5x3";
+	canvasContext.font = baseTextSize + " Bit5x3";
+	canvasContext.textAlign = "center";
+
+	if(isTouchScreen()) {
+		var interaction = "toque";
+	} else {
+		var interaction = "clique";
+	}
 
 	if(!game_settings.game_started) {
 		canvasContext.fillStyle = 'white';
 		canvasContext.font = "4rem Bit5x3";
-		canvasContext.fillText("Pong", (canvas.width - 125) / 2, canvas.height / 3);
+		canvasContext.fillText("Pong", (canvas.width) / 2, canvas.height / 3);
 
 		canvasContext.font = "1.25rem Bit5x3";
-		canvasContext.fillText("clique para comecar", (canvas.width / 2) - 100, 5 * canvas.height / 6);
+		canvasContext.fillText(interaction + " para comecar", (canvas.width / 2), 5 * canvas.height / 6);
 
 		return;
 	}
@@ -439,13 +483,13 @@ function drawEverything(ball, player1, computer, game_settings) {
 		canvasContext.fillStyle = 'white';
 
 		if(player1.score > computer.score) {
-			canvasContext.fillText(win_text, (canvas.width - 16 * win_text.length) / 2, canvas.height / 3);
+			canvasContext.fillText(win_text, (canvas.width) / 2, canvas.height / 3);
 		}
 		else {
-			canvasContext.fillText(lose_text, (canvas.width - 16 * lose_text.length) / 2, canvas.height / 3);
+			canvasContext.fillText(lose_text, (canvas.width) / 2, canvas.height / 3);
 		}
 
-		canvasContext.fillText("clique para reiniciar", (canvas.width - 350) / 2, 5 * canvas.height / 6);
+		canvasContext.fillText(interaction + " para reiniciar", (canvas.width) / 2, 5 * canvas.height / 6);
 		return;
 	}
 
@@ -516,4 +560,8 @@ function colorCircle(centerX, centerY, radius, drawColor) {
 	canvasContext.beginPath(); // requisito para definir uma forma não retangular
 	canvasContext.arc(centerX, centerY, radius, 0, Math.PI*2, true);
 	canvasContext.fill();
+}
+
+function isTouchScreen() {
+	return window.matchMedia('(hover: none)').matches;
 }
