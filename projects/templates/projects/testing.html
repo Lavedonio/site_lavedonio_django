@@ -98,7 +98,7 @@
 					<div id="backgroundfill" class="dark-background"></div>
 					<div id="lockframe" class="mb-3 game dark-background">
 						<div id="closeicon" class="d-none close mx-auto">
-							<span class="light-color-text">Fechar <img src="http://localhost:8000/static/img/x_icon.svg" class="ml-2" width="24px" alt="Exit Fullscreen"></span>
+							<span class="light-color-text">Fechar <img src="{{ request.scheme }}://{{ request.get_host }}{% static 'img/x_icon.svg' %}" class="ml-2" width="24px" alt="Exit Fullscreen"></span>
 						</div>
 						<p class="text-center mx-auto no-space-bottom"><canvas id="gameCanvas" class="mx-auto" width="800" height="600"></canvas></p>
 
