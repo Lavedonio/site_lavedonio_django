@@ -1,7 +1,7 @@
 var canvas;
 var canvasContext;
 var controls;
-var baseTextSize = "2rem";
+var baseTextSize = "32px";
 var DEFAULT_BALL_SPEED;
 
 const SETTINGS_HEIGHT = 150;
@@ -89,7 +89,7 @@ function displaySettings(reload, reset, game_settings, ball=null, player1=null, 
 		}
 
 		controls.style.width = (canvas.width).toString() + "px";
-		baseTextSize = "1.25rem";
+		baseTextSize = "20px";
 	}
 	else if(deviceWidth < 575) {
 		if(available_height < deviceWidth - 50 && (4 * available_height) / 3 < deviceWidth - 50) {
@@ -102,7 +102,7 @@ function displaySettings(reload, reset, game_settings, ball=null, player1=null, 
 		}
 
 		controls.style.width = (canvas.width).toString() + "px";
-		baseTextSize = "1.5rem";
+		baseTextSize = "24px";
 	}
 	else if(deviceWidth < 650) {
 		if(available_height < 0.8 * deviceWidth && (4 * available_height) / 3 < 0.8 * deviceWidth) {
@@ -115,7 +115,7 @@ function displaySettings(reload, reset, game_settings, ball=null, player1=null, 
 		}
 
 		controls.style.width = (canvas.width).toString() + "px";
-		baseTextSize = "2rem";
+		baseTextSize = "32px";
 	}
 	else if(deviceWidth < 767) {
 		if(available_height < 0.7 * deviceWidth && (4 * available_height) / 3 < 0.7 * deviceWidth) {
@@ -130,7 +130,7 @@ function displaySettings(reload, reset, game_settings, ball=null, player1=null, 
 		canvas.height = 0.75 * canvas.width;
 
 		controls.style.width = (canvas.width).toString() + "px";
-		baseTextSize = "2rem";
+		baseTextSize = "32px";
 	}
 	else if(deviceWidth < 990) {
 		if(available_height < 0.6 * deviceWidth && (4 * available_height) / 3 < 0.6 * deviceWidth) {
@@ -143,7 +143,7 @@ function displaySettings(reload, reset, game_settings, ball=null, player1=null, 
 		}
 
 		controls.style.width = (canvas.width).toString() + "px";
-		baseTextSize = "2rem";
+		baseTextSize = "32px";
 	}
 	else {
 		if(available_height < DEFAULT_HEIGHT) {
@@ -156,7 +156,7 @@ function displaySettings(reload, reset, game_settings, ball=null, player1=null, 
 		}
 
 		controls.style.width = (canvas.width).toString() + "px";
-		baseTextSize = "2rem";
+		baseTextSize = "32px";
 	}
 
 	if(reload) {
@@ -467,10 +467,10 @@ function drawEverything(ball, player1, computer, game_settings) {
 
 	if(!game_settings.game_started) {
 		canvasContext.fillStyle = 'white';
-		canvasContext.font = "4rem Bit5x3";
+		canvasContext.font = "64px Bit5x3";
 		canvasContext.fillText("Pong", (canvas.width) / 2, canvas.height / 3);
 
-		canvasContext.font = "1.25rem Bit5x3";
+		canvasContext.font = "20px Bit5x3";
 		canvasContext.fillText(interaction + " para comecar", (canvas.width / 2), 5 * canvas.height / 6);
 
 		return;
