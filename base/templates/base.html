@@ -7,7 +7,7 @@
 	<meta name="description" content="Site pessoal">
 	<meta name="keywords" content="Python,BI,Data Science,IA,Currículo,CV">
 	<meta name="author" content="Daniel Lavedonio de Lima">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	{% block viewport %}<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">{% endblock %}
 	{% block canonical %}<link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{% url 'homepage' %}">{% endblock %}
 
 	<link rel="icon" href="{{ request.scheme }}://{{ request.get_host }}{% static 'img/icons/favicon.ico' %}" type="image/x-icon"/>
