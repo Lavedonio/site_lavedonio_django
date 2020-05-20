@@ -7,8 +7,8 @@ var DEFAULT_BALL_SPEED;
 const SETTINGS_HEIGHT = 150;
 const CANVAS_HEIGHT_PADDING = 70;
 
-var DEFAULT_WIDTH;
-var DEFAULT_HEIGHT;
+const DEFAULT_WIDTH = 800;
+const DEFAULT_HEIGHT = 600;
 
 var CURRENT_PADDLE_HEIGHT = 100;
 
@@ -181,9 +181,6 @@ window.onload = function() {
 	canvas = document.getElementById('gameCanvas'); //associa a variável canvas ao elemento no HTML
 	canvasContext = canvas.getContext('2d');
 	controls = document.getElementById('controls');
-
-	DEFAULT_WIDTH = canvas.width;
-	DEFAULT_HEIGHT = canvas.height;
 
 	// Getting ajusted canvas properties
 	displaySettings(false, false, null);
