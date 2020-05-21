@@ -31,6 +31,9 @@ class Project(models.Model):
     date_posted = models.DateTimeField(default=timezone.now, verbose_name=_('Date Posted'))
     last_updated = models.DateTimeField(auto_now=True, verbose_name=_('Last Updated'))
     content = models.TextField(verbose_name=_('Content'))
+    fix_autoscale = models.BooleanField(default=False, verbose_name=_('Fix Autoscale'),
+        help_text=_("Stop Safari browser in iPhones to zoom in form inputs automatically, but maintaining the user's hability to zoom in manually."))
+    custom_font = models.BooleanField(default=False, verbose_name=_('Custom Font'))
     custom_css = models.BooleanField(default=False, verbose_name=_('Custom CSS'))
     custom_js = models.BooleanField(default=False, verbose_name=_('Custom JavaScript'))
 

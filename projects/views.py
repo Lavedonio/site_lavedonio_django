@@ -60,6 +60,7 @@ class ProjectTestView(TemplateView):
             "credits": 'Imagem principal retirada do próprio jogo.<br>Fonte <em>Bit5x3</em> usada no jogo cortesia de <a href="http://www.mattlag.com/bitfonts/" target="_blank" rel="noopener noreferrer">Matt LaGrandeur</a>, sob licença <a href="https://en.wikipedia.org/wiki/Creative_Commons" target="_blank" rel="noopener noreferrer"><em>Creative Commons</em></a>.<br>Imagem GIF cortesia de <i>pong74ls</i>, retirado da <a href="https://en.wikipedia.org/wiki/File:Pong_Game_Test2.gif" target="_blank" rel="noopener noreferrer">Wikipedia</a>, sob licença <a href="https://en.wikipedia.org/wiki/Creative_Commons" target="_blank" rel="noopener noreferrer"><em>Creative Commons</em></a>.<br>Ícone para fechamento da tela cheia feito por <a href="https://www.flaticon.com/authors/alfredo-hernandez" title="Alfredo Hernandez" target="_blank" rel="noopener noreferrer">Alfredo Hernandez</a> em <a href="https://www.flaticon.com/" title="Flaticon" target="_blank" rel="noopener noreferrer">Flaticon</a>.',
             "categories": ["Games"],
             "fix_scale": True,
+            "custom_font": True,
             "css": "css/pong.css",
             "js": "js/pong.js"
         }

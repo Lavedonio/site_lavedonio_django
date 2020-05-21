@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-03-01 05:15-0300\n"
-"PO-Revision-Date: 2020-04-25 16:41-0300\n"
+"PO-Revision-Date: 2020-05-21 04:51-0300\n"
 "Last-Translator: Daniel Lavedonio de Lima <daniel.lavedonio@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: pt-br\n"
@@ -152,7 +152,7 @@ msgstr "Tamanho Máximo (px)"
 msgid "Image Uploads"
 msgstr "Upload de Imagens"
 
-#: projects/apps.py:7 projects/models.py:47
+#: projects/apps.py:7 projects/models.py:50
 msgid "Projects"
 msgstr "Projetos"
 
@@ -173,14 +173,30 @@ msgid "Dark Background"
 msgstr "Fundo Escuro"
 
 #: projects/models.py:34
+msgid "Fix Autoscale"
+msgstr "Fixar Escala Automática"
+
+#: projects/models.py:35
+msgid ""
+"Stop Safari browser in iPhones to zoom in form inputs automatically, but "
+"maintaining the user's hability to zoom in manually."
+msgstr ""
+"Impeça que o navegador Safari nos iPhones dê zoom automaticamente nos inputs dos formulários, mas "
+"mantendo a possibilidade do usuário dar zoom manualmente."
+
+#: projects/models.py:36
+msgid "Custom Font"
+msgstr "Fonte Personalizada"
+
+#: projects/models.py:37
 msgid "Custom CSS"
 msgstr "CSS Personalizado"
 
-#: projects/models.py:35
+#: projects/models.py:38
 msgid "Custom JavaScript"
 msgstr "JavaScript Personalizado"
 
-#: projects/models.py:46
+#: projects/models.py:49
 msgid "Project"
 msgstr "Projeto"
 

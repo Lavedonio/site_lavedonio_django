@@ -1,12 +1,13 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block viewport %}{% if project.fix_scale %}<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no">{% else %}<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">{% endif %}{% endblock %}
+{% block viewport %}{% if project.fix_autoscale %}<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no">{% else %}<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">{% endif %}{% endblock %}
 {% block canonical %}<link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{% url 'projects' %}">{% endblock %}
 
 {% block stylesheet %}
 	<link rel="stylesheet" type="text/css" href="{{ request.scheme }}://{{ request.get_host }}{% static 'css/projects.css' %}">
 	{% if project.css %}<link rel="stylesheet" type="text/css" href="{{ request.scheme }}://{{ request.get_host }}{% static project.css %}">{% endif %}
 
+	{% if project.custom_font %}
 	<!-- Font pack: http://www.mattlag.com/bitfonts/ -->
 	<!-- Include fonts in Django: https://stackoverflow.com/questions/21346045/django-new-fonts -->
 	<!-- All font types for all Browsers: https://stackoverflow.com/questions/24990554/how-to-include-a-font-ttf-using-css -->
@@ -24,6 +25,7 @@
 			font-style: normal;
 		}
 	</style>
+	{% endif %}
 {% endblock %}
 
 {% block main_section %}
@@ -59,7 +61,7 @@
 
 					<p class="article-content">Para este primeiro jogo, me baseei neste <a href="https://www.udemy.com/code-your-first-game/" target="_blank" rel="noopener noreferrer">curso da Udemy</a>, mas indo além e tornando-o responsível, de forma com que ele possa ser jogado não só no computador, mas também em tablets e smartphones (ou quaisquer dispositivos com telas <i>touch</i> e que consigam acessar essa página).</p>
 
-					<p class="article-content mb-4">Este projeto ainda não está completo. Pretendo ainda implementar outros modos de jogo em breve. Caso queira baixar esses arquivos visite meu <a href="#">repositório de jogos no GitHub</a>.</p>
+					<p class="article-content mb-4">Este projeto ainda não está completo. Pretendo ainda implementar outros modos de jogo em breve. Caso queira baixar esses arquivos visite meu <a href="https://github.com/Lavedonio/games">repositório de jogos no GitHub</a>.</p>
 
 					<ul class="nav nav-tabs mb-md-2" id="myTab" role="tablist">
 						<li class="nav-item" role="presentation">

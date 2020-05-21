@@ -1,11 +1,13 @@
 {% extends 'base.html' %}
 {% load static %}
+{% block viewport %}{% if project.fix_autoscale %}<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no">{% else %}<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">{% endif %}{% endblock %}
 {% block canonical %}<link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{% url 'project' project.slug %}">{% endblock %}
 
 {% block stylesheet %}
 	<link rel="stylesheet" type="text/css" href="{{ request.scheme }}://{{ request.get_host }}{% static 'css/projects.css' %}">
 	{% if project.custom_css %}<link rel="stylesheet" type="text/css" href="{{ request.scheme }}://{{ request.get_host }}{% static project.css %}?last_update={{ project.last_updated|date:'Y-m-d' }}">{% endif %}
 
+	{% if project.custom_font %}
 	<!-- Font pack: http://www.mattlag.com/bitfonts/ -->
 	<!-- Include fonts in Django: https://stackoverflow.com/questions/21346045/django-new-fonts -->
 	<!-- All font types for all Browsers: https://stackoverflow.com/questions/24990554/how-to-include-a-font-ttf-using-css -->
@@ -23,6 +25,7 @@
 			font-style: normal;
 		}
 	</style>
+	{% endif %}
 {% endblock %}
 
 {% block main_section %}
