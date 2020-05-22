@@ -72,5 +72,5 @@
 
 {% block credits %}
 			<span class="d-block mt-1 footer-info">Ícones de redes sociais por <a href="https://pt.vecteezy.com/vetor-gratis/%C3%ADcone-do-tumblr" target="_blank" rel="noopener noreferrer">Vecteezy</a></span>
-			{% if post.credits %}<span class="d-block mt-1 mb-4 footer-info">{{ post.credits }}</span>{% endif %}
+			{% if post.credits %}<span class="d-block mt-1 mb-4 footer-info">{{ post.credits|safe }}</span>{% endif %}
 {% endblock %}
