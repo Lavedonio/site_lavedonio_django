@@ -65,21 +65,18 @@
 
 					<ul class="nav nav-tabs mb-md-2" id="myTab" role="tablist">
 						<li class="nav-item" role="presentation">
-							<a class="nav-link active" id="classic-tab" data-toggle="tab" href="#classic" role="tab" aria-controls="classic" aria-selected="true">Clássico</a>
+							<a class="nav-link classic active" id="classic-tab" data-toggle="tab" href="#classic" role="tab" aria-controls="classic" aria-selected="true">Clássico</a>
 						</li>
 						<li class="nav-item" role="presentation">
-							<a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Profile</a>
+							<a class="nav-link tennis" id="tennis-tab" data-toggle="tab" href="#tennis" role="tab" aria-controls="tennis" aria-selected="false">Tênis</a>
 						</li>
 						<li class="nav-item" role="presentation">
-							<a class="nav-link disabled" href="#" role="tab" tabindex="-1" aria-disabled="true"><em>Tênis (em breve)</em></a>
-						</li>
-						<li class="nav-item" role="presentation">
-							<a class="nav-link disabled" href="#" role="tab" tabindex="-1" aria-disabled="true"><em>Futebol (em breve)</em></a>
+							<a class="nav-link football" id="football-tab" data-toggle="tab" href="#football" role="tab" aria-controls="football" aria-selected="false">Futebol</a>
 						</li>
 					</ul>
 					<div class="tab-content mb-3" id="myTabContent">
 						<div class="tab-pane fade show active" id="classic" role="tabpanel" aria-labelledby="classic-tab">
-							<p>Este é o jogo clássico do Pong (para 1 jogador), no qual você controla a raquete da <strong>esquerda</strong>.</p>
+							<p>Este é o jogo <strong class="classic">clássico</strong> do Pong (para 1 jogador), no qual você controla a raquete da <strong>esquerda</strong>.</p>
 							<h3>Instruções</h3>
 							<ol>
 								<li>Você deve evitar que a bola passe a sua raquete. Se isso ocorrer, resultará em um ponto para o adversário e vice-versa.</li>
@@ -91,7 +88,12 @@
 							<p>Se você está usando um mouse, utilize o cursor para guiar a raquete; caso esteja numa tela touch, utilize seu dedo. A raquete irá acompanhar seu cursor/dedo desde que o movimento esteja sendo feito <strong>dentro dos limites da área do jogo</strong> (dentro da borda branca). Recomendo jogar em <strong>tela cheia</strong> clicando/tocando no botão de mesmo nome.</p>
 							<h4>Bom jogo! ;)</h4>
 						</div>
-						<div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">...</div>
+						<div class="tab-pane fade" id="tennis" role="tabpanel" aria-labelledby="tennis-tab">
+							<p>Este é o jogo Pong, na sua versão de <strong class="tennis">tênis</strong> (para 1 jogador), no qual você controla as duas raquetes da <strong>esquerda</strong>.</p>
+						</div>
+						<div class="tab-pane fade" id="football" role="tabpanel" aria-labelledby="football-tab">
+							<p>Este é o jogo Pong, na sua versão de <strong class="football">futebol</strong> (para 1 jogador), no qual você controla o time da <strong>esquerda</strong>.</p>
+						</div>
 					</div>
 
 					<p class="article-content mb-5"><strong style="color: #DE4B4B;">Aviso:</strong> para telas <em>touch</em>, você precisará entrar em modo de tela cheia para jogar.</p>
