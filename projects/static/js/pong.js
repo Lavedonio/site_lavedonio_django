@@ -5,7 +5,7 @@ var baseTextSize = "32px";
 
 const SETTINGS_HEIGHT = 150;
 const CANVAS_HEIGHT_PADDING = 70;
-const WALL_OFFSET = 20;
+const DEFAULT_WALL_OFFSET = 20;
 
 const DEFAULT_WIDTH = 800;
 const DEFAULT_HEIGHT = 600;
@@ -349,11 +349,12 @@ function Player(type) {
 	};
 
 	this.set_paddle_x_pos = function() {
+		var wall_offset = DEFAULT_WALL_OFFSET * (canvas.width / DEFAULT_WIDTH);
 		if(this.type === 'computer') {
-			this.x = canvas.width - this.paddle_thickness - WALL_OFFSET;
+			this.x = canvas.width - this.paddle_thickness - wall_offset;
 		}
 		else {
-			this.x = WALL_OFFSET;
+			this.x = wall_offset;
 		}
 	}
 
