@@ -2,17 +2,17 @@ var canvas;
 var canvasContext;
 var controls;
 var baseTextSize = "32px";
-var DEFAULT_BALL_SPEED;
 
 const SETTINGS_HEIGHT = 150;
 const CANVAS_HEIGHT_PADDING = 70;
+const WALL_OFFSET = 20;
 
 const DEFAULT_WIDTH = 800;
 const DEFAULT_HEIGHT = 600;
 
 var CURRENT_PADDLE_HEIGHT = 100;
 
-// ------------- Cálculo do Mouse -------------
+// ------------- Cursor Handling Functions -------------
 
 function calculateMousePos(evt) {
 	var rect = canvas.getBoundingClientRect(); // retorna o tamanho e a posição em relação ao canvas dentro da janela visível ao usuário da página (não em relação ao documento HTML como um todo)
@@ -29,16 +29,16 @@ function calculateMousePos(evt) {
 }
 
 function calculateTouchPos(evt) {
-	var rect = canvas.getBoundingClientRect(); // retorna o tamanho e a posição em relação ao canvas dentro da janela visível ao usuário da página (não em relação ao documento HTML como um todo)
+	var rect = canvas.getBoundingClientRect();
 	var root = document.documentElement;
 
 	var e = (typeof evt.originalEvent === 'undefined') ? evt : evt.originalEvent;
 	// Idea from StackOverflow: https://stackoverflow.com/a/41993300/11981524
 	var touch = e.touches[0] || e.changedTouches[0];
 
-	//considera as posições X e Y relativas e não totais, desconsiderando o scroll e os outros elementos da página (texto, parágrafos, divs...)
-	var touchX = touch.pageX - rect.left; // - root.scrollLeft;
-	var touchY = touch.pageY - rect.top; // - root.scrollTop;
+	
+	var touchX = touch.pageX - rect.left;
+	var touchY = touch.pageY - rect.top;
 
 	return {
 		x:touchX,
@@ -58,19 +58,9 @@ function handleMouseClick(evt, player1, computer, game_settings) {
 	}
 }
 
-// ------------- /Cálculo do Mouse -------------
+// ------------- /Cursor Handling Functions -------------
 
 // -------------- Global functions --------------
-
-function reset_game(ball, player1, computer, game_settings) {
-	var paddle_thickness = computer.thickness;
-
-	ball.reset(true);
-	player1.reset(0);
-	computer.reset(canvas.width - paddle_thickness);
-
-	game_settings.showingWinScreen = false;
-}
 
 function displaySettings(reload, reset, game_settings, ball=null, player1=null, computer=null) {
 	var deviceHeight = document.documentElement.clientHeight;
@@ -160,14 +150,14 @@ function displaySettings(reload, reset, game_settings, ball=null, player1=null, 
 	}
 
 	if(reload) {
-		player1.resize(canvas.height / 6, canvas.width / 60);
-		computer.resize(canvas.height / 6, canvas.width / 60);
-		ball.resize(canvas.width / 60);
+		player1.resize();
+		computer.resize();
+		ball.resize(canvas.width / 60, game_settings.ball_speed());
 
 		game_settings.game_started = false;
 
 		if(reset) {
-			reset_game(ball, player1, computer, game_settings);
+			game_settings.reset(ball, player1, computer);
 		}
 	}
 }
@@ -185,13 +175,11 @@ window.onload = function() {
 	// Getting ajusted canvas properties
 	displaySettings(false, false, null);
 
-	DEFAULT_BALL_SPEED = 0.015 * canvas.width;
-
-	var framesPerSecond = 30;
-	var ball = new Ball();
-	var player1 = new Paddle(0);
-	var computer = new Paddle(canvas.width - 10);
+	var framesPerSecond = 60;
 	var game_settings = new GameSettings();
+	var ball = new Ball(game_settings.ball_speed());
+	var player1 = new Player('person');
+	var computer = new Player('computer');
 
 	displaySettings(true, false, game_settings, ball, player1, computer);
 
@@ -213,17 +201,13 @@ window.onload = function() {
 	canvas.addEventListener('mousemove', // http://www.w3schools.com/jsref/dom_obj_event.asp
 		function(evt) {
 			var mousePos = calculateMousePos(evt);
-			if(mousePos.y > player1.height / 2 && mousePos.y < canvas.height - player1.height / 2) {
-				player1.y = mousePos.y - (player1.height / 2);
-			}
+			player1.manual_move(mousePos);
 		});
 
 	canvas.addEventListener('touchmove', // http://www.w3schools.com/jsref/dom_obj_event.asp
 		function(evt) {
 			var touchPos = calculateTouchPos(evt);
-			if(touchPos.y > player1.height / 2 && touchPos.y < canvas.height - player1.height / 2) {
-				player1.y = touchPos.y - (player1.height / 2);
-			}
+			player1.manual_move(touchPos);
 		});
 
 	canvas.addEventListener('mousedown', function(evt) {
@@ -232,7 +216,6 @@ window.onload = function() {
 
 	window.addEventListener("resize", function(event) {
 		displaySettings(true, true, game_settings, ball, player1, computer);
-		DEFAULT_BALL_SPEED = 0.015 * canvas.width;
 
 		// Makes sure the correct computer paddle height is enabled
 		game_settings.set_difficulty(difficulty_selector[difficulty_selector.selectedIndex].value, computer);
@@ -242,8 +225,7 @@ window.onload = function() {
 		game_settings.set_difficulty(difficulty_selector[difficulty_selector.selectedIndex].value, computer);
 
 		// When difficulty level is changed, game is reseted
-		game_settings.game_started = false;
-		reset_game(ball, player1, computer, game_settings);
+		game_settings.reset(ball, player1, computer);
 	});
 
 	score_selector.addEventListener('change', function(event) {
@@ -256,26 +238,49 @@ window.onload = function() {
 
 // ---------------- Construtores ----------------
 
-function Ball() {
+function Ball(base_speed) {
 	this.x = 110;
 	this.y = 50;
-	this.x_speed = DEFAULT_BALL_SPEED;
-	this.y_speed = 4;
+	this.default_x_speed = base_speed;
+	this.x_speed = base_speed;
+	this.y_speed = 2;
 	this.size = 10;
+
+	this.scored = function() {
+		return (this.x < 0 || this.x + this.size > canvas.width);
+	}
+
+	this.check_if_hit_paddle = function(paddle) {
+		var ball_right_bound = this.x < (paddle.x + paddle.thickness);
+		var ball_left_bound = paddle.x < (this.x + this.size);
+		var ball_top_bound = (this.y + this.size) > paddle.y;
+		var ball_lower_bound = this.y < (paddle.y + paddle.height);
+
+		return ball_left_bound && ball_right_bound && ball_top_bound && ball_lower_bound;
+	}
+
+	this.handle_paddle_interaction = function(player) {
+		if(this.check_if_hit_paddle(player.paddle)) {
+			this.x_speed = -this.x_speed;
+
+			var deltaY = this.y - (player.paddle.y + (player.paddle.height / 2));
+			this.y_speed = deltaY * 0.2;
+		}
+	}
 
 	this.update = function() {
 		this.x += this.x_speed;
 		this.y += this.y_speed;
 
-		if(this.y > canvas.height || this.y < 0) {
+		if(this.y + this.size > canvas.height || this.y < 0) {
 			this.y_speed = -this.y_speed;
 		}
 
 		if(this.x_speed > 0) {
-			this.x_speed += 0.01;
+			this.x_speed += 0.005;
 		}
 		else {
-			this.x_speed -= 0.01;
+			this.x_speed -= 0.005;
 		}
 
 		// if(this.x > canvas.width || this.x < 0) {
@@ -283,23 +288,24 @@ function Ball() {
 		// }
 	}
 
-	this.resize = function(new_size) {
+	this.resize = function(new_size, new_base_speed) {
 		this.size = new_size;
+		this.default_x_speed = new_base_speed;
 	}
 
 	this.reset = function(resize=false) {
-		this.x_speed = DEFAULT_BALL_SPEED * Math.sign(this.x_speed);
+		this.x_speed = this.default_x_speed * Math.sign(this.x_speed);
 		if(!resize) {
 			this.x_speed = -this.x_speed;
 		}
 
-		this.y_speed = getRandomArbitrary(-15 * (canvas.height / DEFAULT_HEIGHT), 15 * (canvas.height / DEFAULT_HEIGHT));
+		this.y_speed = getRandomArbitrary((-15 / 2) * (canvas.height / DEFAULT_HEIGHT), (15 / 2) * (canvas.height / DEFAULT_HEIGHT));
 		this.x = canvas.width / 2;
 		this.y = canvas.height / 2;
 	}
 
 	this.draw = function() {
-		colorRect(this.x - (this.size / 2), this.y - (this.size / 2), this.size, this.size, 'white');
+		colorRect(this.x, this.y, this.size, this.size, 'white');
 	}
 }
 
@@ -308,9 +314,9 @@ function Paddle(x) {
 	this.y = canvas.height / 2;
 	this.height = 100;
 	this.thickness = 10;
-	this.score = 0;
 
-	this.resize = function(new_height, new_thickness) {
+	this.resize = function(new_x, new_height, new_thickness) {
+		this.x = new_x;
 		this.height = new_height;
 		this.thickness = new_thickness;
 
@@ -320,6 +326,39 @@ function Paddle(x) {
 	this.reset = function(x) {
 		this.x = x;
 		this.y = canvas.height / 2;
+	}
+
+	this.draw = function(color='white') {
+		colorRect(this.x, this.y, this.thickness, this.height, color);
+	}
+}
+
+
+function Player(type) {
+	this.type = type;
+	this.mode = 'classic';
+	this.score = 0;
+	this.paddle = null;
+	this.x = 0;
+	this.paddle_thickness = 10;
+
+	this.setup = function() {
+		this.set_paddle_x_pos();
+
+		this.paddle = new Paddle(this.x);
+	};
+
+	this.set_paddle_x_pos = function() {
+		if(this.type === 'computer') {
+			this.x = canvas.width - this.paddle_thickness - WALL_OFFSET;
+		}
+		else {
+			this.x = WALL_OFFSET;
+		}
+	}
+
+	this.reset = function() {
+		this.paddle.reset(this.x);
 		this.score = 0;
 	}
 
@@ -329,9 +368,38 @@ function Paddle(x) {
 		}
 	}
 
-	this.draw = function(color = 'white') {
-		colorRect(this.x, this.y, this.thickness, this.height, color);
+	this.resize = function() {
+		this.paddle_thickness = canvas.width / 60;
+		var paddle_height = canvas.height / 6;
+
+		this.set_paddle_x_pos();
+
+		this.paddle.resize(this.x, paddle_height, this.paddle_thickness);
 	}
+
+	this.draw = function() {
+		this.paddle.draw();
+	}
+
+	this.manual_move = function(cursor) {
+		if(cursor.y > this.paddle.height / 2 && cursor.y < canvas.height - this.paddle.height / 2) {
+			this.paddle.y = cursor.y - (this.paddle.height / 2);
+		}
+	}
+
+	this.auto_move = function(ball, game_settings) {
+		var computerYCenter = this.paddle.y + (this.paddle.height / 2);
+
+		if(computerYCenter < ball.y - ((this.paddle.height / 2)) * 0.35 && this.paddle.y + this.paddle.height < canvas.height) {
+			this.paddle.y += game_settings.computer_speed() * this.paddle.height;
+		}
+		else if(computerYCenter > ball.y + ((this.paddle.height / 2)) * 0.35 && this.paddle.y > 0) {
+			this.paddle.y -= game_settings.computer_speed() * this.paddle.height;
+		}
+	}
+
+	// Execute on constructor instantiation;
+	this.setup();
 }
 
 function GameSettings() {
@@ -356,7 +424,11 @@ function GameSettings() {
 		}
 	}
 
-	this.reset = function() {
+	this.reset = function(ball, player1, computer) {
+		ball.reset(true);
+		player1.reset();
+		computer.reset();
+
 		this.showingWinScreen = false;
 	}
 
@@ -365,7 +437,7 @@ function GameSettings() {
 	}
 
 	this.ball_speed = function() {
-		// to be defined
+		return 0.0075 * canvas.width;
 	}
 
 	this.computer_speed = function() {
@@ -373,19 +445,19 @@ function GameSettings() {
 
 		switch(this.difficulty) {
 			case 1:
-				speed = 0.06;
+				speed = 0.04;
 				break;
 
 			case 2:
-				speed = 0.08;
+				speed = 0.06;
 				break;
 
 			case 3:
-				speed = 0.1;
+				speed = 0.08;
 				break;
 
 			default:
-				speed = 0.08;
+				speed = 0.06;
 				break;
 		}
 		return speed;
@@ -395,58 +467,29 @@ function GameSettings() {
 // ------------- /Construtores -------------
 
 
-function computerMovement(ball, computer, game_settings) {
-	var computerYCenter = computer.y + (computer.height / 2);
-
-	if(computerYCenter < ball.y - ((computer.height / 2)) * 0.35 && computer.y + computer.height < canvas.height) {
-		computer.y += game_settings.computer_speed() * computer.height;
-	} else if(computerYCenter > ball.y + ((computer.height / 2)) * 0.35 && computer.y > 0) {
-		computer.y -= game_settings.computer_speed() * computer.height;
-	}
-}
-
 function moveEverything(ball, player1, computer, game_settings) {
 	if(!game_settings.game_started || game_settings.showingWinScreen) {
 		return;
 	}
 
-	computerMovement(ball, computer, game_settings);
+	computer.auto_move(ball, game_settings);
 
 	ball.update();
 
-	if(ball.x < player1.thickness) {
-		if(ball.y > player1.y && ball.y < (player1.y + player1.height)) {
-			ball.x_speed = -ball.x_speed;
+	ball.handle_paddle_interaction(player1);
+	ball.handle_paddle_interaction(computer);
 
-			var deltaY = ball.y - (player1.y + (player1.height / 2));
-			ball.y_speed = deltaY * 0.35;
-
-		} else {
-
+	if(ball.scored()) {
+		if(ball.x < canvas.width / 2) {
 			computer.score++; // must be BEFORE ball.reset()
 			computer.checkIfWon(game_settings);
-
-			ball.reset();
 		}
-	}
-
-	if(ball.x > canvas.width - computer.thickness) {
-		if(ball.y > computer.y && ball.y < (computer.y + computer.height)) {
-			ball.x_speed = -ball.x_speed;
-
-			var deltaY = ball.y - (computer.y + (computer.height / 2));
-			ball.y_speed = deltaY * 0.35;
-
-		} else {
-
+		else {
 			player1.score++; // must be BEFORE ball.reset()
 			player1.checkIfWon(game_settings);
-
-			ball.reset();
 		}
+		ball.reset();
 	}
-
-	// console.log(ball.x_speed);
 }
 
 function drawEverything(ball, player1, computer, game_settings) {
@@ -501,24 +544,13 @@ function drawEverything(ball, player1, computer, game_settings) {
 	// next line draws the ball
 	ball.draw();
 
-	// 2 digits offset
-	var player_score_draw_offset = 0;
-	if(player1.score < 10) {
-		player_score_draw_offset = 30;
-	}
-	var computer_score_draw_offset = 0;
-	if(computer.score >= 10) {
-		computer_score_draw_offset = 30;
-	}
-
 	// player and computer scores
-	canvasContext.fillText(player1.score, (70 + player_score_draw_offset) * (canvas.width / DEFAULT_WIDTH), canvas.height / 6);
-	canvasContext.fillText(computer.score, (DEFAULT_WIDTH - (100 + computer_score_draw_offset)) * (canvas.width / DEFAULT_WIDTH), canvas.height / 6);
-
+	canvasContext.fillText(player1.score, 100 * (canvas.width / DEFAULT_WIDTH), canvas.height / 6);
+	canvasContext.fillText(computer.score, (DEFAULT_WIDTH - 100) * (canvas.width / DEFAULT_WIDTH), canvas.height / 6);
 }
 
 
-// ---------- Funções auxiliares ----------
+// ---------- Auxiliary Functions ----------
 
 function getRandomArbitrary(min, max) {
 	// https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Math/random
