@@ -4,7 +4,7 @@
 This is the source code for [lavedonio.com](https://www.lavedonio.com/) and [lavedonio.com.br](https://www.lavedonio.com.br/) (pt-br) Django Websites. To see the english version of this README, [click here](#index).
 
 #### [BRAZILIAN PORTUGUESE / PORTUGUÊS BRASILEIRO]
-Este é o código fonte para os sites Django [lavedonio.com](https://www.lavedonio.com/) e [lavedonio.com.br](https://www.lavedonio.com.br/) (pt-br). Para ver a versão em português deste arquivo README (LEIAME), [clique aqui](#sumário).
+Este é o código fonte para os sites Django [lavedonio.com](https://www.lavedonio.com/) e [lavedonio.com.br](https://www.lavedonio.com.br/) (pt-br). Para ver a versão em português deste arquivo README (LEIAME), [clique aqui](#leiame---portugu%C3%AAs-brasileiro-pt-br).
 
 # LEIAME - Português Brasileiro (pt-br)
 
