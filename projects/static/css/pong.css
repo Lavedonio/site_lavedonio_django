@@ -19,13 +19,13 @@ canvas {
 }
 
 .classic, .classic:hover {
-	color: gray;
+	color: gray!important;
 }
 
 .tennis, .tennis:hover {
-	color: green;
+	color: green!important;
 }
 
 .football, .football:hover {
-	color: red;
+	color: red!important;
 }
