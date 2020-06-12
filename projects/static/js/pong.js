@@ -46,9 +46,10 @@ function calculateTouchPos(evt) {
 	};
 }
 
-function handleMouseClick(evt, player1, computer, game) {
-	if(!game.game_started) {
-		game.game_started = true;
+function handleMouseClick(evt, ball, player1, computer, game) {
+	if(!game.started) {
+		game.started = true;
+		game.reset(ball, player1, computer);
 	}
 
 	if(game.showingWinScreen) {
@@ -65,71 +66,77 @@ function handleMouseClick(evt, player1, computer, game) {
 function displaySettings(reload, reset, game, ball=null, player1=null, computer=null) {
 	var deviceHeight = document.documentElement.clientHeight;
 	var deviceWidth = document.documentElement.clientWidth;
+	try {
+		var ratio = game.mode_info[game.mode]["canvas_ratio"];  // screen aspect ratio;
+	}
+	catch (e) {
+		var ratio = 0.75;  // default aspect ratio: 3 by 4
+	}
 
 	var available_height = deviceHeight - SETTINGS_HEIGHT - CANVAS_HEIGHT_PADDING;
 
 	if(deviceWidth < 350) {
-		if(available_height < deviceWidth - 50 && (4 * available_height) / 3 < deviceWidth - 50) {
+		if(available_height < deviceWidth - 50 && available_height / ratio < deviceWidth - 50) {
 			canvas.height = available_height;
-			canvas.width = (4 * canvas.height) / 3;
+			canvas.width = canvas.height / ratio;
 		}
 		else {
 			canvas.width = deviceWidth - 50;
-			canvas.height = 0.75 * canvas.width;
+			canvas.height = ratio * canvas.width;
 		}
 
 		controls.style.width = (canvas.width).toString() + "px";
 		baseTextSize = "20px";
 	}
-	else if(deviceWidth < 575) {
-		if(available_height < deviceWidth - 50 && (4 * available_height) / 3 < deviceWidth - 50) {
+	else if(deviceWidth < 576) {
+		if(available_height < deviceWidth - 50 && available_height / ratio < deviceWidth - 50) {
 			canvas.height = available_height;
-			canvas.width = (4 * canvas.height) / 3;
+			canvas.width = canvas.height / ratio;
 		}
 		else {
 			canvas.width = deviceWidth - 50;
-			canvas.height = 0.75 * canvas.width;
+			canvas.height = ratio * canvas.width;
 		}
 
 		controls.style.width = (canvas.width).toString() + "px";
 		baseTextSize = "24px";
 	}
-	else if(deviceWidth < 650) {
-		if(available_height < 0.8 * deviceWidth && (4 * available_height) / 3 < 0.8 * deviceWidth) {
+	else if(719 < deviceWidth && deviceWidth < 768) {
+		if(available_height < 0.6 * deviceWidth && available_height / ratio < 0.6 * deviceWidth) {
 			canvas.height = available_height;
-			canvas.width = (4 * canvas.height) / 3;
-		}
-		else {
-			canvas.width = 0.8 * deviceWidth;
-			canvas.height = 0.75 * canvas.width;
-		}
-
-		controls.style.width = (canvas.width).toString() + "px";
-		baseTextSize = "32px";
-	}
-	else if(deviceWidth < 767) {
-		if(available_height < 0.7 * deviceWidth && (4 * available_height) / 3 < 0.7 * deviceWidth) {
-			canvas.height = available_height;
-			canvas.width = (4 * canvas.height) / 3;
-		}
-		else {
-			canvas.width = 0.7 * deviceWidth;
-			canvas.height = 0.75 * canvas.width;
-		}
-		canvas.width = 0.7 * deviceWidth;
-		canvas.height = 0.75 * canvas.width;
-
-		controls.style.width = (canvas.width).toString() + "px";
-		baseTextSize = "32px";
-	}
-	else if(deviceWidth < 990) {
-		if(available_height < 0.6 * deviceWidth && (4 * available_height) / 3 < 0.6 * deviceWidth) {
-			canvas.height = available_height;
-			canvas.width = (4 * canvas.height) / 3;
+			canvas.width = canvas.height / ratio;
 		}
 		else {
 			canvas.width = 0.6 * deviceWidth;
-			canvas.height = 0.75 * canvas.width;
+			canvas.height = ratio * canvas.width;
+		}
+
+		controls.style.width = (canvas.width).toString() + "px";
+		baseTextSize = "32px";
+	}
+	else if(deviceWidth < 992) {
+		if(available_height < 0.7 * deviceWidth && available_height / ratio < 0.7 * deviceWidth) {
+			canvas.height = available_height;
+			canvas.width = canvas.height / ratio;
+		}
+		else {
+			canvas.width = 0.7 * deviceWidth;
+			canvas.height = ratio * canvas.width;
+		}
+		canvas.width = 0.7 * deviceWidth;
+		canvas.height = ratio * canvas.width;
+
+		controls.style.width = (canvas.width).toString() + "px";
+		baseTextSize = "32px";
+	}
+	else if(deviceWidth < 1200) {
+		if(available_height < 0.6 * deviceWidth && available_height / ratio < 0.6 * deviceWidth) {
+			canvas.height = available_height;
+			canvas.width = canvas.height / ratio;
+		}
+		else {
+			canvas.width = 0.6 * deviceWidth;
+			canvas.height = ratio * canvas.width;
 		}
 
 		controls.style.width = (canvas.width).toString() + "px";
@@ -138,11 +145,11 @@ function displaySettings(reload, reset, game, ball=null, player1=null, computer=
 	else {
 		if(available_height < DEFAULT_HEIGHT) {
 			canvas.height = available_height;
-			canvas.width = (4 * canvas.height) / 3;
+			canvas.width = canvas.height / ratio;
 		}
 		else {
 			canvas.width = DEFAULT_WIDTH;
-			canvas.height = DEFAULT_HEIGHT;
+			canvas.height = ratio * canvas.width;
 		}
 
 		controls.style.width = (canvas.width).toString() + "px";
@@ -154,7 +161,7 @@ function displaySettings(reload, reset, game, ball=null, player1=null, computer=
 		computer.resize();
 		ball.resize(canvas.width / 60, game.ball_speed());
 
-		game.game_started = false;
+		game.started = false;
 
 		if(reset) {
 			game.reset(ball, player1, computer);
@@ -201,17 +208,21 @@ window.onload = function() {
 	canvas.addEventListener('mousemove', // http://www.w3schools.com/jsref/dom_obj_event.asp
 		function(evt) {
 			var mousePos = calculateMousePos(evt);
-			player1.manual_move(mousePos);
+			if(game.started) {
+				player1.manual_move(mousePos);
+			}
 		});
 
 	canvas.addEventListener('touchmove', // http://www.w3schools.com/jsref/dom_obj_event.asp
 		function(evt) {
 			var touchPos = calculateTouchPos(evt);
-			player1.manual_move(touchPos);
+			if(game.started) {
+				player1.manual_move(touchPos);
+			}
 		});
 
 	canvas.addEventListener('mousedown', function(evt) {
-		handleMouseClick(evt, player1, computer, game);
+		handleMouseClick(evt, ball, player1, computer, game);
 	});
 
 	window.addEventListener("resize", function(event) {
@@ -219,6 +230,13 @@ window.onload = function() {
 
 		// Makes sure the correct computer paddle height is enabled
 		game.set_difficulty(difficulty_selector[difficulty_selector.selectedIndex].value, computer);
+	});
+
+	$('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
+		var target = $(e.target).attr("href"); // activated tab
+
+		game.set_mode(target.substring(1), player1, computer);
+		displaySettings(true, true, game, ball, player1, computer);
 	});
 
 	difficulty_selector.addEventListener('change', function(event) {
@@ -260,11 +278,15 @@ function Ball(base_speed) {
 	}
 
 	this.handle_paddle_interaction = function(player) {
-		if(this.check_if_hit_paddle(player.paddle)) {
-			this.x_speed = -this.x_speed;
+		for(i = 0; i < player.num_paddles; i++) {
+			if(this.check_if_hit_paddle(player.paddles[i])) {
+				if(player.mode !== 'tennis' || ((player.type === 'person' && this.x_speed < 0) || (player.type === 'computer' && this.x_speed > 0))) {
+					this.x_speed = -this.x_speed;
+				}
 
-			var deltaY = this.y - (player.paddle.y + (player.paddle.height / 2));
-			this.y_speed = deltaY * 0.2;
+				var deltaY = this.y - (player.paddles[i].y + (player.paddles[i].height / 2));
+				this.y_speed = deltaY * 0.2;
+			}
 		}
 	}
 
@@ -337,29 +359,45 @@ function Paddle(x) {
 function Player(type) {
 	this.type = type;
 	this.mode = 'classic';
+	this.num_paddles = 1;
 	this.score = 0;
-	this.paddle = null;
-	this.x = 0;
+	this.paddles = null;
+	this.x = [0, 0];
 	this.paddle_thickness = 10;
 
 	this.setup = function() {
 		this.set_paddle_x_pos();
 
-		this.paddle = new Paddle(this.x);
+		this.paddles = [new Paddle(this.x[0]), new Paddle(this.x[1])];
 	};
+
+	this.set_mode = function(mode) {
+		if(mode === 'classic') {
+			this.mode = mode;
+			this.num_paddles = 1;
+		}
+		else if(mode === 'tennis') {
+			this.mode = mode;
+			this.num_paddles = 2;
+		}
+	}
 
 	this.set_paddle_x_pos = function() {
 		var wall_offset = DEFAULT_WALL_OFFSET * (canvas.width / DEFAULT_WIDTH);
 		if(this.type === 'computer') {
-			this.x = canvas.width - this.paddle_thickness - wall_offset;
+			this.x[0] = canvas.width - this.paddle_thickness - wall_offset;
+			this.x[1] = 0.625 * canvas.width;
 		}
 		else {
-			this.x = wall_offset;
+			this.x[0] = wall_offset;
+			this.x[1] = 0.375 * canvas.width;
 		}
 	}
 
 	this.reset = function() {
-		this.paddle.reset(this.x);
+		for(i = 0; i < this.paddles.length; i++) {
+			this.paddles[i].reset(this.x[i]);
+		}
 		this.score = 0;
 	}
 
@@ -375,27 +413,40 @@ function Player(type) {
 
 		this.set_paddle_x_pos();
 
-		this.paddle.resize(this.x, paddle_height, this.paddle_thickness);
+		for(i = 0; i < this.paddles.length; i++) {
+			this.paddles[i].resize(this.x[i], paddle_height, this.paddle_thickness);
+		}
 	}
 
 	this.draw = function() {
-		this.paddle.draw();
+		for(i = 0; i < this.num_paddles; i++) {
+			this.paddles[i].draw();
+		}
 	}
 
 	this.manual_move = function(cursor) {
-		if(cursor.y > this.paddle.height / 2 && cursor.y < canvas.height - this.paddle.height / 2) {
-			this.paddle.y = cursor.y - (this.paddle.height / 2);
+		if(cursor.y > this.paddles[0].height / 2 && cursor.y < canvas.height - this.paddles[0].height / 2) {
+			this.paddles[0].y = cursor.y - (this.paddles[0].height / 2);
+		}
+
+		if(this.mode === 'tennis') {
+			this.paddles[1].y = canvas.height - (this.paddles[0].height + this.paddles[0].y); 
 		}
 	}
 
 	this.auto_move = function(ball, game) {
-		var computerYCenter = this.paddle.y + (this.paddle.height / 2);
+		var variability = (this.type === 'person') ? 1.05 : 1;
+		var computerYCenter = this.paddles[0].y + (this.paddles[0].height / 2);
 
-		if(computerYCenter < ball.y - ((this.paddle.height / 2)) * 0.35 && this.paddle.y + this.paddle.height < canvas.height) {
-			this.paddle.y += game.computer_speed() * this.paddle.height;
+		if(computerYCenter < ball.y - ((this.paddles[0].height / 2)) * 0.35 && this.paddles[0].y + this.paddles[0].height < canvas.height) {
+			this.paddles[0].y += variability * game.computer_speed() * this.paddles[0].height;
 		}
-		else if(computerYCenter > ball.y + ((this.paddle.height / 2)) * 0.35 && this.paddle.y > 0) {
-			this.paddle.y -= game.computer_speed() * this.paddle.height;
+		else if(computerYCenter > ball.y + ((this.paddles[0].height / 2)) * 0.35 && this.paddles[0].y > 0) {
+			this.paddles[0].y -= variability * game.computer_speed() * this.paddles[0].height;
+		}
+
+		if(this.mode === 'tennis') {
+			this.paddles[1].y = canvas.height - (this.paddles[0].height + this.paddles[0].y); 
 		}
 	}
 
@@ -405,7 +456,25 @@ function Player(type) {
 
 function Game() {
 	this.difficulty = 1;
-	this.game_started = false;
+	this.mode = 'classic';
+	this.mode_info = {
+		"classic": {
+			"game_name": "Pong",
+			"background_color": "black",
+			"canvas_ratio": 0.75  // 3 by 4 aspect ratio
+		},
+		"tennis": {
+			"game_name": "Pong Tennis",
+			"background_color": "#A73202",
+			"canvas_ratio": 0.625  // 1 by 2 aspect ratio
+		},
+		"football": {
+			"game_name": "Pong Soccer",
+			"background_color": "#28A745",
+			"canvas_ratio": 0.64  // 16 by 25 aspect ratio
+		},
+	}
+	this.started = false;
 	this.winning_score = 5;
 	this.disable_endgame = false;
 	this.showingWinScreen = false;
@@ -437,6 +506,14 @@ function Game() {
 		this.disable_endgame = this.winning_score === 0;  // if-else
 	}
 
+	this.set_mode = function(mode, player1, computer) {
+		player1.set_mode(mode);
+		computer.set_mode(mode);
+
+		this.mode = mode;
+		this.started = false;
+	}
+
 	this.ball_speed = function() {
 		return 0.0075 * canvas.width;
 	}
@@ -465,14 +542,31 @@ function Game() {
 	}
 
 	this.drawFieldLines = function() {
-		for(var i = 0; i < canvas.height; i += 40) {
-			colorRect((canvas.width / 2) -1, i, 2, 20, 'white');
+		if(this.mode === 'classic') {
+			for(var i = 0; i < canvas.height; i += 40) {
+				colorRect((canvas.width / 2) - 1, i, 2, 20, 'white');
+			}
+		}
+
+		if(this.mode === 'tennis') {
+			for(var i = 0; i < canvas.height; i += 30) {
+				colorRect((canvas.width / 2) - 1, i, 2, 15, 'white');
+			}
+			colorRect(0, (0.125 * canvas.height) - 1, canvas.width, 2, 'white');
+			colorRect(0.25 * canvas.width, 0.125 * canvas.height, 2, 0.75 * canvas.height, 'white');
+			colorRect(0.25 * canvas.width, (canvas.height / 2) - 1, 0.5 * canvas.width, 2, 'white');
+			colorRect(0.75 * canvas.width, 0.125 * canvas.height, 2, 0.75 * canvas.height, 'white');
+			colorRect(0, (0.875 * canvas.height) - 1, canvas.width, 2, 'white');
 		}
 	}
 
 	this.moveEverything = function(ball, player1, computer) {
-		if(!this.game_started || this.showingWinScreen) {
+		if(this.showingWinScreen) {
 			return;
+		}
+
+		if(!this.started) {
+			player1.auto_move(ball, this);
 		}
 
 		computer.auto_move(ball, this);
@@ -485,11 +579,11 @@ function Game() {
 		if(ball.scored()) {
 			if(ball.x < canvas.width / 2) {
 				computer.score++; // must be BEFORE ball.reset()
-				computer.checkIfWon(this);
+				if(this.started) { computer.checkIfWon(this); }
 			}
 			else {
 				player1.score++; // must be BEFORE ball.reset()
-				player1.checkIfWon(this);
+				if(this.started) { player1.checkIfWon(this); }
 			}
 			ball.reset();
 		}
@@ -497,7 +591,7 @@ function Game() {
 
 	this.drawEverything = function(ball, player1, computer) {
 		// next line blanks out the screen with black
-		colorRect(0, 0, canvas.width, canvas.height, 'black');
+		colorRect(0, 0, canvas.width, canvas.height, this.mode_info[this.mode]["background_color"]);
 
 		canvasContext.font = baseTextSize + " Bit5x3";
 		canvasContext.textAlign = "center";
@@ -508,15 +602,25 @@ function Game() {
 			var interaction = "clique";
 		}
 
-		if(!this.game_started) {
+		if(!this.started) {
 			canvasContext.fillStyle = 'white';
-			canvasContext.font = "64px Bit5x3";
-			canvasContext.fillText("Pong", (canvas.width) / 2, canvas.height / 3);
+			var title = this.mode_info[this.mode]["game_name"];
+			var deviceWidth = document.documentElement.clientWidth;
+
+			if(title.split(" ").length > 1 && deviceWidth < 450) {
+				canvasContext.font = "48px Bit5x3";
+				canvasContext.fillText(title.split(" ")[0], (canvas.width) / 2, (canvas.height / 6) + 10);
+				canvasContext.fillText(title.split(" ")[1], (canvas.width) / 2, (canvas.height / 3) + 20);
+			}
+			else {
+				canvasContext.font = "64px Bit5x3";
+				canvasContext.fillText(title, (canvas.width) / 2, canvas.height / 3);
+			}
 
 			canvasContext.font = "20px Bit5x3";
 			canvasContext.fillText(interaction + " para comecar", (canvas.width / 2), 5 * canvas.height / 6);
 
-			return;
+			// return;
 		}
 
 		if(this.showingWinScreen) {
@@ -547,9 +651,11 @@ function Game() {
 		// next line draws the ball
 		ball.draw();
 
+		var score_height = (this.mode === 'tennis') ? canvas.height / 10 : canvas.height / 6;
+
 		// player and computer scores
-		canvasContext.fillText(player1.score, 100 * (canvas.width / DEFAULT_WIDTH), canvas.height / 6);
-		canvasContext.fillText(computer.score, (DEFAULT_WIDTH - 100) * (canvas.width / DEFAULT_WIDTH), canvas.height / 6);
+		canvasContext.fillText(player1.score, 100 * (canvas.width / DEFAULT_WIDTH), score_height);
+		canvasContext.fillText(computer.score, (DEFAULT_WIDTH - 100) * (canvas.width / DEFAULT_WIDTH), score_height);
 	}
 }
 

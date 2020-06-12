@@ -63,7 +63,13 @@
 
 					<p class="article-content mb-4">Este projeto ainda não está completo. Pretendo ainda implementar outros modos de jogo em breve. Caso queira baixar esses arquivos visite meu <a href="https://github.com/Lavedonio/games">repositório de jogos no GitHub</a>.</p>
 
-					<ul class="nav nav-tabs mb-md-2" id="myTab" role="tablist">
+					<h4>Versão atual: <strong>2.0.0</strong> - 12/06/2020</h4>
+					<p>Modo de tênis adicionado e lógica interna do jogo reconstruída e melhorada. Agora o jogo também possui uma tela de início que serve de demonstração do jogo.</p>
+
+					<h5 class="mt-4">Versões anteriores:</h5>
+					<p><strong>1.0.0</strong> - 21/05/2020 - Jogo lançado! Ainda construindo modos de jogo de tênis e futebol.</p>
+
+					<ul class="nav nav-tabs mt-5 mb-md-2" id="myTab" role="tablist">
 						<li class="nav-item" role="presentation">
 							<a class="nav-link classic active" id="classic-tab" data-toggle="tab" href="#classic" role="tab" aria-controls="classic" aria-selected="true">Clássico</a>
 						</li>
@@ -71,7 +77,7 @@
 							<a class="nav-link tennis" id="tennis-tab" data-toggle="tab" href="#tennis" role="tab" aria-controls="tennis" aria-selected="false">Tênis</a>
 						</li>
 						<li class="nav-item" role="presentation">
-							<a class="nav-link football" id="football-tab" data-toggle="tab" href="#football" role="tab" aria-controls="football" aria-selected="false">Futebol</a>
+							<a class="nav-link football disabled" role="tab" tabindex="-1" aria-disabled="true"><em>Futebol (em breve)</em></a>
 						</li>
 					</ul>
 					<div class="tab-content mb-3" id="myTabContent">
@@ -79,7 +85,7 @@
 							<p>Este é o jogo <strong class="classic">clássico</strong> do Pong (para 1 jogador), no qual você controla a raquete da <strong>esquerda</strong>.</p>
 							<h3>Instruções</h3>
 							<ol>
-								<li>Você deve evitar que a bola passe a sua raquete. Se isso ocorrer, resultará em um ponto para o adversário e vice-versa.</li>
+								<li>Você deve evitar que a bola acerte sua parede lateral. Se isso ocorrer, resultará em um ponto para o adversário e vice-versa.</li>
 								<li>Ao ultrapassar a pontuação máxima de 5 pontos (podendo ser alterada nos ajustes abaixo do jogo), quem tiver a maior pontuação ganha.</li>
 								<li>Há 3 níveis de dificuldade (também podendo ser alterado nos ajustes abaixo do jogo), sendo que cada um irá alterar a proporção entre o tamanho da sua raquete em relação a de seu adversário.</li>
 								<li>Para tornar o jogo mais desafiador, com o passar do tempo a bola vai ficando cada vez mais rápida.</li>
@@ -90,6 +96,16 @@
 						</div>
 						<div class="tab-pane fade" id="tennis" role="tabpanel" aria-labelledby="tennis-tab">
 							<p>Este é o jogo Pong, na sua versão de <strong class="tennis">tênis</strong> (para 1 jogador), no qual você controla as duas raquetes da <strong>esquerda</strong>.</p>
+							<h3>Instruções</h3>
+							<ol>
+								<li>Você deve evitar que a bola acerte sua parede lateral. Se isso ocorrer, resultará em um ponto para o adversário e vice-versa.</li>
+								<li>Ao ultrapassar a pontuação máxima de 5 pontos (podendo ser alterada nos ajustes abaixo do jogo), quem tiver a maior pontuação ganha.</li>
+								<li>Há 3 níveis de dificuldade (também podendo ser alterado nos ajustes abaixo do jogo), sendo que cada um irá alterar a proporção entre o tamanho da sua raquete em relação a de seu adversário.</li>
+								<li>Para tornar o jogo mais desafiador, com o passar do tempo a bola vai ficando cada vez mais rápida.</li>
+							</ol>
+							<h3>Controles</h3>
+							<p>Se você está usando um mouse, utilize o cursor para guiar a raquete do fundo; caso esteja numa tela touch, utilize seu dedo. A <strong>raquete do fundo</strong> irá acompanhar seu cursor/dedo, enquanto a raquete da frente irá espelhar verticalmente o movimento. Para que seu comando seja registrado, o movimento do cursor/dedo deve ser feito <strong>dentro dos limites da área do jogo</strong> (dentro da borda branca). Recomendo jogar em <strong>tela cheia</strong> clicando/tocando no botão de mesmo nome.</p>
+							<h4>Bom jogo! ;)</h4>
 						</div>
 						<div class="tab-pane fade" id="football" role="tabpanel" aria-labelledby="football-tab">
 							<p>Este é o jogo Pong, na sua versão de <strong class="football">futebol</strong> (para 1 jogador), no qual você controla o time da <strong>esquerda</strong>.</p>

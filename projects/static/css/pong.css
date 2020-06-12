@@ -23,9 +23,9 @@ canvas {
 }
 
 .tennis, .tennis:hover {
-	color: green!important;
+	color: red!important;
 }
 
 .football, .football:hover {
-	color: red!important;
+	color: green!important;
 }
