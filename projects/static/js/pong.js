@@ -294,7 +294,7 @@ function Ball(base_speed) {
 		this.x += this.x_speed;
 		this.y += this.y_speed;
 
-		if(this.y + this.size > canvas.height || this.y < 0) {
+		if((this.y + this.size > canvas.height && this.y_speed > 0) || (this.y < 0 && this.y_speed < 0)) {
 			this.y_speed = -this.y_speed;
 		}
 
@@ -470,9 +470,9 @@ function Game() {
 		},
 		"football": {
 			"game_name": "Pong Soccer",
-			"background_color": "#28A745",
+			"background_color": "#008000",
 			"canvas_ratio": 0.64  // 16 by 25 aspect ratio
-		},
+		}
 	}
 	this.started = false;
 	this.winning_score = 5;
