@@ -10,8 +10,6 @@ const DEFAULT_WALL_OFFSET = 20;
 const DEFAULT_WIDTH = 800;
 const DEFAULT_HEIGHT = 600;
 
-var CURRENT_PADDLE_HEIGHT = 100;
-
 // ------------- Cursor Handling Functions -------------
 
 function calculateMousePos(evt) {
@@ -50,6 +48,7 @@ function handleMouseClick(evt, ball, player1, computer, game) {
 	if(!game.started) {
 		game.started = true;
 		game.reset(ball, player1, computer);
+		player1.manual_move({"x": canvas.width / 2, "y": canvas.height / 2});
 	}
 
 	if(game.showingWinScreen) {
@@ -157,11 +156,8 @@ function displaySettings(reload, reset, game, ball=null, player1=null, computer=
 	}
 
 	if(reload) {
-		player1.resize();
-		computer.resize();
-		ball.resize(canvas.width / 60, game.ball_speed());
-
 		game.started = false;
+		game.resize(ball, player1, computer);
 
 		if(reset) {
 			game.reset(ball, player1, computer);
@@ -264,8 +260,13 @@ function Ball(base_speed) {
 	this.y_speed = 2;
 	this.size = 10;
 
-	this.scored = function() {
-		return (this.x < 0 || this.x + this.size > canvas.width);
+	this.scored = function(mode) {
+		if(mode === 'football') {
+			return ((0.365 * canvas.height < this.y - (this.size / 2) && this.y + (this.size / 2) < 0.635 * canvas.height) && (this.x < 0 || this.x + this.size > canvas.width));
+		}
+		else {
+			return (this.x < 0 || this.x + this.size > canvas.width);
+		}
 	}
 
 	this.check_if_hit_paddle = function(paddle) {
@@ -278,14 +279,19 @@ function Ball(base_speed) {
 	}
 
 	this.handle_paddle_interaction = function(player) {
-		for(i = 0; i < player.num_paddles; i++) {
+		for(var i = 0; i < player.num_paddles; i++) {
 			if(this.check_if_hit_paddle(player.paddles[i])) {
-				if(player.mode !== 'tennis' || ((player.type === 'person' && this.x_speed < 0) || (player.type === 'computer' && this.x_speed > 0))) {
+				if(player.mode === 'classic' || ((player.type === 'person' && this.x_speed < 0) || (player.type === 'computer' && this.x_speed > 0))) {
 					this.x_speed = -this.x_speed;
 				}
 
 				var deltaY = this.y - (player.paddles[i].y + (player.paddles[i].height / 2));
-				this.y_speed = deltaY * 0.2;
+				if(player.mode === 'football') {
+					this.y_speed = deltaY * 0.25;
+				}
+				else {
+					this.y_speed = deltaY * 0.2;
+				}
 			}
 		}
 	}
@@ -305,9 +311,9 @@ function Ball(base_speed) {
 			this.x_speed -= 0.005;
 		}
 
-		// if(this.x > canvas.width || this.x < 0) {
-		// 	this.x_speed = -this.x_speed;
-		// }
+		if(this.x + this.size > canvas.width || this.x < 0) {
+			this.x_speed = -this.x_speed;
+		}
 	}
 
 	this.resize = function(new_size, new_base_speed) {
@@ -341,8 +347,6 @@ function Paddle(x) {
 		this.x = new_x;
 		this.height = new_height;
 		this.thickness = new_thickness;
-
-		CURRENT_PADDLE_HEIGHT = new_height;
 	}
 
 	this.reset = function(x) {
@@ -350,7 +354,7 @@ function Paddle(x) {
 		this.y = canvas.height / 2;
 	}
 
-	this.draw = function(color='white') {
+	this.draw = function(color) {
 		colorRect(this.x, this.y, this.thickness, this.height, color);
 	}
 }
@@ -359,16 +363,17 @@ function Paddle(x) {
 function Player(type) {
 	this.type = type;
 	this.mode = 'classic';
+	this.difficulty = 1;
 	this.num_paddles = 1;
 	this.score = 0;
 	this.paddles = null;
-	this.x = [0, 0];
+	this.x = [0, 0, 0, 0, 0, 0];
 	this.paddle_thickness = 10;
 
 	this.setup = function() {
 		this.set_paddle_x_pos();
 
-		this.paddles = [new Paddle(this.x[0]), new Paddle(this.x[1])];
+		this.paddles = [new Paddle(this.x[0]), new Paddle(this.x[1]), new Paddle(this.x[2]), new Paddle(this.x[3]), new Paddle(this.x[4]), new Paddle(this.x[5])];
 	};
 
 	this.set_mode = function(mode) {
@@ -380,6 +385,12 @@ function Player(type) {
 			this.mode = mode;
 			this.num_paddles = 2;
 		}
+		else if(mode === 'football') {
+			this.mode = mode;
+			this.num_paddles = 6;
+		}
+
+		this.set_paddle_x_pos();
 	}
 
 	this.set_paddle_x_pos = function() {
@@ -387,15 +398,43 @@ function Player(type) {
 		if(this.type === 'computer') {
 			this.x[0] = canvas.width - this.paddle_thickness - wall_offset;
 			this.x[1] = 0.625 * canvas.width;
+			this.x[2] = 0.2 * canvas.width;
+			this.x[3] = 0.65 * canvas.width;
+			this.x[4] = 0.6 * canvas.width;
+			this.x[5] = 0.6 * canvas.width;
+
+			if(this.mode === 'football') {
+				this.x[1] = 0.2 * canvas.width;
+			}
 		}
 		else {
 			this.x[0] = wall_offset;
 			this.x[1] = 0.375 * canvas.width;
+			this.x[2] = 0.8 * canvas.width;
+			this.x[3] = 0.35 * canvas.width;
+			this.x[4] = 0.4 * canvas.width;
+			this.x[5] = 0.4 * canvas.width;
+
+			if(this.mode === 'football') {
+				this.x[1] = 0.8 * canvas.width;
+			}
+		}
+
+		if(this.paddles !== null) {
+			for(var i = 0; i < this.paddles.length; i++) {
+				this.paddles[i].reset(this.x[i]);
+			}
+		}
+	}
+
+	this.set_height = function(new_height) {
+		for(var i = 0; i < this.paddles.length; i++) {
+			this.paddles[i].height = new_height;
 		}
 	}
 
 	this.reset = function() {
-		for(i = 0; i < this.paddles.length; i++) {
+		for(var i = 0; i < this.paddles.length; i++) {
 			this.paddles[i].reset(this.x[i]);
 		}
 		this.score = 0;
@@ -407,30 +446,56 @@ function Player(type) {
 		}
 	}
 
-	this.resize = function() {
-		this.paddle_thickness = canvas.width / 60;
-		var paddle_height = canvas.height / 6;
+	this.resize = function(paddle_height, paddle_thickness, paddle_height_variance) {
+		this.paddle_thickness = paddle_thickness;
 
 		this.set_paddle_x_pos();
 
-		for(i = 0; i < this.paddles.length; i++) {
-			this.paddles[i].resize(this.x[i], paddle_height, this.paddle_thickness);
+		for(var i = 0; i < this.paddles.length; i++) {
+			this.paddles[i].resize(this.x[i], paddle_height * paddle_height_variance, this.paddle_thickness);
 		}
 	}
 
 	this.draw = function() {
-		for(i = 0; i < this.num_paddles; i++) {
-			this.paddles[i].draw();
+		if(this.mode === 'football' && this.type === 'computer') {
+			for(var i = 0; i < this.num_paddles; i++) {
+				this.paddles[i].draw('yellow');
+			}
+		}
+		else {
+			for(var i = 0; i < this.num_paddles; i++) {
+				this.paddles[i].draw('white');
+			}
 		}
 	}
 
 	this.manual_move = function(cursor) {
-		if(cursor.y > this.paddles[0].height / 2 && cursor.y < canvas.height - this.paddles[0].height / 2) {
-			this.paddles[0].y = cursor.y - (this.paddles[0].height / 2);
+		if(this.mode === 'football') {
+			if(cursor.y > (2 * this.paddles[0].height) + (canvas.height / 15) && cursor.y < canvas.height - (2 * this.paddles[0].height) - (canvas.height / 15)) {
+				this.paddles[0].y = cursor.y - (this.paddles[0].height / 2);
+			}
+			else {
+				if(cursor.y <= (2 * this.paddles[0].height) + (canvas.height / 15)) {
+					this.paddles[0].y = (3 * this.paddles[0].height / 2) + (canvas.height / 15);
+				}
+				else {
+					this.paddles[0].y = canvas.height - (5 * this.paddles[0].height / 2) - (canvas.height / 15);
+				}
+			}
+			this.paddles[1].y = this.paddles[0].y - (this.paddles[0].height / 2) - (canvas.height / 15);
+			this.paddles[2].y = this.paddles[0].y + (this.paddles[0].height / 2) + (canvas.height / 15);
+			this.paddles[3].y = this.paddles[0].y;
+			this.paddles[4].y = this.paddles[0].y - (3 * this.paddles[0].height / 2) - (canvas.height / 15);
+			this.paddles[5].y = this.paddles[0].y + (3 * this.paddles[0].height / 2) + (canvas.height / 15);
 		}
+		else {
+			if(cursor.y > this.paddles[0].height / 2 && cursor.y < canvas.height - this.paddles[0].height / 2) {
+				this.paddles[0].y = cursor.y - (this.paddles[0].height / 2);
+			}
 
-		if(this.mode === 'tennis') {
-			this.paddles[1].y = canvas.height - (this.paddles[0].height + this.paddles[0].y); 
+			if(this.mode === 'tennis') {
+				this.paddles[1].y = canvas.height - (this.paddles[0].height + this.paddles[0].y); 
+			}
 		}
 	}
 
@@ -438,15 +503,31 @@ function Player(type) {
 		var variability = (this.type === 'person') ? 1.05 : 1;
 		var computerYCenter = this.paddles[0].y + (this.paddles[0].height / 2);
 
-		if(computerYCenter < ball.y - ((this.paddles[0].height / 2)) * 0.35 && this.paddles[0].y + this.paddles[0].height < canvas.height) {
-			this.paddles[0].y += variability * game.computer_speed() * this.paddles[0].height;
-		}
-		else if(computerYCenter > ball.y + ((this.paddles[0].height / 2)) * 0.35 && this.paddles[0].y > 0) {
-			this.paddles[0].y -= variability * game.computer_speed() * this.paddles[0].height;
-		}
+		if(this.mode === 'football') {
+			if(computerYCenter < ball.y - ((this.paddles[0].height / 2)) * 0.35 && this.paddles[0].y + this.paddles[0].height < canvas.height && computerYCenter < canvas.height - ((5 - this.difficulty) * this.paddles[0].height / 2) - (canvas.height / 15)) {
+				this.paddles[0].y += variability * game.computer_speed() * this.paddles[0].height;
+			}
+			else if(computerYCenter > ball.y + ((this.paddles[0].height / 2)) * 0.35 && this.paddles[0].y > 0 && computerYCenter > ((5 - this.difficulty) * this.paddles[0].height / 2) + (canvas.height / 15)) {
+				this.paddles[0].y -= variability * game.computer_speed() * this.paddles[0].height;
+			}
 
-		if(this.mode === 'tennis') {
-			this.paddles[1].y = canvas.height - (this.paddles[0].height + this.paddles[0].y); 
+			this.paddles[1].y = this.paddles[0].y - (this.paddles[0].height / 2) - (canvas.height / 15);
+			this.paddles[2].y = this.paddles[0].y + (this.paddles[0].height / 2) + (canvas.height / 15);
+			this.paddles[3].y = this.paddles[0].y;
+			this.paddles[4].y = this.paddles[0].y - (3 * this.paddles[0].height / 2) - (canvas.height / 15);
+			this.paddles[5].y = this.paddles[0].y + (3 * this.paddles[0].height / 2) + (canvas.height / 15);
+		}
+		else {
+			if(computerYCenter < ball.y - ((this.paddles[0].height / 2)) * 0.35 && this.paddles[0].y + this.paddles[0].height < canvas.height) {
+				this.paddles[0].y += variability * game.computer_speed() * this.paddles[0].height;
+			}
+			else if(computerYCenter > ball.y + ((this.paddles[0].height / 2)) * 0.35 && this.paddles[0].y > 0) {
+				this.paddles[0].y -= variability * game.computer_speed() * this.paddles[0].height;
+			}
+
+			if(this.mode === 'tennis') {
+				this.paddles[1].y = canvas.height - (this.paddles[0].height + this.paddles[0].y); 
+			}
 		}
 	}
 
@@ -461,17 +542,20 @@ function Game() {
 		"classic": {
 			"game_name": "Pong",
 			"background_color": "black",
-			"canvas_ratio": 0.75  // 3 by 4 aspect ratio
+			"canvas_ratio": 0.75,  // 3 by 4 aspect ratio
+			"paddle_height_variance": 1
 		},
 		"tennis": {
 			"game_name": "Pong Tennis",
 			"background_color": "#A73202",
-			"canvas_ratio": 0.625  // 1 by 2 aspect ratio
+			"canvas_ratio": 0.625,  // 5 by 8 aspect ratio
+			"paddle_height_variance": 1
 		},
 		"football": {
 			"game_name": "Pong Soccer",
 			"background_color": "#008000",
-			"canvas_ratio": 0.64  // 16 by 25 aspect ratio
+			"canvas_ratio": 0.65,  // 13 by 20 aspect ratio
+			"paddle_height_variance": 0.5
 		}
 	}
 	this.started = false;
@@ -482,15 +566,18 @@ function Game() {
 	this.set_difficulty = function(difficulty, computer) {
 		if(difficulty === "easy") {
 			this.difficulty = 1;
-			computer.height = 0.9 * CURRENT_PADDLE_HEIGHT;
+			computer.difficulty = this.difficulty;
+			computer.set_height(0.9 * (canvas.height / 6) * this.mode_info[this.mode]["paddle_height_variance"]);
 		}
 		else if(difficulty === "medium") {
 			this.difficulty = 2;
-			computer.height = CURRENT_PADDLE_HEIGHT;
+			computer.difficulty = this.difficulty;
+			computer.set_height((canvas.height / 6) * this.mode_info[this.mode]["paddle_height_variance"]);
 		}
 		else {
 			this.difficulty = 3;
-			computer.height = 1.1 * CURRENT_PADDLE_HEIGHT;
+			computer.difficulty = this.difficulty;
+			computer.set_height(1.1 * (canvas.height / 6) * this.mode_info[this.mode]["paddle_height_variance"]);
 		}
 	}
 
@@ -502,16 +589,36 @@ function Game() {
 		this.showingWinScreen = false;
 	}
 
+	this.resize = function(ball, player1, computer) {
+		var paddle_height_variance = this.mode_info[this.mode]["paddle_height_variance"];
+		var height = this.default_height();
+		var width = this.default_width();
+
+		player1.resize(height, width, paddle_height_variance);
+		computer.resize(height, width, paddle_height_variance);
+		ball.resize(width, this.ball_speed());
+	}
+
 	this.check_if_disable_endgame = function() {
 		this.disable_endgame = this.winning_score === 0;  // if-else
 	}
 
 	this.set_mode = function(mode, player1, computer) {
-		player1.set_mode(mode);
-		computer.set_mode(mode);
+		var paddle_height_variance = this.mode_info[mode]["paddle_height_variance"];
+
+		player1.set_mode(mode, paddle_height_variance);
+		computer.set_mode(mode, paddle_height_variance);
 
 		this.mode = mode;
 		this.started = false;
+	}
+
+	this.default_height = function() {
+		return canvas.height / 6;
+	}
+
+	this.default_width = function() {
+		return canvas.width / 60;
 	}
 
 	this.ball_speed = function() {
@@ -558,6 +665,54 @@ function Game() {
 			colorRect(0.75 * canvas.width, 0.125 * canvas.height, 2, 0.75 * canvas.height, 'white');
 			colorRect(0, (0.875 * canvas.height) - 1, canvas.width, 2, 'white');
 		}
+
+		if(this.mode === 'football') {
+			// Método .fillRect(a, b, c, d):
+			//		a. [posição x do canto do quadrado],
+			//		b. [posição y do canto do quadrado],
+			//		c. [largura do quadrado],
+			//		d. [altura do quadrado]
+			// Obs.: levar em consideração ao centralizar um objeto
+
+			// Left side
+			// área
+			colorRect(0, (0.365 * canvas.height) - 1, (0.0524 * canvas.width), 2, 'white');
+			colorRect(0, (0.635 * canvas.height) - 1, (0.0524 * canvas.width), 2, 'white');
+			colorRect((0.0524 * canvas.width) - 1, (0.365 * canvas.height), 2, (0.27 * canvas.height), 'white');
+
+			colorCircle((0.105 * canvas.width), (canvas.height / 2), 2, 'white', true);
+			colorCircle((0.105 * canvas.width), (canvas.height / 2), (0.135 * canvas.height), 'white', false, 0.295 * Math.PI, -0.295 * Math.PI);
+
+			colorRect(0, (0.204 * canvas.height) - 1, (0.157 * canvas.width), 2, 'white');
+			colorRect(0, (0.796 * canvas.height) - 1, (0.157 * canvas.width), 2, 'white');
+			colorRect((0.157 * canvas.width) - 1, (0.204 * canvas.height), 2, (0.592 * canvas.height), 'white');
+
+			// escanteio
+			colorCircle(0, 0, (0.015 * canvas.height), 'white', false, 0, Math.PI / 2, false);
+			colorCircle(0, canvas.height, (0.015 * canvas.height), 'white', false, 0, Math.PI / 2, true);
+
+			// Middle
+			colorRect((canvas.width / 2) - 1, 0, 2, canvas.height, 'white');
+			colorCircle((canvas.width / 2), (canvas.height / 2), (0.135 * canvas.height), 'white');
+			colorCircle((canvas.width / 2), (canvas.height / 2), 2, 'white', true);
+
+			// Right side
+			// área
+			colorRect((0.9476 * canvas.width), (0.365 * canvas.height) - 1, (0.0524 * canvas.width), 2, 'white');
+			colorRect((0.9476 * canvas.width), (0.635 * canvas.height) - 1, (0.0524 * canvas.width), 2, 'white');
+			colorRect((0.9476 * canvas.width) - 1, (0.365 * canvas.height), 2, (0.27 * canvas.height), 'white');
+
+			colorCircle((0.895 * canvas.width), (canvas.height / 2), 2, 'white', true);
+			colorCircle((0.895 * canvas.width), (canvas.height / 2), (0.135 * canvas.height), 'white', false, -0.705 * Math.PI, 0.705 * Math.PI);
+
+			colorRect((0.843 * canvas.width), (0.204 * canvas.height) - 1, (0.157 * canvas.width), 2, 'white');
+			colorRect((0.843 * canvas.width), (0.796 * canvas.height) - 1, (0.157 * canvas.width), 2, 'white');
+			colorRect((0.843 * canvas.width) - 1, (0.204 * canvas.height), 2, (0.592 * canvas.height), 'white');
+
+			// escanteio
+			colorCircle(canvas.width, 0, (0.015 * canvas.height), 'white', false, Math.PI / 2, Math.PI, false);
+			colorCircle(canvas.width, canvas.height, (0.015 * canvas.height), 'white', false, Math.PI / 2, Math.PI, true);
+		}
 	}
 
 	this.moveEverything = function(ball, player1, computer) {
@@ -576,7 +731,7 @@ function Game() {
 		ball.handle_paddle_interaction(player1);
 		ball.handle_paddle_interaction(computer);
 
-		if(ball.scored()) {
+		if(ball.scored(this.mode)) {
 			if(ball.x < canvas.width / 2) {
 				computer.score++; // must be BEFORE ball.reset()
 				if(this.started) { computer.checkIfWon(this); }
@@ -651,7 +806,7 @@ function Game() {
 		// next line draws the ball
 		ball.draw();
 
-		var score_height = (this.mode === 'tennis') ? canvas.height / 10 : canvas.height / 6;
+		var score_height = (this.mode === 'classic') ? canvas.height / 6 : canvas.height / 10;
 
 		// player and computer scores
 		canvasContext.fillText(player1.score, 100 * (canvas.width / DEFAULT_WIDTH), score_height);
@@ -680,7 +835,7 @@ function colorRect(leftX, topX, width, height, drawColor) {
 	canvasContext.fillRect(leftX, topX, width, height);
 }
 
-function colorCircle(centerX, centerY, radius, drawColor) {
+function colorCircle(centerX, centerY, radius, drawColor, fill, start_angle, end_angle, counterclockwise) {
 	// (http://www.w3schools.com/tags/canvas_arc.asp)
 	// Método .arc(a, b, c, d, e, f):
 	//		a. [posição x do centro da circunferência],
@@ -690,10 +845,21 @@ function colorCircle(centerX, centerY, radius, drawColor) {
 	//		e. [ângulo final do desenho],
 	//		f. [Default: false; Indica se o desenho deve ser feito no sentido horário ou anti-horário. Não faz diferença se é uma circunferência completa]
 
-	canvasContext.fillStyle = drawColor;
+	start_angle = typeof start_angle !== 'undefined' ? start_angle : 0;
+	end_angle = typeof end_angle !== 'undefined' ? end_angle : Math.PI*2;
+	counterclockwise = typeof counterclockwise !== 'undefined' ? counterclockwise : true;
+	fill = typeof fill !== 'undefined' ? fill : false;
+
+	canvasContext.lineWidth = 2;
 	canvasContext.beginPath(); // requisito para definir uma forma não retangular
-	canvasContext.arc(centerX, centerY, radius, 0, Math.PI*2, true);
-	canvasContext.fill();
+	canvasContext.arc(centerX, centerY, radius, start_angle, end_angle, counterclockwise);
+	if(fill) {
+		canvasContext.fillStyle = drawColor;
+		canvasContext.fill();
+	} else {
+		canvasContext.strokeStyle = drawColor;
+		canvasContext.stroke();
+	}
 }
 
 function isTouchScreen() {
