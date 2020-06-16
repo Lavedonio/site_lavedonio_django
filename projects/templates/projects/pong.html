@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% block viewport %}<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no">{% endblock %}
 {% block canonical %}<link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{% url 'projects' %}">{% endblock %}
 
 {% block stylesheet %}
@@ -41,44 +42,83 @@
 						<span class="mx-1">Categorias:</span>
 						<div class="d-inline-block mr-3" style="color: #DE4B4B;">Games</div>
 					</div>
-				<hr>
+				<hr class="light-color-hr">
 				<div class="d-block mb-4">
 					<p class="lead mb-4">Esta é a recriação do primeiro jogo da Atari, feito em 1972, que foi um dos grandes responsáveis pelo nascimento da indústria do videogame como conhecemos.</p>
 
 					<p class="text-center mb-1"><img class="img-fluid sample-gif" src="https://upload.wikimedia.org/wikipedia/commons/6/62/Pong_Game_Test2.gif" alt="Jogo acontecendo no fliperama original"></p>
 					<p class="text-center img-description">Você veria isso se estivesse jogando em 1972</p>
 
-					<p class="article-content">Como queria aprender mais sobre a liguagem de programação <em>Javascript</em> e <em>frontend</em> em geral, decidi ir além do <em>Hello World</em> e recriar esse clássico em HTML5/CSS3 e Javascript modernos.</p>
+					<p class="article-content">Como queria aprender mais sobre a liguagem de programação <em>Javascript</em> e <em>frontend</em> em geral, decidi ir além do <em>Hello World</em> e recriar esse clássico em HTML5/CSS3 e Javascript modernos. Afinal, se <a href="https://en.wikipedia.org/wiki/Allan_Alcorn" target="_blank" rel="noopener noreferrer">Allan Alcorn</a> conseguiu, quase 40 anos atrás e recém-formado no mesmo curso que eu faço atualmente, fazer em 3 meses esse jogo com chips programáveis a nível de transistor e muita solda, eu consigo fazer no conforto de um computador milhões de vezes mais potente e com o Google para me ajudar.</p>
 
 					<p class="article-content">Quando o jogo foi lançado, precisava de todo um equipamento e circuito digital feito especificamente para rodá-lo. Depois, este jogo passou para diversas gerações de consoles que podiam ser jogados em casa, e finalmente para PC. Várias versões foram feitas, muitas em <i>Flash</i>, mas poucas com implementação moderna.</p>
 
 					<p class="article-content">Para este primeiro jogo, me baseei neste <a href="https://www.udemy.com/code-your-first-game/" target="_blank" rel="noopener noreferrer">curso da Udemy</a>, mas indo além e tornando-o responsível, de forma com que ele possa ser jogado não só no computador, mas também em tablets e smartphones (ou quaisquer dispositivos com telas <i>touch</i> e que consigam acessar essa página).</p>
 
-					<p class="article-content mb-4">Este projeto ainda não está completo. Pretendo ainda implementar outros modos de jogo em breve. Caso queira baixar esses arquivos visite meu <a href="#">repositório de jogos no GitHub</a>.</p>
+					<p class="article-content mb-4">Caso queira baixar os arquivos do jogo para entender como eu fiz ou brincar com o código, visite meu <a href="https://github.com/Lavedonio/games" target="_blank" rel="noopener noreferrer">repositório de jogos no GitHub</a>.</p>
 
-					<ul class="nav nav-tabs mb-md-2" id="myTab" role="tablist">
+					<h4>Versão atual: <strong>2.1.0</strong> - 15/06/2020</h4>
+					<p>Modo de futebol adicionado!</p>
+
+					<h5 class="mt-4">Versões anteriores:</h5>
+					<ul>
+						<li><strong>2.0.1</strong> - 14/06/2020 - Correção de bug em que a bola ficava presa nas laterais.</li>
+						<li><strong>2.0.0</strong> - 12/06/2020 - Modo de tênis adicionado e lógica interna do jogo reconstruída e melhorada. Agora o jogo também possui uma tela de início que serve de demonstração do jogo.</li>
+						<li><strong>1.0.0</strong> - 21/05/2020 - Jogo lançado! Ainda construindo modos de jogo de tênis e futebol.</li>
+					</ul>
+
+					<h3 class="mt-5">Escolha um modo de jogo:</h3>
+					<ul class="nav nav-tabs mt-4 mb-2" id="myTab" role="tablist">
 						<li class="nav-item" role="presentation">
-							<a class="nav-link active" id="classic-tab" data-toggle="tab" href="#classic" role="tab" aria-controls="classic" aria-selected="true">Clássico</a>
+							<a class="nav-link classic active" id="classic-tab" data-toggle="tab" href="#classic" role="tab" aria-controls="classic" aria-selected="true">Clássico</a>
 						</li>
 						<li class="nav-item" role="presentation">
-							<a class="nav-link disabled" href="#" role="tab" tabindex="-1" aria-disabled="true"><em>Tênis (em breve)</em></a>
+							<a class="nav-link tennis" id="tennis-tab" data-toggle="tab" href="#tennis" role="tab" aria-controls="tennis" aria-selected="false">Tênis</a>
 						</li>
 						<li class="nav-item" role="presentation">
-							<a class="nav-link disabled" href="#" role="tab" tabindex="-1" aria-disabled="true"><em>Futebol (em breve)</em></a>
+							<a class="nav-link football" id="football-tab" data-toggle="tab" href="#football" role="tab" aria-controls="football" aria-selected="false">Futebol</a>
 						</li>
 					</ul>
 					<div class="tab-content mb-3" id="myTabContent">
 						<div class="tab-pane fade show active" id="classic" role="tabpanel" aria-labelledby="classic-tab">
-							<p>Este é o jogo clássico do Pong (para 1 jogador), no qual você controla a raquete da <strong>esquerda</strong>.</p>
+							<p>Este é o jogo <strong class="classic">clássico</strong> do Pong (para 1 jogador), no qual você controla a raquete da <strong>esquerda</strong>.</p>
 							<h3>Instruções</h3>
 							<ol>
-								<li>Você deve evitar que a bola passe a sua raquete. Se isso ocorrer, resultará em um ponto para o adversário e vice-versa.</li>
+								<li>Você deve evitar que a bola acerte sua parede lateral. Se isso ocorrer, resultará em um ponto para o adversário e vice-versa.</li>
 								<li>Ao ultrapassar a pontuação máxima de 5 pontos (podendo ser alterada nos ajustes abaixo do jogo), quem tiver a maior pontuação ganha.</li>
 								<li>Há 3 níveis de dificuldade (também podendo ser alterado nos ajustes abaixo do jogo), sendo que cada um irá alterar a proporção entre o tamanho da sua raquete em relação a de seu adversário.</li>
 								<li>Para tornar o jogo mais desafiador, com o passar do tempo a bola vai ficando cada vez mais rápida.</li>
 							</ol>
 							<h3>Controles</h3>
 							<p>Se você está usando um mouse, utilize o cursor para guiar a raquete; caso esteja numa tela touch, utilize seu dedo. A raquete irá acompanhar seu cursor/dedo desde que o movimento esteja sendo feito <strong>dentro dos limites da área do jogo</strong> (dentro da borda branca). Recomendo jogar em <strong>tela cheia</strong> clicando/tocando no botão de mesmo nome.</p>
+							<h4>Bom jogo! ;)</h4>
+						</div>
+						<div class="tab-pane fade" id="tennis" role="tabpanel" aria-labelledby="tennis-tab">
+							<p>Este é o jogo Pong, na sua versão de <strong class="tennis">tênis</strong> (para 1 jogador), no qual você controla as duas raquetes da <strong>esquerda</strong>.</p>
+							<h3>Instruções</h3>
+							<ol>
+								<li>Você deve evitar que a bola acerte sua parede lateral. Se isso ocorrer, resultará em um ponto para o adversário e vice-versa.</li>
+								<li>Se a bola acertar a raquete da frente, mas estiver indo no sentido do seu adversário, a bola irá desviar seu curso, mas não irá mudar a direção horizontal; isso só acontece se a bola acertar um jogador adversário. O equivalente vale para o outro time.</li>
+								<li>Ao ultrapassar a pontuação máxima de 5 pontos (podendo ser alterada nos ajustes abaixo do jogo), quem tiver a maior pontuação ganha.</li>
+								<li>Há 3 níveis de dificuldade (também podendo ser alterado nos ajustes abaixo do jogo), sendo que cada um irá alterar a proporção entre o tamanho da sua raquete em relação a de seu adversário.</li>
+								<li>Para tornar o jogo mais desafiador, com o passar do tempo a bola vai ficando cada vez mais rápida.</li>
+							</ol>
+							<h3>Controles</h3>
+							<p>Se você está usando um mouse, utilize o cursor para guiar a raquete do fundo; caso esteja numa tela touch, utilize seu dedo. A <strong>raquete do fundo</strong> irá acompanhar seu cursor/dedo, enquanto a raquete da frente irá espelhar verticalmente o movimento. Para que seu comando seja registrado, o movimento do cursor/dedo deve ser feito <strong>dentro dos limites da área do jogo</strong> (dentro da borda branca). Recomendo jogar em <strong>tela cheia</strong> clicando/tocando no botão de mesmo nome.</p>
+							<h4>Bom jogo! ;)</h4>
+						</div>
+						<div class="tab-pane fade" id="football" role="tabpanel" aria-labelledby="football-tab">
+							<p>Este é o jogo Pong, na sua versão de <strong class="football">futebol</strong> (para 1 jogador), no qual você controla o time de cor <strong>branca</strong>.</p>
+							<h3>Instruções</h3>
+							<ol>
+								<li>Você deve evitar que a bola acerte seu gol. Nesse modo de jogo, ele será demarcado pela <strong>pequena área</strong>. Se isso ocorrer, resultará em um ponto para o adversário e vice-versa.</li>
+								<li>Se a bola acertar um jogador do seu time, mas estiver indo no sentido do gol do adversário, a bola irá desviar seu curso, mas não irá mudar a direção horizontal; isso só acontece se a bola acertar um jogador adversário. O equivalente vale para o outro time.</li>
+								<li>Ao ultrapassar a pontuação máxima de 5 pontos (podendo ser alterada nos ajustes abaixo do jogo), quem tiver a maior pontuação ganha.</li>
+								<li>Há 3 níveis de dificuldade (também podendo ser alterado nos ajustes abaixo do jogo), sendo que cada um irá alterar a proporção entre o tamanho dos seus jogadores em relação a de seu adversário, além da mobilidade máxima do computador.</li>
+								<li>Para tornar o jogo mais desafiador, com o passar do tempo a bola vai ficando cada vez mais rápida.</li>
+							</ol>
+							<h3>Controles</h3>
+							<p>Se você está usando um mouse, utilize o cursor para guiar o goleiro; caso esteja numa tela touch, utilize seu dedo. Todos os jogadores irão acompanhar seu cursor/dedo. Para que seu comando seja registrado, o movimento do cursor/dedo deve ser feito <strong>dentro dos limites da área do jogo</strong> (dentro da borda branca). Recomendo jogar em <strong>tela cheia</strong> clicando/tocando no botão de mesmo nome.</p>
 							<h4>Bom jogo! ;)</h4>
 						</div>
 					</div>
@@ -92,7 +132,7 @@
 						<div id="closeicon" class="d-none close mx-auto">
 							<span class="light-color-text">Fechar <img src="{{ request.scheme }}://{{ request.get_host }}{% static 'img/x_icon.svg' %}" class="ml-2" width="24px" alt="Exit Fullscreen"></span>
 						</div>
-						<p class="text-center mx-auto no-space-bottom"><canvas id="gameCanvas" class="mx-auto" width="800" height="600"></canvas></p>
+						<p class="text-center mx-auto no-space-bottom"><canvas id="gameCanvas" class="mx-auto" width="200" height="150"></canvas></p>
 
 						<div id="controls" class="row mx-auto">
 							<div class="col-sm-12">
