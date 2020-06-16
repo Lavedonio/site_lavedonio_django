@@ -54,15 +54,15 @@ class ProjectTestView(TemplateView):
 
         # Project specific settings
         project_manual_settings = {
-            "title": "Pong",
-            "description": "A recriação do maior clássico dos videogames, agora também para telas touch.",
+            "title": "Snake",
+            "description": "Esta é uma recriação do clássico \"jogo da cobrinha\", mas com uma diferença: agora a inteligência artificial também pode jogar.",
             "dark_background": True,
-            "credits": 'Imagem principal retirada do próprio jogo.<br>Fonte <em>Bit5x3</em> usada no jogo cortesia de <a href="http://www.mattlag.com/bitfonts/" target="_blank" rel="noopener noreferrer">Matt LaGrandeur</a>, sob licença <a href="https://en.wikipedia.org/wiki/Creative_Commons" target="_blank" rel="noopener noreferrer"><em>Creative Commons</em></a>.<br>Imagem GIF cortesia de <i>pong74ls</i>, retirado da <a href="https://en.wikipedia.org/wiki/File:Pong_Game_Test2.gif" target="_blank" rel="noopener noreferrer">Wikipedia</a>, sob licença <a href="https://en.wikipedia.org/wiki/Creative_Commons" target="_blank" rel="noopener noreferrer"><em>Creative Commons</em></a>.<br>Ícone para fechamento da tela cheia feito por <a href="https://www.flaticon.com/authors/alfredo-hernandez" title="Alfredo Hernandez" target="_blank" rel="noopener noreferrer">Alfredo Hernandez</a> em <a href="https://www.flaticon.com/" title="Flaticon" target="_blank" rel="noopener noreferrer">Flaticon</a>.',
-            "categories": ["Games"],
+            "credits": 'Imagem principal retirada do próprio jogo.<br>Imagem GIF cortesia de <a href="https://imgur.com/user/jervis" target="_blank" rel="noopener noreferrer"><em>jervis</em></a>, retirado de <a href="https://imgur.com/gallery/dAtcCfH" target="_blank" rel="noopener noreferrer">imgur</a>.<br>Ícone para fechamento da tela cheia feito por <a href="https://www.flaticon.com/authors/alfredo-hernandez" title="Alfredo Hernandez" target="_blank" rel="noopener noreferrer">Alfredo Hernandez</a> em <a href="https://www.flaticon.com/" title="Flaticon" target="_blank" rel="noopener noreferrer">Flaticon</a>.',
+            "categories": ["Games", "IA"],
             "fix_scale": True,
             "custom_font": True,
-            "css": "css/pong.css",
-            "js": "js/pong.js"
+            "css": "css/snake.css",
+            "js": "js/snake.js"
         }
 
         context["project"] = project_manual_settings
