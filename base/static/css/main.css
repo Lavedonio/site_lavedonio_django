@@ -98,6 +98,10 @@ h2 {
 	color: #E7F6FF;
 }
 
+.light-color-hr {
+	border-color: #E7F6FF;
+}
+
 .light-text {
 	font-weight: normal;
 }

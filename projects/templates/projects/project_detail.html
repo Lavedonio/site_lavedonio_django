@@ -47,9 +47,11 @@
 						<div class="d-inline-block mr-3" style="{% if project.dark_background %}color: #DE4B4B;{% else %}color: #C11111;{% endif %}">{{ category.name }}</div>
 						{% endfor %}
 					</div>
-				<hr>
+				<hr{%if project.dark_background %} class="light-color-hr"{% endif %}>
 				{% endif %}
-				<div class="d-block mb-4">{{ project.content|safe }}</div>
+				<div class="d-block mb-4">
+					{{ project.content|safe }}
+				</div>
 				<a href="{{ request.scheme }}://{{ request.get_host }}{% url 'projects' %}" class="btn btn-info btn-sm">&laquo; Voltar aos Projetos</a>
 			</div>
 		</article>
