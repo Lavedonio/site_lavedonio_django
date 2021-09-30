@@ -1,29 +1,33 @@
 import os
+from dotenv import load_dotenv
+from .base import BASE_DIR
 
 
-try:
-    from .secrets import secrets
-    config = secrets
-except ModuleNotFoundError:
+load_dotenv(BASE_DIR / '.env')
 
-    config = {}
+config = {}
 
-    config["ENVIRONMENT"] = os.environ.get("ENVIRONMENT")
-    config["SECRET_KEY"] = os.environ.get("SECRET_KEY")
-    config["DEBUG_VALUE"] = os.environ.get("DEBUG_VALUE")
-    config["SERVER_TYPE"] = os.environ.get("SERVER_TYPE")
-    config["DB_NAME"] = os.environ.get("DB_NAME")
-    config["DB_USER"] = os.environ.get("DB_USER")
-    config["DB_PASS"] = os.environ.get("DB_PASS")
-    config["RECAPTCHA_PUBLIC_KEY"] = os.environ.get("RECAPTCHA_PUBLIC_KEY")
-    config["RECAPTCHA_PRIVATE_KEY"] = os.environ.get("RECAPTCHA_PRIVATE_KEY")
-    config["EMAIL_USER"] = os.environ.get("EMAIL_USER")
-    config["EMAIL_PASS"] = os.environ.get("EMAIL_PASS")
-    config["AWS_ACCESS_KEY_ID"] = os.environ.get("AWS_ACCESS_KEY_ID")
-    config["AWS_SECRET_ACCESS_KEY"] = os.environ.get("AWS_SECRET_ACCESS_KEY")
-    config["AWS_STORAGE_BUCKET_NAME"] = os.environ.get("AWS_STORAGE_BUCKET_NAME")
-    config["HTTPS_TRAFFIC_ONLY"] = os.environ.get("HTTPS_TRAFFIC_ONLY")
-    config["ANALYTICS_ID"] = os.environ.get("ANALYTICS_ID")
+env_vars = [
+    "ENVIRONMENT",
+    "SECRET_KEY",
+    "DEBUG_VALUE",
+    "SERVER_TYPE",
+    "DB_NAME",
+    "DB_USER",
+    "DB_PASS",
+    "RECAPTCHA_PUBLIC_KEY",
+    "RECAPTCHA_PRIVATE_KEY",
+    "EMAIL_USER",
+    "EMAIL_PASS",
+    "AWS_ACCESS_KEY_ID",
+    "AWS_SECRET_ACCESS_KEY",
+    "AWS_STORAGE_BUCKET_NAME",
+    "HTTPS_TRAFFIC_ONLY",
+    "ANALYTICS_ID"
+]
 
-    if config["ENVIRONMENT"] is None:
-        config["ENVIRONMENT"] = "development"
+for var in env_vars:
+    config[var] = os.environ.get(var)
+
+if config["ENVIRONMENT"] is None:
+    config["ENVIRONMENT"] = "development"
