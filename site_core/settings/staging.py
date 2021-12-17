@@ -1,23 +1,19 @@
 """
 Django staging settings for site_lavedonio_django project.
 
-Created based on 'django-admin startproject' command using Django 2.2.10.
+Created based on 'django-admin startproject' command using Django 3.2.10.
 
 Edited source folder from site_lavedonio_django to site_core.
 
 For more information on this file, see
-https://docs.djangoproject.com/en/2.2/topics/settings/
+https://docs.djangoproject.com/en/3.2/topics/settings/
 
 For the full list of settings and their values, see
-https://docs.djangoproject.com/en/2.2/ref/settings/
+https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
-import os
 from .config import config
 from .base import *
-
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 
 # Setting environment name to escape unfinnished or testing pages
@@ -25,7 +21,7 @@ ENVIRONMENT = "staging"
 
 
 # Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
+# See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config["SECRET_KEY"]
@@ -46,8 +42,8 @@ INSTALLED_APPS += ['storages']
 
 
 # Root location
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 
 # E-mail configuration
