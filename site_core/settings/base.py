@@ -1,22 +1,23 @@
 """
 Django settings for site_lavedonio_django project.
 
-Created based on 'django-admin startproject' command using Django 2.2.10.
+Created based on 'django-admin startproject' command using Django 3.2.10.
 
 Edited source folder from site_lavedonio_django to site_core.
 
 For more information on this file, see
-https://docs.djangoproject.com/en/2.2/topics/settings/
+https://docs.djangoproject.com/en/3.2/topics/settings/
 
 For the full list of settings and their values, see
-https://docs.djangoproject.com/en/2.2/ref/settings/
+https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
-import os
+from pathlib import Path
 from django.utils.translation import gettext_lazy as _
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = Path(__file__).resolve().parents[2]
 
 
 # Application definition
@@ -95,7 +96,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 
 # Internationalization
-# https://docs.djangoproject.com/en/2.2/topics/i18n/
+# https://docs.djangoproject.com/en/3.2/topics/i18n/
 
 LANGUAGES = [
     ('pt-br', _("Brazilian Portuguese")),
@@ -103,7 +104,7 @@ LANGUAGES = [
 ]
 
 LOCALE_PATHS = [
-    os.path.join(BASE_DIR, 'locale'),
+    BASE_DIR / 'locale',
 ]
 
 LANGUAGE_CODE = 'pt-br'
@@ -118,7 +119,7 @@ USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/2.2/howto/static-files/
+# https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
 
@@ -126,6 +127,12 @@ MEDIA_URL = '/media/'
 
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'dashboard'
+
+# Default primary key field type
+# https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
 
 # E-mail configuration
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
