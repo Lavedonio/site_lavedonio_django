@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block canonical %}<link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{% url 'base:contact' %}">{% endblock %}
+
+{% block background_images %}
+  <style>
+    #contact-img {
+      background-image: linear-gradient(45deg, var(--offcanvas-background-color), var(--navbar-background-color-transparent), var(--footer-text-color-transparent)), url('{{ request.scheme }}://{{ request.get_host }}{% static "img/IMG_9172.jpeg" %}');
+    }
+  </style>
+{% endblock %}
+
+{% block main_section %}
+    <header id="contact-img" class="font-poppins page-header page-header--light">
+      <div class="container d-flex align-items-end">
+        <div class="d-block">
+          <h1 class="page-header__heading page-header__heading--light">Contato</h1>
+          <div class="line line--light"></div>
+        </div>
+      </div>
+    </header>
+
+    <div class="container">
+      <div class="row">
+        <section class="contact-section col-lg-8 col-md-7">
+          <h3>Entre em contato pelo formulário...</h3>
+          <form id="contactform" method="POST" class="mt-4 mb-5" style="max-width: 600px;">
+            {% csrf_token %}
+
+            {% crispy form form.helper %}
+            
+            <!-- Hidden input for recaptcha v3 info -->
+
+            <button class="btn btn-primary btn-md" type="submit">Enviar</button>
+          </form>
+        </section>
+        <section class="contact-section col-lg-4 col-md-5">
+          <h3>...ou pelas redes sociais.</h3>
+          <div class="contact-section__social-networks">
+            <div><a href="https://github.com/Lavedonio" target="_blank" rel="noopener noreferrer"><img style="border-radius: 5px;" src="{{ request.scheme }}://{{ request.get_host }}{% static 'img/icons/social-media/github-badge.svg' %}" alt="Follow @Lavedonio"></a></div>
+            <div><a href="https://twitter.com/Lavedonio" class="twitter-follow-button" data-size="large" data-lang="pt_BR" data-show-count="false">Follow @Lavedonio</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></div>
+            <div><div class="badge-base LI-profile-badge" data-locale="pt_BR" data-size="large" data-theme="dark" data-type="VERTICAL" data-vanity="daniel-lavedonio-de-lima" data-version="v1"><a class="badge-base__link LI-simple-link" href="https://br.linkedin.com/in/daniel-lavedonio-de-lima?trk=profile-badge"></a></div></div>
+          </div>
+          </ul>
+        </section>
+      </div>
+    </div>
+{% endblock %}
+
+{% block credits %}
+      <span class="custom-footer__info text-lg-end mb-4">Badge do GitHub por <a href="https://dev.to/envoy_" target="_blank" rel="noopener noreferrer">Vedant Chainani</a> em <a href="https://dev.to/envoy_/150-badges-for-github-pnk" target="_blank" rel="noopener noreferrer">DEV.to</a>.</span>
+{% endblock %}
+
+{% block javascript %}
+<script src="https://platform.linkedin.com/badges/js/profile.js" async defer type="text/javascript"></script>
+{% endblock %}

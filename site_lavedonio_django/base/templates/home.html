@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block main_section %}
+    <!-- Hero section -->
+    <section class="hero-main font-poppins background-gradient">
+      <div class="container hero-main__container flex-lg-row my-lg-0">
+        <div class="col-12 col-lg-6 my-5 align-self-lg-center">
+          <h1>Olá, seja bem-vindo!</h1>
+          <div class="line line--light"></div>
+          <h2 class="hero-main__text">Meu nome é Daniel e estou sempre procurando novos desafios que envolvam programação e dados.</h2>
+          <div class="d-flex">
+            <a class="btn btn-info mx-1" href="{{ request.scheme }}://{{ request.get_host }}{% url 'base:about' %}" role="button">Saiba mais sobre mim</a>
+            <a class="btn btn-secondary mx-1" href="{{ request.scheme }}://{{ request.get_host }}{% url 'base:contact' %}" role="button">Entre em contato</a>
+          </div>
+        </div>
+        <img class="col-8 col-lg-6 mt-5 align-self-end hero-main__image" src="{{ request.scheme }}://{{ request.get_host }}{% static 'img/homepage-photo.png' %}" alt="Daniel Lavedonio de Lima's profile image">
+      </div>
+    </section>
+{% endblock %}
+
+{% block credits %}
+          <span class="custom-footer__info text-lg-end">Fotos em segundo plano desta página por <a href="https://unsplash.com/@yancymin?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" target="_blank" rel="noopener noreferrer">Yancy Min</a>{% if projects and posts %},{% elif projects %} e{% endif %}{% if projects %} <a href="https://unsplash.com/@ugmonk?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" target="_blank" rel="noopener noreferrer">Jeff Sheldon</a>{% endif %}{% if posts %} e <a href="https://unsplash.com/@emilep?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" target="_blank" rel="noopener noreferrer">Émile Perron</a>{% endif %} em <a href="https://unsplash.com/s/photos/code?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" target="_blank" rel="noopener noreferrer">Unsplash</a>.</span>
+          <span class="custom-footer__info text-lg-end mb-4">Imagens dos projetos e das publicações em destaque creditadas em suas respectivas páginas.</span>
+{% endblock %}
