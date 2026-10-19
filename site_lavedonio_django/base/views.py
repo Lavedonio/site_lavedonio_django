@@ -1,8 +1,14 @@
 # from django.conf import settings
+from django.utils.translation import get_language, gettext as _
 from django.views.generic import TemplateView
 from django.views.generic.edit import FormView
 from django.urls import reverse_lazy
+from blog.models import Post
+from projects.models import Project
 from .forms import ContactForm
+
+# How many featured projects and posts are shown in the homepage
+HOME_FEATURED_COUNT = 3
 
 
 class HomeView(TemplateView):
@@ -10,12 +16,14 @@ class HomeView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["title"] = "Homepage"
+        context["title"] = _("Homepage")
         context["navbar_active"] = "home"
         # context["analytics_id"] = settings.ANALYTICS_ID
 
-        # context["posts"] = Post.objects.filter(featured=True).order_by('-date_posted')[:3]
-        # context["projects"] = Project.objects.filter(featured=True).order_by('-pk')[:3]
+        # Each section is only shown when it has featured content
+        user = self.request.user
+        context["projects"] = list(Project.objects.visible_to(user).filter(featured=True).with_related()[:HOME_FEATURED_COUNT])
+        context["posts"] = list(Post.objects.visible_to(user).filter(featured=True).with_related()[:HOME_FEATURED_COUNT])
         return context
 
 
@@ -24,9 +32,12 @@ class AboutView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["title"] = "About"
+        context["title"] = _("About")
         context["navbar_active"] = "about"
         # context["analytics_id"] = settings.ANALYTICS_ID
+
+        # Long texts are kept in one template per language instead of the .po files
+        context["content_templates"] = [f"about/content_{get_language()}.html", "about/content_en.html"]
 
         return context
 
@@ -38,7 +49,7 @@ class ContactView(FormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["title"] = "Contact"
+        context["title"] = _("Contact")
         context["navbar_active"] = "contact"
         # context["analytics_id"] = settings.ANALYTICS_ID
 
@@ -109,7 +120,7 @@ class ContactSuccessView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["title"] = "Contact - Form Submitted Successfully"
+        context["title"] = _("Contact - Form Submitted Successfully")
         context["navbar_active"] = "contact"
         # context["analytics_id"] = settings.ANALYTICS_ID
         return context
@@ -122,30 +133,6 @@ class TempAdminView(TemplateView):
         context = super().get_context_data(**kwargs)
         context["title"] = "Project"
         context["navbar_active"] = "projects"
-        # context["analytics_id"] = settings.ANALYTICS_ID
-
-        return context
-
-
-class TempProjectView(TemplateView):
-    template_name = "blank.html"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["title"] = "Project"
-        context["navbar_active"] = "projects"
-        # context["analytics_id"] = settings.ANALYTICS_ID
-
-        return context
-
-
-class TempBlogView(TemplateView):
-    template_name = "blank.html"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["title"] = "Blog"
-        context["navbar_active"] = "blog"
         # context["analytics_id"] = settings.ANALYTICS_ID
 
         return context

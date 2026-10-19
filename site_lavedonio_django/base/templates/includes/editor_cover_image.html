@@ -1,0 +1,14 @@
+{% load i18n %}
+{% comment %}Cover image picker with preview. `field` is a ClearableFileInput ImageField.{% endcomment %}
+<div class="cover-picker">
+  <img class="cover-picker__preview" data-cover-preview src="{% if field.value and field.value.url %}{{ field.value.url }}{% endif %}" alt=""{% if not field.value or not field.value.url %} hidden{% endif %}>
+  <input type="file" name="{{ field.html_name }}" id="{{ field.id_for_label }}" class="form-control" accept="image/*" data-cover-input>
+  {% if field.value and field.value.url %}
+  <div class="form-check mt-2">
+    <input type="checkbox" class="form-check-input" name="{{ field.html_name }}-clear" id="{{ field.id_for_label }}-clear">
+    <label class="form-check-label" for="{{ field.id_for_label }}-clear">{% translate "Remove the current image" %}</label>
+  </div>
+  {% endif %}
+  {% if field.help_text %}<div class="form-text">{{ field.help_text }}</div>{% endif %}
+  {% for error in field.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
+</div>

@@ -1,0 +1,60 @@
+{% load static site_tags %}
+<article id="about-me" class="about-article">
+  <div class="about-article__content">
+    <h2>Sobre mim</h2>
+    <p>Meu nome é Daniel Lavedonio de Lima e sou um curioso por natureza. Tento sempre buscar</p>
+  </div>
+  <figure class="about-article__figure">
+    <img src="{{ request.scheme }}://{{ request.get_host }}{% static_image 'img/IMG_9126.jpeg' %}" alt="" loading="lazy">
+    <figcaption>Foto no Grand Canyon.</figcaption>
+  </figure>
+</article>
+<article id="education" class="about-article">
+  <div class="about-article__content">
+    <h2>Educação</h2>
+    <p>Estudei Engenharia Elétrica com Ênfase em Computação na <a href="https://www.poli.usp.br/" target="_blank" rel="noopener noreferrer">Escola Politécnica da USP</a>, tendo concluído em 2020.</p>
+    <p>Durante a graduação, já no 1º semestre, entrei para a <a href="https://www.polijunior.com.br/" target="_blank" rel="noopener noreferrer">Poli Júnior</a>, a primeira empresa júnior de engenharia do Brasil. Nela participei de projetos na área de Engenharia de Produção e de Computação, sendo nesta última área também como gerente. Além disso, fui um dos organizadores do 12º Ser Empreendedor, um evento de fomento do empreendedorismo universitário.</p>
+    <p>Com a minha experiência no Movimento Empresa Júnior, participei nos 5º e 6º semestres da <a href="https://www.fejesp.org.br/" target="_blank" rel="noopener noreferrer">FEJESP - Federação das Empresas Juniores do Estado de São Paulo</a> como Coordenador de Sistemas. Como tal, fui o responsável pela mudança do site e do sistema de e-mails usado.</p>
+    <p>Na parte final da graduação, estive envolvido no projeto de Iniciação Científica <em>BioGadget</em>, que usava a tecnologia de <em>Bluetooth Low Energy (BLE)</em> para criar rastreadores especializados para estudos específicos de animais silvestres. Apesar de não participar do projeto até o final, consegui conhecer mais sobre o mundo acadêmico com ele.</p>
+    <p>Atualmente estou cursando um mestrado acadêmico <em>(stricto sensu)</em> no <a href="https://www.psi.poli.usp.br/" target="_blank" rel="noopener noreferrer">Departamento de Engenharia de Sistemas Eletrônicos</a> da Escola Politécnica da USP (PSI-POLI-USP) em um projeto que envolve robustez contra ataques adversários baseados em caracteres para sistemas de Processamento de Linguagem Natural (PLN ou, em inglês, NLP).</p>
+  </div>
+  <figure class="about-article__figure">
+    <img src="{{ request.scheme }}://{{ request.get_host }}{% static_image 'img/about-education.jpeg' %}" alt="" loading="lazy">
+    <figcaption>Foto da formatura.</figcaption>
+  </figure>
+</article>
+<article id="career" class="about-article">
+  <div class="about-article__content">
+    <h2>Carreira</h2>
+    <p>Comecei minha carreira na área de dados e sigo nela desde então.</p>
+    <p>No primeiro estágio, na Marisa, que comecei em dezembro de 2017, lembro de ver meus colegas de trabalho mexendo no Excel somente por atalhos e sem sequer usar o mouse. O que foi um fascínio no primeiro momento se tornou em uma reflexão, pois via eles fazendo os mesmos movimentos todos os dias, para gerar os mesmos relatórios diários. Praticamente nada era automatizado e todos os relatórios eram gerados diariamente por um esquadrão de estagiários e analistas. A partir de uma conversa com o meu chefe, meu foco virou automatizar estes relatórios de Excel usando VBA até o final do meu estágio de férias, em janeiro de 2018.</p>
+    <p>Depois de um hiato de 1 ano para focar na faculdade, comecei no meu segundo estágio na Medcel em janeiro de 2019. Nele, continuei a automatizar tarefas em Excel VBA, mas expandi meu escopo, ajudando a analista de dados a fazer queries SQL, criar dashboards no Tableau e automatizar processos usando Python. Nesse ponto, me aventurei criando um web scraper para automatizar uma tarefa repetitiva e chata que me foi pedida: buscar todos os aprovados em provas de residência e mapear quem tinha sido nosso cliente. Para isso usei Selenium, visto que os sites eram altamente dependentes de JavaScript. Consegui automatizar com sucesso e a tempo de ser apresentado na reunião de diretoria 2 semanas depois. Trabalhei nesta empresa até junho de 2019.</p>
+    <p>No meu terceiro estágio, na Mobly, que comecei em julho de 2019, entrei numa equipe maior e comecei a ajudar e conhecer de perto o trabalho do engenheiro de dados. Lá também conheci diversas ferramentas como Apache Airflow e Pentaho e foi o primeiro momento que tive contato com um ambiente cloud, neste caso a AWS (Amazon Web Services). Lá utilizei o S3, EC2, RedShift, RDS, QuickSight, entre outros serviços. Além disso, como o único no time com conhecimento de VBA, fiquei responsável pela manutenção dos relatórios Excel legados. Foram meses muito intensos até que decidi migrar, desta vez entrando de vez na área de engenharia de dados, onde sigo até hoje. Trabalhei nesta empresa até novembro de 2019.</p>
+    <p>No meu quarto e último estágio, na Revelo, que comecei em dezembro de 2019, entrei como “estagiário sênior”, sendo o responsável por automatizações e otimizações de processos. Logo após uma breve passagem de um outro engenheiro de dados, fui promovido a engenheiro de dados (o único da empresa). Lá o meu principal projeto foi resolver um problema técnico clássico de startups em crescimento: os analistas de dados realizavam queries direto no banco de dados de produção, o que não só era uma operação lenta, como também afetava a operação da plataforma como um todo. A solução foi criar uma réplica de onde então eram tirados snapshots do banco de dados para colocar no sistema de armazenamento em nuvem e colocar os dados em um sistema analítico próprio para queries mais complexas. Por motivos fora do meu controle, havia mais uma complicação: o time de tech usava AWS e o de dados usava GCP (Google Cloud Platform). Para isso foi criada uma instância do Airflow na cloud GCP (Google Cloud Platform) para orquestrar este processo, onde a réplica Postgres no AWS RDS era extraída usando o comando PG copy, esses dados eram então colocados numa pasta particionada do Google Cloud Storage e essas tabelas eram então adicionadas no BigQuery. A solução não era das mais elegantes, mas por ter conseguido criar todo esse processo do zero sem nenhuma assistência externa tão cedo na minha carreira (e ter tido a liberdade para tal dada pelo meu chefe e pelo CTO), foi um feito e tanto. No final do ano de 2020, recebi atribuições também de SRE (Site Reliability Engineer), um cargo no campo de DevOps, onde automatizei os projetos que fiz usando GitHub Actions e adicionei observabilidade usando Prometheus e Grafana. Apenas de aprender bastante, vi que sentia falta de trabalhar como engenheiro de dados, então migrei para outra oportunidade onde pude trabalhar como tal. Trabalhei nesta empresa até fevereiro de 2021.</p>
+    <p>No meu primeiro emprego pós-formatura da faculdade, na InfoPrice, que comecei em março de 2021, entrei num time de engenharia de dados com um desafio enorme: pela primeira vez o time de dados não era o backoffice, e sim o produto principal da empresa. Nele, enfrentei diversos desafios, sendo o principal deles um dos projetos que mais me orgulho. Este projeto consistia na redução de custo na execução de Spark jobs utilizando o AWS EMR. O caminho proposto foi mudar as máquinas de On-Demand para Spot.</p>
+  </div>
+  <figure class="about-article__figure">
+    <img src="{{ request.scheme }}://{{ request.get_host }}{% static_image 'img/IMG_2777.jpeg' %}" alt="" loading="lazy">
+    <figcaption>Foto no primeiro estágio.</figcaption>
+  </figure>
+</article>
+<article id="projects" class="about-article">
+  <div class="about-article__content">
+    <h2>Projetos</h2>
+    <p>Meu nome é Daniel Lavedonio de Lima e sou um curioso por natureza. Tento sempre buscar</p>
+  </div>
+  <figure class="about-article__figure">
+    <img src="{{ request.scheme }}://{{ request.get_host }}{% static_image 'img/IMG_9205.jpeg' %}" alt="" loading="lazy">
+    <figcaption>Debugando um projeto.</figcaption>
+  </figure>
+</article>
+<article id="hiring" class="about-article">
+  <div class="about-article__content">
+    <h2>Como contratar</h2>
+    <p>Meu nome é Daniel Lavedonio de Lima e sou um curioso por natureza. Tento sempre buscar</p>
+  </div>
+  <figure class="about-article__figure">
+    <img src="{{ request.scheme }}://{{ request.get_host }}{% static_image 'img/about-contract2.jpeg' %}" alt="" loading="lazy">
+    <figcaption>Foto da formatura.</figcaption>
+  </figure>
+</article>

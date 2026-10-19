@@ -1,15 +1,29 @@
-{% load static %}
+{% load static i18n %}
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="{{ LANGUAGE_CODE }}">
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  {% block viewport %}<meta name="viewport" content="width=device-width, initial-scale=1.0">{% endblock %}
 
-  <meta name="description" content="Site pessoal">
+  <!-- Applies the saved light/dark theme before the page is drawn (see set_color_scheme in main.js) -->
+  <script>
+    (function() {
+      var scheme = 'auto';
+      try { scheme = localStorage.getItem('color-scheme') || 'auto'; } catch (error) {}
+      var is_dark = scheme === 'dark' || (scheme === 'auto' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+      document.documentElement.setAttribute('data-bs-theme', is_dark ? 'dark' : 'light');
+    })();
+  </script>
+
+  <meta name="description" content="{% block meta_description %}{% translate 'Personal website' %}{% endblock %}">
   <meta name="keywords" content="Python,BI,Data Science,IA,Currículo,CV">
   <meta name="author" content="Daniel Lavedonio de Lima">
   {% block canonical %}<link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{% url 'base:home' %}">{% endblock %}
+  {% block language_alternates %}{% for alternate in language_alternates %}{% if alternate.is_available %}
+  <link rel="alternate" hreflang="{{ alternate.code }}" href="{{ alternate.url }}">{% endif %}{% endfor %}{% if language_alternate_default %}
+  <link rel="alternate" hreflang="x-default" href="{{ language_alternate_default.url }}">{% endif %}{% endblock %}
+  {% block meta %}{% endblock %}
 
   <link rel="icon" href="{{ request.scheme }}://{{ request.get_host }}{% static 'img/icons/favicon.ico' %}" type="image/x-icon"/>
   <link rel="shortcut icon" href="{{ request.scheme }}://{{ request.get_host }}{% static 'img/icons/favicon.ico' %}" type="image/x-icon"/>
@@ -29,6 +43,7 @@
 
   <!-- Loading all static background images from the page -->
   {% block background_images %}{% endblock %}
+  <noscript><style>.progressive-background::after { opacity: 1; }</style></noscript>
 
   {% block title_custom %}<title>{% if title %}{{ title }} - {% endif %}Daniel Lavedonio de Lima</title>{% endblock %}
 </head>
@@ -36,7 +51,7 @@
   <header>
     <nav id="main-nav" class="autohide navbar nav-underline navbar-expand-lg fixed-top" data-bs-theme="dark">
       <div class="container-lg">
-        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="{% translate 'Toggle navigation' %}">
           <span class="navbar-toggler-icon"></span>
         </button>
         <a class="navbar-brand brand-font navbar-brand--font-size" href="{{ request.scheme }}://{{ request.get_host }}{% url 'base:home' %}">Lavedonio</a>
@@ -44,20 +59,20 @@
         <div class="offcanvas offcanvas-start offcanvas--background-color" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
           <div class="offcanvas-header border-bottom mx-3 px-1">
             <h5 class="offcanvas-title brand-font offcanvas-brand--font-size" id="offcanvasNavbarLabel">Daniel Lavedonio de Lima</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="{% translate 'Close' %}"></button>
           </div>
           <div class="offcanvas-body">
             <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-              <li class="nav-item px-2"><a class="nav-link navbar--text-color{% if navbar_active == 'home' %} active{% endif %}"{% if navbar_active == 'home' %} aria-current="page"{% endif %} href="{{ request.scheme }}://{{ request.get_host }}{% url 'base:home' %}">Home</a></li>
-              <li class="nav-item px-2"><a class="nav-link navbar--text-color{% if navbar_active == 'about' %} active{% endif %}"{% if navbar_active == 'about' %} aria-current="page"{% endif %} href="{{ request.scheme }}://{{ request.get_host }}{% url 'base:about' %}">Sobre</a></li>
-              <li class="nav-item px-2"><a class="nav-link navbar--text-color{% if navbar_active == 'projects' %} active{% endif %}"{% if navbar_active == 'projects' %} aria-current="page"{% endif %} href="{{ request.scheme }}://{{ request.get_host }}{% url 'base:projects' %}">Projetos</a></li>
-              <li class="nav-item px-2"><a class="nav-link navbar--text-color{% if navbar_active == 'blog' %} active{% endif %}"{% if navbar_active == 'blog' %} aria-current="page"{% endif %} href="{{ request.scheme }}://{{ request.get_host }}{% url 'base:blog' %}">Blog</a></li>
-              <li class="nav-item px-2"><a class="nav-link navbar--text-color{% if navbar_active == 'contact' %} active{% endif %}"{% if navbar_active == 'contact' %} aria-current="page"{% endif %} href="{{ request.scheme }}://{{ request.get_host }}{% url 'base:contact' %}">Contato</a></li>
+              <li class="nav-item px-2"><a class="nav-link navbar--text-color{% if navbar_active == 'home' %} active{% endif %}"{% if navbar_active == 'home' %} aria-current="page"{% endif %} href="{{ request.scheme }}://{{ request.get_host }}{% url 'base:home' %}">{% translate "Home" %}</a></li>
+              <li class="nav-item px-2"><a class="nav-link navbar--text-color{% if navbar_active == 'about' %} active{% endif %}"{% if navbar_active == 'about' %} aria-current="page"{% endif %} href="{{ request.scheme }}://{{ request.get_host }}{% url 'base:about' %}">{% translate "About" %}</a></li>
+              <li class="nav-item px-2"><a class="nav-link navbar--text-color{% if navbar_active == 'projects' %} active{% endif %}"{% if navbar_active == 'projects' %} aria-current="page"{% endif %} href="{{ request.scheme }}://{{ request.get_host }}{% url 'projects:list' %}">{% translate "Projects" %}</a></li>
+              <li class="nav-item px-2"><a class="nav-link navbar--text-color{% if navbar_active == 'blog' %} active{% endif %}"{% if navbar_active == 'blog' %} aria-current="page"{% endif %} href="{{ request.scheme }}://{{ request.get_host }}{% url 'blog:list' %}">{% translate "Blog" %}</a></li>
+              <li class="nav-item px-2"><a class="nav-link navbar--text-color{% if navbar_active == 'contact' %} active{% endif %}"{% if navbar_active == 'contact' %} aria-current="page"{% endif %} href="{{ request.scheme }}://{{ request.get_host }}{% url 'base:contact' %}">{% translate "Contact" %}</a></li>
               <hr>
               <div class="vr d-none d-lg-inline-block mx-2"></div>
               <li class="nav-item px-2 dropdown">
                 <a class="nav-link dropdown-toggle icon-link h-100 navbar--text-color" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  <span class="d-inline-block me-2 me-lg-0 d-lg-none">Modo Noturno</span>
+                  <span class="d-inline-block me-2 me-lg-0 d-lg-none">{% translate "Dark Mode" %}</span>
                   <svg id="icon-dark-mode" class="bi bi-moon-stars-fill" fill="currentColor" aria-hidden="true"><use href="{{ request.scheme }}://{{ request.get_host }}{% static 'img/icons/bs-icons.svg' %}#moon-stars-fill"></use></svg>
                   <svg id="icon-light-mode" class="bi bi-sun-fill" fill="currentColor" aria-hidden="true"><use href="{{ request.scheme }}://{{ request.get_host }}{% static 'img/icons/bs-icons.svg' %}#sun-fill"></use></svg>
                 </a>
@@ -65,32 +80,66 @@
                   <li>
                     <a id="automatic-theme" class="dropdown-item icon-link h-100 active" href="#">
                       <svg class="bi bi-circle-half" height="16" width="16" fill="currentColor" aria-hidden="true"><use href="{{ request.scheme }}://{{ request.get_host }}{% static 'img/icons/bs-icons.svg' %}#circle-half"></use></svg>
-                      Automático
+                      {% translate "Automatic" %}
                     </a>
                   </li>
                   <li><hr class="dropdown-divider"></li>
                   <li>
                     <a id="light-theme" class="dropdown-item icon-link h-100" href="#">
                       <svg class="bi bi-sun-fill" height="16" width="16" fill="currentColor" aria-hidden="true"><use href="{{ request.scheme }}://{{ request.get_host }}{% static 'img/icons/bs-icons.svg' %}#sun-fill"></use></svg>
-                      Modo Claro
+                      {% translate "Light Mode" %}
                     </a>
                   </li>
                   <li>
                     <a id="dark-theme" class="dropdown-item icon-link h-100" href="#">
                       <svg class="bi bi-moon-stars-fill" height="16" width="16" fill="currentColor" aria-hidden="true"><use href="{{ request.scheme }}://{{ request.get_host }}{% static 'img/icons/bs-icons.svg' %}#moon-stars-fill"></use></svg>
-                      Modo Escuro
+                      {% translate "Dark Mode" %}
                     </a>
                   </li>
                 </ul>
               </li><div class="vr d-none d-lg-inline-block mx-2"></div>
               <li class="nav-item px-2 dropdown">
                 <a class="nav-link dropdown-toggle icon-link h-100 navbar--text-color" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  <span class="d-inline-block me-2 me-lg-0 d-lg-none">Cookies</span>
-                  <svg class="bi bi-cookie" fill="currentColor" aria-hidden="true"><use href="{{ request.scheme }}://{{ request.get_host }}{% static 'img/icons/bs-icons.svg' %}#cookie"></use></svg>
+                  <span class="d-inline-block me-2 me-lg-0 d-lg-none">{% translate "Language" %}</span>
+                  <svg class="bi bi-translate" fill="currentColor" aria-hidden="true"><use href="{{ request.scheme }}://{{ request.get_host }}{% static 'img/icons/bs-icons.svg' %}#translate"></use></svg>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end">
-                  <li><a class="dropdown-item" href="#">Permitir</a></li>
-                  <li><a class="dropdown-item" href="#">Não Permitir</a></li>
+                  {% for alternate in language_alternates %}
+                  <li><a class="dropdown-item{% if alternate.is_current %} active{% endif %}" href="{{ alternate.switch_url }}" lang="{{ alternate.code }}" hreflang="{{ alternate.code }}"{% if alternate.is_current %} aria-current="true"{% endif %}>{{ alternate.name }}</a></li>
+                  {% endfor %}
+                </ul>
+              </li><div class="vr d-none d-lg-inline-block mx-2"></div>
+              {% if user.is_authenticated %}
+              <li class="nav-item px-2 dropdown">
+                <a class="nav-link dropdown-toggle icon-link h-100 navbar--text-color" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  <span class="d-inline-block me-2 me-lg-0 d-lg-none">{{ user.get_short_name|default:user.get_username }}</span>
+                  <svg class="bi bi-person-circle" fill="currentColor" aria-hidden="true"><use href="{{ request.scheme }}://{{ request.get_host }}{% static 'img/icons/bs-icons.svg' %}#person-circle"></use></svg>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end">
+                  <li><h6 class="dropdown-header">{{ user.get_full_name|default:user.get_username }}</h6></li>
+                  {% if perms.blog.add_post %}<li><a class="dropdown-item icon-link" href="{{ request.scheme }}://{{ request.get_host }}{% url 'blog:post-create' %}"><i class="bi bi-pencil-square" aria-hidden="true"></i>{% translate "New post" %}</a></li>{% endif %}
+                  {% if perms.projects.add_project %}<li><a class="dropdown-item icon-link" href="{{ request.scheme }}://{{ request.get_host }}{% url 'projects:project-create' %}"><i class="bi bi-plus-square" aria-hidden="true"></i>{% translate "New project" %}</a></li>{% endif %}
+                  {% if user.is_staff %}<li><a class="dropdown-item icon-link" href="{{ request.scheme }}://{{ request.get_host }}{% url 'admin:index' %}"><i class="bi bi-gear" aria-hidden="true"></i>{% translate "Site administration" %}</a></li>{% endif %}
+                  <li><hr class="dropdown-divider"></li>
+                  <li>
+                    <form method="post" action="{{ request.scheme }}://{{ request.get_host }}{% url 'users:logout' %}">
+                      {% csrf_token %}
+                      <button type="submit" class="dropdown-item icon-link"><i class="bi bi-box-arrow-right" aria-hidden="true"></i>{% translate "Log out" %}</button>
+                    </form>
+                  </li>
+                </ul>
+              </li><div class="vr d-none d-lg-inline-block mx-2"></div>
+              {% endif %}
+              <li class="nav-item px-2 dropdown">
+                <a class="nav-link dropdown-toggle icon-link h-100 navbar--text-color" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  <span class="d-inline-block me-2 me-lg-0 d-lg-none">{% translate "Cookies" %}</span>
+                  <svg class="bi bi-cookie" fill="currentColor" aria-hidden="true"><use href="{{ request.scheme }}://{{ request.get_host }}{% static 'img/icons/bs-icons.svg' %}#cookie"></use></svg>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end cookie-menu">
+                  <li><p class="dropdown-item-text cookie-menu__description">{% translate "Analytics cookies, used to understand how the site is visited." %}</p></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item{% if cookie_consent == 'accepted' %} active{% endif %}" href="#" data-cookie-consent="accepted">{% translate "Allow" %}</a></li>
+                  <li><a class="dropdown-item{% if cookie_consent == 'rejected' %} active{% endif %}" href="#" data-cookie-consent="rejected">{% translate "Don't allow" %}</a></li>
                 </ul>
               </li>
             </ul>
@@ -104,18 +153,31 @@
     {% block main_section %}{% endblock %}
   </main>
 
+  {% if messages %}
+  <div class="toast-container position-fixed end-0 p-3 messages-container">
+    {% for message in messages %}
+    <div class="toast align-items-center border-0 text-bg-{% if message.level_tag == 'error' %}danger{% else %}{{ message.level_tag|default:'info' }}{% endif %}" role="status" aria-live="polite" aria-atomic="true">
+      <div class="d-flex">
+        <div class="toast-body">{{ message }}</div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="{% translate 'Close' %}"></button>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
   <footer class="footer custom-footer mt-auto" data-bs-theme="dark">
     <div class="container">
       <div class="custom-footer__top flex-lg-row">
         <h5 class="col-lg-3 custom-footer__brand brand-font">Lavedonio</h5>
         <div class="col-lg-9 align-items-end">
           {% block credits %}{% endblock %}
-          <span class="custom-footer__info text-lg-end mb-lg-4">Este site é um projeto <i>open-source</i>. Veja o código fonte <a href="https://github.com/Lavedonio/site_lavedonio_django/" target="_blank" rel="noopener noreferrer">aqui</a>.</span>
+          <span class="custom-footer__info text-lg-end mb-lg-4">{% blocktranslate trimmed with source_url="https://github.com/Lavedonio/site_lavedonio_django/" %}This website is an <i>open-source</i> project. See the source code <a href="{{ source_url }}" target="_blank" rel="noopener noreferrer">here</a>.{% endblocktranslate %}</span>
         </div>
       </div>
       <hr class="text-light">
       <div class="custom-footer__bottom flex-md-row">
-        <p>&copy; 2020&ndash;{% now "Y" %}. Daniel Lavedonio de Lima. Some rights reserved.</p>
+        <p>&copy; 2020&ndash;{% now "Y" %}. Daniel Lavedonio de Lima. {% translate "Some rights reserved." %}</p>
         <ul class="list-unstyled d-flex">
           <li><a class="link-body-emphasis" href="https://www.linkedin.com/in/daniel-lavedonio-de-lima/" target="_blank" rel="noopener noreferrer"><img class="custom-footer__social-media-icons" src="{{ request.scheme }}://{{ request.get_host }}{% static 'img/icons/social-media/circle-svg/LinkedIn.svg' %}" alt="LinkedIn"></a></li>
           <li class="ms-3"><a class="link-body-emphasis" href="https://www.twitter.com/Lavedonio" target="_blank" rel="noopener noreferrer"><img class="custom-footer__social-media-icons" src="{{ request.scheme }}://{{ request.get_host }}{% static 'img/icons/social-media/circle-svg/Twitter.svg' %}" alt="Twitter"></a></li>
@@ -124,6 +186,36 @@
       </div>
     </div>
   </footer>
+
+  {% block bottom_notices %}
+  <div class="bottom-notices" data-bs-theme="dark">
+    {% if analytics_id and not cookie_consent %}
+    <!-- Asks for permission before setting optional cookies -->
+    <div id="cookie-banner" class="bottom-notice" role="region" aria-label="{% translate 'Cookies' %}">
+      <div class="container bottom-notice__container">
+        <span>{% translate "This site would like to use cookies to understand how it is visited (Google Analytics). They are only set if you allow them." %}</span>
+        <div class="bottom-notice__actions">
+          <button type="button" class="btn btn-outline-light btn-sm" data-cookie-consent="rejected">{% translate "Don't allow" %}</button>
+          <button type="button" class="btn btn-info btn-sm" data-cookie-consent="accepted">{% translate "Allow" %}</button>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Suggests the version of the page in the visitor's browser language -->
+    <div id="language-banner" class="bottom-notice language-banner" hidden>
+      <div class="container bottom-notice__container">
+        <span class="language-banner__message"></span>
+        <div class="bottom-notice__actions">
+          <a class="btn btn-info btn-sm language-banner__action" href="#"></a>
+          <button type="button" class="btn-close language-banner__dismiss"></button>
+        </div>
+      </div>
+    </div>
+  </div>
+  {{ language_banner|json_script:"language-banner-data" }}
+  {% endblock %}
+  {{ cookie_settings|json_script:"cookie-settings" }}
 
   <!-- Bootstrap JavaScript -->
   <script src="{{ request.scheme }}://{{ request.get_host }}{% static 'js/bootstrap.bundle.min.js' %}"></script>

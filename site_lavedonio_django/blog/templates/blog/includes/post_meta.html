@@ -1,0 +1,8 @@
+{% load i18n %}
+<div class="post-meta">
+  <time datetime="{{ post.date_posted|date:'c' }}">{{ post.date_posted|date }}</time>
+  <span aria-hidden="true">&middot;</span>
+  <span>{% blocktranslate trimmed count minutes=post_translation.reading_time %}{{ minutes }} min read{% plural %}{{ minutes }} min read{% endblocktranslate %}</span>
+  {% if post_translation.is_fallback %}<span class="badge text-bg-secondary" title="{% blocktranslate with language=post_translation.language_name %}Written in {{ language }}{% endblocktranslate %}">{{ post_translation.language_short_name }}</span>{% endif %}
+  {% if not post.published %}<span class="badge text-bg-danger">{% translate "Draft" %}</span>{% elif post.is_scheduled %}<span class="badge text-bg-warning">{% translate "Scheduled" %}</span>{% endif %}
+</div>

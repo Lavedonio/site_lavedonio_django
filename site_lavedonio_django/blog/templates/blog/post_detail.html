@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% load static i18n site_tags %}
+{% block canonical %}<link rel="canonical" href="{{ canonical_url }}">{% endblock %}
+{% block meta_description %}{{ post_translation.excerpt }}{% endblock %}
+{% block meta %}
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="{{ post_translation.title }}">
+  <meta property="og:description" content="{{ post_translation.excerpt }}">
+  <meta property="og:url" content="{{ canonical_url }}">
+  {% if post.cover_image %}<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ post.cover_image.url }}">{% endif %}
+  <meta property="article:published_time" content="{{ post.date_posted|date:'c' }}">
+  <meta name="twitter:card" content="summary_large_image">
+  {% if not post.published or post.is_scheduled %}<meta name="robots" content="noindex">{% endif %}
+{% endblock %}
+
+{% block stylesheet %}
+  <link rel="stylesheet" type="text/css" href="{{ request.scheme }}://{{ request.get_host }}{% static 'css/pygments.css' %}">
+{% endblock %}
+
+{% block background_images %}
+  {% if post.cover_image %}
+  <style>
+    #post-img {
+      --background-image: url('{{ post.cover_image.url }}');
+      --background-placeholder: url('{% image_placeholder post.cover_image %}');
+    }
+  </style>
+  {% endif %}
+{% endblock %}
+
+{% block main_section %}
+    <header id="post-img" class="{% if post.cover_image %}progressive-background {% endif %}font-poppins page-header page-header--light">
+      <div class="container d-flex align-items-end">
+        <div class="d-block content-header" lang="{{ post_translation.language }}">
+          <h1 class="content-header__title">{{ post_translation.title }}</h1>
+          <div class="line line--light"></div>
+          {% if post_translation.subtitle %}<p class="page-header__subheading">{{ post_translation.subtitle }}</p>{% endif %}
+        </div>
+      </div>
+    </header>
+
+    <div class="container my-5">
+      <div class="row justify-content-center">
+        <aside class="d-none d-lg-block col-lg-1">
+          <div class="share-bar share-bar--vertical">
+            <span class="share-bar__label">{% translate "Share" %}</span>
+            {% for link in share_links|slice:":4" %}
+            <a class="share-bar__link" href="{{ link.url }}" target="_blank" rel="noopener noreferrer" title="{{ link.name }}" aria-label="{% blocktranslate with network=link.name %}Share on {{ network }}{% endblocktranslate %}"><i class="bi bi-{{ link.icon }}" aria-hidden="true"></i></a>
+            {% endfor %}
+          </div>
+        </aside>
+
+        <article class="col-12 col-lg-10 col-xl-8 post" lang="{{ post_translation.language }}">
+          {% if post_translation.is_fallback %}
+          <div class="alert alert-info icon-link w-100" lang="{{ LANGUAGE_CODE }}"><i class="bi bi-translate" aria-hidden="true"></i>{% blocktranslate trimmed with language=post_translation.language_name %}This post is only available in {{ language }}.{% endblocktranslate %}</div>
+          {% endif %}
+
+          <div class="post-byline">
+            <img class="post-byline__photo" src="{{ request.scheme }}://{{ request.get_host }}{% static_image 'img/homepage-photo.png' %}" alt="">
+            <div class="post-byline__text">
+              {% url 'base:about' as about_path %}
+              {% with author_name=post.author.get_full_name|default:"Daniel Lavedonio de Lima" about_url=request.scheme|add:"://"|add:request.get_host|add:about_path %}
+              <span lang="{{ LANGUAGE_CODE }}">{% blocktranslate trimmed %}By <a href="{{ about_url }}">{{ author_name }}</a>{% endblocktranslate %}</span>
+              {% endwith %}
+              {% include 'blog/includes/post_meta.html' %}
+              {% if post.was_updated %}<small class="text-body-secondary" lang="{{ LANGUAGE_CODE }}">{% blocktranslate trimmed with date=post.last_updated|date %}Updated on {{ date }}{% endblocktranslate %}</small>{% endif %}
+            </div>
+          </div>
+
+          {% if perms.blog.change_post %}
+          <div class="admin-controls" lang="{{ LANGUAGE_CODE }}">
+            <a class="btn btn-primary btn-sm icon-link" href="{{ request.scheme }}://{{ request.get_host }}{% url 'blog:post-update' post.pk %}"><i class="bi bi-pencil" aria-hidden="true"></i>{% translate "Edit" %}</a>
+            {% if perms.blog.delete_post %}<a class="btn btn-outline-danger btn-sm icon-link" href="{{ request.scheme }}://{{ request.get_host }}{% url 'blog:post-delete' post.pk %}"><i class="bi bi-trash3" aria-hidden="true"></i>{% translate "Delete" %}</a>{% endif %}
+          </div>
+          {% endif %}
+
+          {% if post.tags.all %}<div class="tag-list mt-3">{% for tag in post.tags.all %}{% include 'blog/includes/tag.html' %}{% endfor %}</div>{% endif %}
+
+          <hr>
+          <div class="rendered-content">
+            {{ post_translation.content_html|safe }}
+          </div>
+          <hr>
+
+          <div class="share-bar" lang="{{ LANGUAGE_CODE }}">
+            <span class="share-bar__label">{% translate "Share" %}</span>
+            <button type="button" class="share-bar__link" data-native-share data-share-title="{{ post_translation.title }}" data-share-url="{{ canonical_url }}" title="{% translate 'Share' %}" aria-label="{% translate 'Share' %}" hidden><i class="bi bi-share" aria-hidden="true"></i></button>
+            {% for link in share_links %}
+            <a class="share-bar__link" href="{{ link.url }}" target="_blank" rel="noopener noreferrer" title="{{ link.name }}" aria-label="{% blocktranslate with network=link.name %}Share on {{ network }}{% endblocktranslate %}"><i class="bi bi-{{ link.icon }}" aria-hidden="true"></i></a>
+            {% endfor %}
+            <button type="button" class="share-bar__link" data-copy-link="{{ canonical_url }}" data-copied-message="{% translate 'Link copied!' %}" title="{% translate 'Copy link' %}" aria-label="{% translate 'Copy link' %}"><i class="bi bi-link-45deg" aria-hidden="true"></i></button>
+          </div>
+
+          {% if previous_post or next_post %}
+          <nav class="post-navigation" lang="{{ LANGUAGE_CODE }}" aria-label="{% translate 'Other posts' %}">
+            {% if previous_post %}
+            <a class="post-navigation__link" href="{{ previous_post.get_absolute_url }}">
+              <span class="post-navigation__label"><i class="bi bi-arrow-left" aria-hidden="true"></i> {% translate "Older post" %}</span>
+              <span class="post-navigation__title">{{ previous_post.translation.title }}</span>
+            </a>
+            {% endif %}
+            {% if next_post %}
+            <a class="post-navigation__link post-navigation__link--next" href="{{ next_post.get_absolute_url }}">
+              <span class="post-navigation__label">{% translate "Newer post" %} <i class="bi bi-arrow-right" aria-hidden="true"></i></span>
+              <span class="post-navigation__title">{{ next_post.translation.title }}</span>
+            </a>
+            {% endif %}
+          </nav>
+          {% endif %}
+
+          <a class="btn btn-info btn-sm mt-4" href="{{ request.scheme }}://{{ request.get_host }}{% url 'blog:list' %}" lang="{{ LANGUAGE_CODE }}">&laquo; {% translate "Back to the blog" %}</a>
+        </article>
+      </div>
+    </div>
+{% endblock %}
+
+{% block credits %}
+          {% if post_translation.credits %}<span class="custom-footer__info text-lg-end mb-4" lang="{{ post_translation.language }}">{{ post_translation.credits|safe }}</span>{% endif %}
+{% endblock %}
+
+{% block javascript %}
+  <script src="{{ request.scheme }}://{{ request.get_host }}{% static 'blog/js/post-share.js' %}"></script>
+{% endblock %}

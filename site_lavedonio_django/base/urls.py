@@ -15,19 +15,18 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.urls import path
+from django.utils.translation import gettext_lazy as _
 
-from .views import HomeView, AboutView, ContactView, ContactSuccessView, TempBlogView, TempProjectView, TempAdminView
+from .views import HomeView, AboutView, ContactView, ContactSuccessView, TempAdminView
 
 
 app_name = 'base'
 
 urlpatterns = [
     path('', HomeView.as_view(), name='home'),
-    path('about/', AboutView.as_view(), name='about'),
-    path('contact/', ContactView.as_view(), name='contact'),
-    path('contact/success/', ContactSuccessView.as_view(), name='contact-success'),
+    path(_('about/'), AboutView.as_view(), name='about'),
+    path(_('contact/'), ContactView.as_view(), name='contact'),
+    path(_('contact/success/'), ContactSuccessView.as_view(), name='contact-success'),
 
-    path('projects/', TempProjectView.as_view(), name='projects'),
     path('dashboard/', TempAdminView.as_view(), name='dashboard'),
-    path('blog/', TempBlogView.as_view(), name='blog'),
 ]

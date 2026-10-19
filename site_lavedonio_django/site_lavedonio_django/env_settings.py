@@ -20,6 +20,14 @@ class BaseSettings:
         self.ALLOWED_HOSTS = []
         self.DATABASES = {}
 
+        # Which host serves each language ("www." prefixes are ignored).
+        # Requests to any other host are served in LANGUAGE_CODE.
+        self.LANGUAGE_DOMAINS = {}
+
+        # Google Analytics measurement ID (optional). It's only loaded for
+        # visitors who allow cookies.
+        self.ANALYTICS_ID = os.environ.get('ANALYTICS_ID') or None
+
 
 class DevSettings(BaseSettings):
 
@@ -32,6 +40,14 @@ class DevSettings(BaseSettings):
                 'ENGINE': 'django.db.backends.sqlite3',
                 'NAME': BASE_DIR / 'db.sqlite3',
             }
+        }
+
+        # Locally, each language gets its own loopback host name so the
+        # domain-based language switching can be tested without editing
+        # /etc/hosts: http://localhost:8000 (EN) and http://127.0.0.1:8000 (PT-BR).
+        self.LANGUAGE_DOMAINS = {
+            'en': 'localhost',
+            'pt-br': '127.0.0.1',
         }
 
 
@@ -51,6 +67,10 @@ class DevDockerSettings(BaseSettings):
                 'PORT': str(os.environ.get('DB_PORT', 5432)),
             }
         }
+        self.LANGUAGE_DOMAINS = {
+            'en': 'localhost',
+            'pt-br': '127.0.0.1',
+        }
 
 
 class StagingSettings(BaseSettings):
@@ -62,6 +82,10 @@ class StagingSettings(BaseSettings):
             'staging.lavedonio.com',
             'staging.lavedonio.com.br',
         ]
+        self.LANGUAGE_DOMAINS = {
+            'en': 'staging.lavedonio.com',
+            'pt-br': 'staging.lavedonio.com.br',
+        }
 
 
 class ProductionSettings(BaseSettings):
@@ -75,6 +99,10 @@ class ProductionSettings(BaseSettings):
             'lavedonio.com.br',
             'www.lavedonio.com.br',
         ]
+        self.LANGUAGE_DOMAINS = {
+            'en': 'lavedonio.com',
+            'pt-br': 'lavedonio.com.br',
+        }
 
 
 env_mapping = {

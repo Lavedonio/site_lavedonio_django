@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load static %}
+{% load static i18n site_tags %}
 {% load crispy_forms_tags %}
 
 {% block canonical %}<link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{% url 'base:contact' %}">{% endblock %}
@@ -7,52 +7,67 @@
 {% block background_images %}
   <style>
     #contact-img {
-      background-image: linear-gradient(45deg, var(--offcanvas-background-color), var(--navbar-background-color-transparent), var(--footer-text-color-transparent)), url('{{ request.scheme }}://{{ request.get_host }}{% static "img/IMG_9172.jpeg" %}');
+      --background-image: url('{{ request.scheme }}://{{ request.get_host }}{% static_image "img/IMG_9172.jpeg" %}');
+      --background-placeholder: url('{% image_placeholder "img/IMG_9172.jpeg" %}');
     }
   </style>
 {% endblock %}
 
 {% block main_section %}
-    <header id="contact-img" class="font-poppins page-header page-header--light">
+    <header id="contact-img" class="progressive-background font-poppins page-header page-header--light">
       <div class="container d-flex align-items-end">
         <div class="d-block">
-          <h1 class="page-header__heading page-header__heading--light">Contato</h1>
+          <h1 class="page-header__heading page-header__heading--light">{% translate "Contact" %}</h1>
           <div class="line line--light"></div>
         </div>
       </div>
     </header>
 
-    <div class="container">
-      <div class="row">
-        <section class="contact-section col-lg-8 col-md-7">
-          <h3>Entre em contato pelo formulário...</h3>
-          <form id="contactform" method="POST" class="mt-4 mb-5" style="max-width: 600px;">
+    <div class="container my-5">
+      <div class="row g-5">
+        <section class="contact-section col-lg-7">
+          <h3>{% translate "Get in touch using the form..." %}</h3>
+          <form id="contactform" method="POST" class="contact-card mt-4" novalidate>
             {% csrf_token %}
 
             {% crispy form form.helper %}
-            
+
             <!-- Hidden input for recaptcha v3 info -->
 
-            <button class="btn btn-primary btn-md" type="submit">Enviar</button>
+            <div class="d-flex justify-content-end">
+              <button class="btn btn-primary icon-link" type="submit">{% translate "Send" %}<i class="bi bi-send" aria-hidden="true"></i></button>
+            </div>
           </form>
         </section>
-        <section class="contact-section col-lg-4 col-md-5">
-          <h3>...ou pelas redes sociais.</h3>
-          <div class="contact-section__social-networks">
-            <div><a href="https://github.com/Lavedonio" target="_blank" rel="noopener noreferrer"><img style="border-radius: 5px;" src="{{ request.scheme }}://{{ request.get_host }}{% static 'img/icons/social-media/github-badge.svg' %}" alt="Follow @Lavedonio"></a></div>
-            <div><a href="https://twitter.com/Lavedonio" class="twitter-follow-button" data-size="large" data-lang="pt_BR" data-show-count="false">Follow @Lavedonio</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></div>
-            <div><div class="badge-base LI-profile-badge" data-locale="pt_BR" data-size="large" data-theme="dark" data-type="VERTICAL" data-vanity="daniel-lavedonio-de-lima" data-version="v1"><a class="badge-base__link LI-simple-link" href="https://br.linkedin.com/in/daniel-lavedonio-de-lima?trk=profile-badge"></a></div></div>
+        <section class="contact-section col-lg-5">
+          <h3>{% translate "...or through social media." %}</h3>
+          <div class="social-links mt-4">
+            <a class="social-link social-link--linkedin" href="https://www.linkedin.com/in/daniel-lavedonio-de-lima/" target="_blank" rel="noopener noreferrer">
+              <i class="bi bi-linkedin social-link__icon" aria-hidden="true"></i>
+              <span class="social-link__text">
+                <span class="social-link__name">LinkedIn</span>
+                <span class="social-link__handle">daniel-lavedonio-de-lima</span>
+              </span>
+              <span class="social-link__action">{% translate "Connect" %}<i class="bi bi-box-arrow-up-right" aria-hidden="true"></i></span>
+            </a>
+            <a class="social-link social-link--github" href="https://github.com/Lavedonio" target="_blank" rel="noopener noreferrer">
+              <i class="bi bi-github social-link__icon" aria-hidden="true"></i>
+              <span class="social-link__text">
+                <span class="social-link__name">GitHub</span>
+                <span class="social-link__handle">@Lavedonio</span>
+              </span>
+              <span class="social-link__action">{% translate "Follow" %}<i class="bi bi-box-arrow-up-right" aria-hidden="true"></i></span>
+            </a>
+            <a class="social-link social-link--x" href="https://x.com/Lavedonio" target="_blank" rel="noopener noreferrer">
+              <i class="bi bi-twitter-x social-link__icon" aria-hidden="true"></i>
+              <span class="social-link__text">
+                <span class="social-link__name">X (Twitter)</span>
+                <span class="social-link__handle">@Lavedonio</span>
+              </span>
+              <span class="social-link__action">{% translate "Follow" %}<i class="bi bi-box-arrow-up-right" aria-hidden="true"></i></span>
+            </a>
           </div>
-          </ul>
         </section>
       </div>
     </div>
-{% endblock %}
-
-{% block credits %}
-      <span class="custom-footer__info text-lg-end mb-4">Badge do GitHub por <a href="https://dev.to/envoy_" target="_blank" rel="noopener noreferrer">Vedant Chainani</a> em <a href="https://dev.to/envoy_/150-badges-for-github-pnk" target="_blank" rel="noopener noreferrer">DEV.to</a>.</span>
-{% endblock %}
-
-{% block javascript %}
-<script src="https://platform.linkedin.com/badges/js/profile.js" async defer type="text/javascript"></script>
 {% endblock %}

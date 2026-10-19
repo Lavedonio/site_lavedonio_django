@@ -1,0 +1,60 @@
+{% load static site_tags %}
+<article id="about-me" class="about-article">
+  <div class="about-article__content">
+    <h2>About me</h2>
+    <p>My name is Daniel Lavedonio de Lima and I'm curious by nature. I always try to</p>
+  </div>
+  <figure class="about-article__figure">
+    <img src="{{ request.scheme }}://{{ request.get_host }}{% static_image 'img/IMG_9126.jpeg' %}" alt="" loading="lazy">
+    <figcaption>Photo at the Grand Canyon.</figcaption>
+  </figure>
+</article>
+<article id="education" class="about-article">
+  <div class="about-article__content">
+    <h2>Education</h2>
+    <p>I studied Electrical Engineering with an Emphasis on Computing at the <a href="https://www.poli.usp.br/" target="_blank" rel="noopener noreferrer">Polytechnic School of the University of São Paulo (USP)</a>, graduating in 2020.</p>
+    <p>During my undergraduate studies, right in my first semester, I joined <a href="https://www.polijunior.com.br/" target="_blank" rel="noopener noreferrer">Poli Júnior</a>, the first engineering junior enterprise in Brazil. There I worked on Production Engineering and Computer Engineering projects, in the latter also as a manager. I was also one of the organizers of the 12th Ser Empreendedor, an event that promotes entrepreneurship among university students.</p>
+    <p>Building on my experience in the Junior Enterprise Movement, during my 5th and 6th semesters I was the Systems Coordinator at <a href="https://www.fejesp.org.br/" target="_blank" rel="noopener noreferrer">FEJESP - Federation of Junior Enterprises of the State of São Paulo</a>. In that role, I was responsible for migrating its website and its e-mail system.</p>
+    <p>Towards the end of my undergraduate studies, I was involved in the <em>BioGadget</em> undergraduate research project, which used <em>Bluetooth Low Energy (BLE)</em> technology to build specialized trackers for specific studies of wild animals. Although I didn't stay in the project until the end, it gave me the chance to learn more about the academic world.</p>
+    <p>I'm currently pursuing an academic master's degree <em>(stricto sensu)</em> at the <a href="https://www.psi.poli.usp.br/" target="_blank" rel="noopener noreferrer">Department of Electronic Systems Engineering</a> of the Polytechnic School of USP (PSI-POLI-USP), in a project about robustness against character-based adversarial attacks on Natural Language Processing (NLP) systems.</p>
+  </div>
+  <figure class="about-article__figure">
+    <img src="{{ request.scheme }}://{{ request.get_host }}{% static_image 'img/about-education.jpeg' %}" alt="" loading="lazy">
+    <figcaption>Graduation photo.</figcaption>
+  </figure>
+</article>
+<article id="career" class="about-article">
+  <div class="about-article__content">
+    <h2>Career</h2>
+    <p>I started my career in the data field and I've stayed in it ever since.</p>
+    <p>At my first internship, at Marisa, which I started in December 2017, I remember watching my coworkers use Excel only through keyboard shortcuts, without even touching the mouse. What fascinated me at first soon became food for thought, since I watched them repeat the same moves every single day to produce the same daily reports. Practically nothing was automated and every report was produced daily by a squad of interns and analysts. After a conversation with my boss, my focus became automating these Excel reports with VBA until the end of my summer internship, in January 2018.</p>
+    <p>After a one-year break to focus on college, I started my second internship at Medcel in January 2019. There I kept automating tasks with Excel VBA, but I broadened my scope, helping the data analyst write SQL queries, build Tableau dashboards and automate processes with Python. At that point, I ventured into building a web scraper to automate a repetitive and boring task I had been given: finding everyone who passed medical residency exams and mapping who had been our customer. For that I used Selenium, since the websites relied heavily on JavaScript. I managed to automate it successfully and in time for it to be presented at the board meeting 2 weeks later. I worked at this company until June 2019.</p>
+    <p>At my third internship, at Mobly, which I started in July 2019, I joined a bigger team and began helping out with, and getting to know closely, the work of a data engineer. There I also got to know several tools such as Apache Airflow and Pentaho, and it was the first time I worked with a cloud environment, in this case AWS (Amazon Web Services), where I used S3, EC2, RedShift, RDS and QuickSight, among other services. Besides that, as the only person on the team who knew VBA, I was responsible for maintaining the legacy Excel reports. They were very intense months, until I decided to move on, this time diving fully into data engineering, where I remain to this day. I worked at this company until November 2019.</p>
+    <p>At my fourth and last internship, at Revelo, which I started in December 2019, I joined as a “senior intern”, responsible for process automation and optimization. Shortly after another data engineer's brief stint, I was promoted to data engineer (the only one in the company). My main project there was solving a classic technical problem of growing startups: data analysts ran queries straight against the production database, which was not only slow but also affected the operation of the platform as a whole. The solution was to create a replica, from which snapshots of the database were taken, stored in cloud storage and loaded into a dedicated analytical system for more complex queries. For reasons beyond my control, there was one more complication: the tech team used AWS and the data team used GCP (Google Cloud Platform). So an Airflow instance was set up on GCP (Google Cloud Platform) to orchestrate this process, in which the Postgres replica on AWS RDS was extracted with the PG copy command, the data was placed in a partitioned Google Cloud Storage folder and those tables were then added to BigQuery. The solution wasn't the most elegant one, but having built this whole process from scratch without any outside help so early in my career (and having been given the freedom to do so by my boss and the CTO) was quite an achievement. At the end of 2020, I also took on SRE (Site Reliability Engineer) duties, a role in the DevOps field, where I automated the projects I had built using GitHub Actions and added observability using Prometheus and Grafana. Despite learning a lot, I realized I missed working as a data engineer, so I moved on to another opportunity where I could work as one. I worked at this company until February 2021.</p>
+    <p>At my first job after graduating, at InfoPrice, which I started in March 2021, I joined a data engineering team facing a huge challenge: for the first time, the data team wasn't the back office, but the company's main product. There I faced many challenges, the main one being one of the projects I'm most proud of. This project consisted of reducing the cost of running Spark jobs on AWS EMR. The proposed path was to switch the machines from On-Demand to Spot.</p>
+  </div>
+  <figure class="about-article__figure">
+    <img src="{{ request.scheme }}://{{ request.get_host }}{% static_image 'img/IMG_2777.jpeg' %}" alt="" loading="lazy">
+    <figcaption>Photo at my first internship.</figcaption>
+  </figure>
+</article>
+<article id="projects" class="about-article">
+  <div class="about-article__content">
+    <h2>Projects</h2>
+    <p>My name is Daniel Lavedonio de Lima and I'm curious by nature. I always try to</p>
+  </div>
+  <figure class="about-article__figure">
+    <img src="{{ request.scheme }}://{{ request.get_host }}{% static_image 'img/IMG_9205.jpeg' %}" alt="" loading="lazy">
+    <figcaption>Debugging a project.</figcaption>
+  </figure>
+</article>
+<article id="hiring" class="about-article">
+  <div class="about-article__content">
+    <h2>How to hire me</h2>
+    <p>My name is Daniel Lavedonio de Lima and I'm curious by nature. I always try to</p>
+  </div>
+  <figure class="about-article__figure">
+    <img src="{{ request.scheme }}://{{ request.get_host }}{% static_image 'img/about-contract2.jpeg' %}" alt="" loading="lazy">
+    <figcaption>Graduation photo.</figcaption>
+  </figure>
+</article>

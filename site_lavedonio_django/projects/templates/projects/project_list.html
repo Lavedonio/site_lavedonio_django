@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% load static i18n site_tags %}
+{% block canonical %}<link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{% url 'projects:list' %}{% if filter_category %}?category={{ filter_category.slug }}{% endif %}">{% endblock %}
+{% block meta_description %}{% translate "Personal projects I've built, and keep building, to make my own work easier, to practice and learn new concepts, or simply because I felt like it." %}{% endblock %}
+
+{% block background_images %}
+  <style>
+    #projects-img {
+      --background-image: url('{{ request.scheme }}://{{ request.get_host }}{% static_image "img/ales-nesetril-technology-unsplash.jpg" %}');
+      --background-placeholder: url('{% image_placeholder "img/ales-nesetril-technology-unsplash.jpg" %}');
+    }
+  </style>
+{% endblock %}
+
+{% block main_section %}
+    <header id="projects-img" class="progressive-background font-poppins page-header page-header--light">
+      <div class="container d-flex align-items-end">
+        <div class="d-block">
+          <h1 class="page-header__heading page-header__heading--light">{% translate "Projects" %}</h1>
+          <div class="line line--light"></div>
+          <p class="page-header__subheading d-none d-sm-block">{% translate "Personal projects I've built, and keep building, to make my own work easier, to practice and learn new concepts, or simply because I felt like it." %}</p>
+        </div>
+      </div>
+    </header>
+
+    <div class="container my-5">
+      {% if categories or perms.projects.add_project %}
+      <div class="d-flex flex-wrap align-items-center gap-3 mb-4">
+        {% if categories %}
+        <nav class="filter-bar flex-grow-1" aria-label="{% translate 'Categories' %}">
+          <a class="filter-bar__chip{% if not filter_category %} filter-bar__chip--active{% endif %}" href="{{ request.scheme }}://{{ request.get_host }}{% url 'projects:list' %}"{% if not filter_category %} aria-current="page"{% endif %}>{% translate "All" %}</a>
+          {% for category in categories %}
+          <a class="filter-bar__chip{% if filter_category.pk == category.pk %} filter-bar__chip--active{% endif %}" href="{{ request.scheme }}://{{ request.get_host }}{% url 'projects:list' %}?category={{ category.slug }}"{% if filter_category.pk == category.pk %} aria-current="page"{% endif %}>{{ category }}</a>
+          {% endfor %}
+        </nav>
+        {% endif %}
+        {% if perms.projects.add_project %}
+        <a class="btn btn-success btn-sm icon-link ms-auto" href="{{ request.scheme }}://{{ request.get_host }}{% url 'projects:project-create' %}"><i class="bi bi-plus-lg" aria-hidden="true"></i>{% translate "New project" %}</a>
+        {% endif %}
+      </div>
+      {% endif %}
+
+      {% for project in featured_projects %}
+      {% with project_translation=project.translation project_url=project.get_absolute_url %}
+      <article class="featured-project mb-4"{% if project_translation.is_fallback %} lang="{{ project_translation.language }}"{% endif %}>
+        <a href="{{ project_url }}" tabindex="-1" aria-hidden="true">
+          {% if project.cover_image %}<img class="featured-project__image" src="{{ project.cover_image.url }}" alt="">{% else %}<div class="featured-project__image content-placeholder"><i class="bi bi-code-slash"></i></div>{% endif %}
+        </a>
+        <div class="featured-project__body">
+          <div class="d-flex flex-wrap align-items-center gap-2" lang="{{ LANGUAGE_CODE }}">
+            <span class="badge rounded-pill text-bg-info">{% translate "Featured" %}</span>
+            {% include 'projects/includes/status_badge.html' %}
+            {% if project.categories.all %}<span class="featured-project__categories">{{ project.categories.all|join:" · " }}</span>{% endif %}
+          </div>
+          <h2 class="featured-project__title"><a href="{{ project_url }}">{{ project_translation.title }}</a></h2>
+          <p class="mb-0">{{ project_translation.summary }}</p>
+          <div class="d-flex flex-wrap gap-2" lang="{{ LANGUAGE_CODE }}">
+            <a class="btn btn-info btn-sm" href="{{ project_url }}">{% translate "See more" %} &raquo;</a>
+            {% include 'projects/includes/project_links.html' with button_class='btn-outline-light' %}
+          </div>
+        </div>
+      </article>
+      {% endwith %}
+      {% endfor %}
+
+      {% if projects %}
+      {% if featured_projects %}
+      <h2 class="section-heading mt-5">{% translate "More projects" %}</h2>
+      <div class="line line--thin"></div>
+      {% endif %}
+      <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4 mt-1">
+        {% for project in projects %}
+        <div class="col">{% include 'projects/includes/project_card.html' %}</div>
+        {% endfor %}
+      </div>
+      {% elif not featured_projects %}
+      <div class="empty-state">
+        <i class="bi bi-kanban" aria-hidden="true"></i>
+        <p>{% translate "No projects here yet. Come back soon!" %}</p>
+      </div>
+      {% endif %}
+    </div>
+{% endblock %}
+
+{% block credits %}
+          <span class="custom-footer__info text-lg-end">{% blocktranslate trimmed with author='<a href="https://unsplash.com/@alesnesetril?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" target="_blank" rel="noopener noreferrer">Ales Nesetril</a>' website='<a href="https://unsplash.com/s/photos/technology?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" target="_blank" rel="noopener noreferrer">Unsplash</a>' %}Photo at the top of this page by {{ author }} on {{ website }}.{% endblocktranslate %}</span>
+          <span class="custom-footer__info text-lg-end mb-4">{% translate "Images of the projects are credited on their respective pages." %}</span>
+{% endblock %}

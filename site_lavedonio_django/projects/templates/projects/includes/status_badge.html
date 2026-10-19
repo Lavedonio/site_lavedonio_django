@@ -1,0 +1,1 @@
+<span class="badge rounded-pill {% if project.status == 'completed' %}text-bg-success{% elif project.status == 'archived' %}text-bg-secondary{% else %}text-bg-warning{% endif %}">{{ project.get_status_display }}</span>

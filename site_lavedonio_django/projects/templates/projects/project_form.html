@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% load static i18n %}
+{% block canonical %}<meta name="robots" content="noindex">{% endblock %}
+{% block language_alternates %}{% endblock %}
+{% block bottom_notices %}{% endblock %}
+
+{% block stylesheet %}
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jodit@4.17.1/es2021/jodit.fat.min.css">
+  <link rel="stylesheet" type="text/css" href="{{ request.scheme }}://{{ request.get_host }}{% static 'css/editor.css' %}">
+{% endblock %}
+
+{% block main_section %}
+    <header class="font-poppins page-header page-header--light page-header--compact">
+      <div class="container d-flex align-items-end">
+        <div class="d-block">
+          <h1 class="page-header__heading page-header__heading--light">{% if object %}{% translate "Edit project" %}{% else %}{% translate "New project" %}{% endif %}</h1>
+          <div class="line line--light"></div>
+        </div>
+      </div>
+    </header>
+
+    <div class="container editor-page">
+      <form method="post" enctype="multipart/form-data" class="editor-form" novalidate data-editor-form data-upload-url="{{ request.scheme }}://{{ request.get_host }}{% url 'uploads:image' %}" data-upload-error-message="{% translate 'The image could not be uploaded.' %}">
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}<div class="alert alert-danger">{% for error in form.non_field_errors %}<div>{{ error }}</div>{% endfor %}</div>{% endif %}
+
+        <div class="row g-4">
+          <div class="col-12 col-lg-8">
+            {% include 'includes/translation_tabs.html' %}
+          </div>
+
+          <aside class="col-12 col-lg-4">
+            <div class="editor-card">
+              <h2 class="editor-card__heading">{% translate "Publishing" %}</h2>
+              {% include 'includes/editor_switch.html' with field=form.published %}
+              {% include 'includes/editor_switch.html' with field=form.featured %}
+              {% include 'includes/editor_field.html' with field=form.date_posted %}
+            </div>
+
+            <div class="editor-card">
+              <h2 class="editor-card__heading">{% translate "Details" %}</h2>
+              {% include 'includes/editor_field.html' with field=form.status %}
+              {% if form.categories.field.queryset %}
+              <div class="mb-3">
+                <span class="form-label d-block">{{ form.categories.label }}</span>
+                <div class="tag-picker">
+                  {% for choice in form.categories %}
+                  {{ choice.tag }}<label class="tag-chip tag-picker__option" for="{{ choice.id_for_label }}">{{ choice.choice_label }}</label>
+                  {% endfor %}
+                </div>
+              </div>
+              {% endif %}
+              {% include 'includes/editor_field.html' with field=form.repository_url %}
+              {% include 'includes/editor_field.html' with field=form.live_url %}
+              {% include 'includes/editor_field.html' with field=form.slug %}
+            </div>
+
+            <div class="editor-card">
+              <h2 class="editor-card__heading">{{ form.cover_image.label }}</h2>
+              {% include 'includes/editor_cover_image.html' with field=form.cover_image %}
+            </div>
+
+            <details class="editor-card"{% if form.custom_css.errors or form.custom_js.errors or form.instance.custom_css or form.instance.custom_js %} open{% endif %}>
+              <summary class="editor-card__heading mb-0">{% translate "Advanced" %}</summary>
+              <div class="mt-3">
+                {% include 'includes/editor_switch.html' with field=form.dark_background %}
+                {% include 'includes/editor_switch.html' with field=form.fix_autoscale %}
+                {% include 'includes/editor_field.html' with field=form.custom_css %}
+                {% include 'includes/editor_field.html' with field=form.custom_js %}
+              </div>
+            </details>
+          </aside>
+        </div>
+
+        <div class="editor-actions">
+          <div class="editor-actions__container">
+            {% if object %}
+            <a class="btn btn-outline-secondary" href="{{ request.scheme }}://{{ request.get_host }}{{ object.get_absolute_url }}">{% translate "Cancel" %}</a>
+            {% else %}
+            <a class="btn btn-outline-secondary" href="{{ request.scheme }}://{{ request.get_host }}{% url 'projects:list' %}">{% translate "Cancel" %}</a>
+            {% endif %}
+            <button class="btn btn-primary icon-link" type="submit"><i class="bi bi-check-lg" aria-hidden="true"></i>{% translate "Save" %}</button>
+          </div>
+        </div>
+      </form>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+  <script src="https://cdn.jsdelivr.net/npm/jodit@4.17.1/es2021/jodit.fat.min.js"></script>
+  <script src="{{ request.scheme }}://{{ request.get_host }}{% static 'js/editor-forms.js' %}"></script>
+  <script src="{{ request.scheme }}://{{ request.get_host }}{% static 'projects/js/project-editor.js' %}"></script>
+{% endblock %}

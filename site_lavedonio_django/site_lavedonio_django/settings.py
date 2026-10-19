@@ -10,10 +10,15 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+from pathlib import Path
+
 from .env_settings import environment_settings
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = environment_settings.BASE_DIR
+
+# Folder that holds manage.py and the v2 apps
+PROJECT_DIR = Path(__file__).resolve().parent.parent
 
 
 # Production checklist
@@ -33,6 +38,10 @@ ALLOWED_HOSTS = environment_settings.ALLOWED_HOSTS
 INSTALLED_APPS = [
     # Project apps
     'base.apps.BaseConfig',
+    'users.apps.UsersConfig',
+    'uploads.apps.UploadsConfig',
+    'blog.apps.BlogConfig',
+    'projects.apps.ProjectsConfig',
 
     # Third-Party apps
     "crispy_forms",
@@ -50,6 +59,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'base.middleware.DomainLocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -67,9 +77,12 @@ TEMPLATES = [
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
+                'django.template.context_processors.i18n',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'base.context_processors.site_languages',
+                'base.context_processors.cookie_consent',
             ],
         },
     },
@@ -106,7 +119,19 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+# English is the default language. To add a new one: add it to LANGUAGES, give
+# it a host in env_settings.LANGUAGE_DOMAINS, run `makemessages -l <locale>`
+# and translate the generated .po file.
+LANGUAGE_CODE = 'en'
+
+LANGUAGES = [
+    ('en', 'English'),
+    ('pt-br', 'Português (Brasil)'),
+]
+
+LANGUAGE_DOMAINS = environment_settings.LANGUAGE_DOMAINS
+
+LOCALE_PATHS = [PROJECT_DIR / 'locale']
 
 TIME_ZONE = 'America/Sao_Paulo'
 
@@ -119,6 +144,19 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
+
+# User uploaded files (post covers, editor images, etc.)
+MEDIA_URL = 'media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+
+# Analytics (only loaded after the visitor allows cookies)
+ANALYTICS_ID = environment_settings.ANALYTICS_ID
+
+# Authentication
+LOGIN_URL = 'users:login'
+LOGIN_REDIRECT_URL = 'base:home'
+LOGOUT_REDIRECT_URL = 'base:home'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+{% load static i18n site_tags %}
+{% block canonical %}<link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}{% if page_obj.number > 1 %}?page={{ page_obj.number }}{% endif %}">{% endblock %}
+{% block meta_description %}{% translate "A collection of projects, tutorials and scribbled thoughts." %}{% endblock %}
+
+{% block background_images %}
+  <style>
+    #blog-img {
+      --background-image: url('{{ request.scheme }}://{{ request.get_host }}{% static_image "img/ali-yahya-notebook-unsplash.jpg" %}');
+      --background-placeholder: url('{% image_placeholder "img/ali-yahya-notebook-unsplash.jpg" %}');
+    }
+  </style>
+{% endblock %}
+
+{% block main_section %}
+    <header id="blog-img" class="progressive-background font-poppins page-header page-header--light">
+      <div class="container d-flex align-items-end">
+        <div class="d-block">
+          <h1 class="page-header__heading page-header__heading--light">{% translate "Blog" %}</h1>
+          <div class="line line--light"></div>
+          <p class="page-header__subheading d-none d-sm-block">{% translate "A collection of projects, tutorials and scribbled thoughts." %}</p>
+        </div>
+      </div>
+    </header>
+
+    {% if featured_posts %}
+    <section class="featured-posts font-poppins">
+      <div class="container">
+        <h2 class="section-heading">{% translate "Featured posts" %}</h2>
+        <div class="line line--thin line--light"></div>
+        <div class="row g-4 mt-1">
+          {% for post in featured_posts %}
+          <div class="col-12 col-md-6">{% include 'blog/includes/featured_post_card.html' %}</div>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+    {% endif %}
+
+    <div class="container my-5">
+      <div class="row g-5">
+        <section class="col-12 col-lg-8">
+          <div class="d-flex align-items-center flex-wrap gap-2">
+            <h2 class="section-heading mb-0">
+              {% if filter_tag %}{% blocktranslate trimmed with tag=filter_tag %}Posts tagged “{{ tag }}”{% endblocktranslate %}
+              {% elif filter_month %}{% blocktranslate trimmed with month=filter_month|date:"YEAR_MONTH_FORMAT" %}Posts from {{ month }}{% endblocktranslate %}
+              {% else %}{% translate "Posts" %}{% endif %}
+              {% if page_obj.number > 1 %}<small class="text-body-secondary">{% blocktranslate trimmed with number=page_obj.number total=page_obj.paginator.num_pages %}(page {{ number }} of {{ total }}){% endblocktranslate %}</small>{% endif %}
+            </h2>
+            {% if is_filtered %}<a class="btn btn-outline-secondary btn-sm icon-link" href="{{ request.scheme }}://{{ request.get_host }}{% url 'blog:list' %}"><i class="bi bi-x-lg" aria-hidden="true"></i>{% translate "Clear filter" %}</a>{% endif %}
+          </div>
+          <div class="line line--thin"></div>
+
+          {% for post in posts %}
+          {% with post_translation=post.translation post_url=post.get_absolute_url %}
+          <article class="post-card"{% if post_translation.is_fallback %} lang="{{ post_translation.language }}"{% endif %}>
+            <a class="post-card__image-link" href="{{ post_url }}" tabindex="-1" aria-hidden="true">
+              {% if post.cover_image %}<img class="post-card__image" src="{{ post.cover_image.url }}" alt="" loading="lazy">{% else %}<div class="post-card__image content-placeholder"><i class="bi bi-journal-richtext"></i></div>{% endif %}
+            </a>
+            <div class="post-card__body">
+              {% include 'blog/includes/post_meta.html' %}
+              <h3 class="post-card__title"><a href="{{ post_url }}">{{ post_translation.title }}</a></h3>
+              <p class="post-card__excerpt">{{ post_translation.excerpt }}</p>
+              {% if post.tags.all %}<div class="tag-list">{% for tag in post.tags.all %}{% include 'blog/includes/tag.html' %}{% endfor %}</div>{% endif %}
+            </div>
+          </article>
+          {% endwith %}
+          {% empty %}
+          <div class="empty-state">
+            <i class="bi bi-journal" aria-hidden="true"></i>
+            <p>{% if is_filtered %}{% translate "There are no posts here." %}{% else %}{% translate "No posts yet. Come back soon!" %}{% endif %}</p>
+            {% if is_filtered %}<a class="btn btn-info btn-sm" href="{{ request.scheme }}://{{ request.get_host }}{% url 'blog:list' %}">&laquo; {% translate "Back to the blog" %}</a>{% endif %}
+          </div>
+          {% endfor %}
+
+          {% include 'includes/pagination.html' %}
+        </section>
+
+        <aside class="col-12 col-lg-4 blog-sidebar">
+          {% if perms.blog.add_post %}
+          <div class="sidebar-card sidebar-card--admin">
+            <h3 class="sidebar-card__heading">{% translate "Admin" %}</h3>
+            <a class="btn btn-success btn-sm icon-link" href="{{ request.scheme }}://{{ request.get_host }}{% url 'blog:post-create' %}"><i class="bi bi-pencil-square" aria-hidden="true"></i>{% translate "New post" %}</a>
+            {% if draft_count %}<p class="small text-body-secondary mt-2 mb-0">{% blocktranslate trimmed count counter=draft_count %}{{ counter }} draft or scheduled post, only visible to you.{% plural %}{{ counter }} draft or scheduled posts, only visible to you.{% endblocktranslate %}</p>{% endif %}
+          </div>
+          {% endif %}
+
+          {% if tags %}
+          <div class="sidebar-card">
+            <h3 class="sidebar-card__heading">{% translate "Tags" %}</h3>
+            <div class="tag-list">
+              {% for tag in tags %}{% include 'blog/includes/tag.html' with count=tag.num_posts active=filter_tag.pk|default_if_none:0 %}{% endfor %}
+            </div>
+          </div>
+          {% endif %}
+
+          {% if archive %}
+          <div class="sidebar-card">
+            <h3 class="sidebar-card__heading">{% translate "Archive" %}</h3>
+            {% for year in archive %}
+            <h4 class="archive__year">{{ year.year }}</h4>
+            <ul class="archive__months">
+              {% for item in year.months %}
+              <li><a class="archive__month{% if filter_month and filter_month.year == item.month.year and filter_month.month == item.month.month %} archive__month--active{% endif %}" href="{{ request.scheme }}://{{ request.get_host }}{% url 'blog:archive' item.month.year item.month.month %}">{{ item.month|date:"F" }} <span class="badge rounded-pill text-bg-secondary">{{ item.count }}</span></a></li>
+              {% endfor %}
+            </ul>
+            {% endfor %}
+          </div>
+          {% endif %}
+        </aside>
+      </div>
+    </div>
+{% endblock %}
+
+{% block credits %}
+          <span class="custom-footer__info text-lg-end">{% blocktranslate trimmed with author='<a href="https://unsplash.com/@ayahya09?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" target="_blank" rel="noopener noreferrer">Ali Yahya</a>' website='<a href="https://unsplash.com/s/photos/notebook?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" target="_blank" rel="noopener noreferrer">Unsplash</a>' %}Photo at the top of this page by {{ author }} on {{ website }}.{% endblocktranslate %}</span>
+          <span class="custom-footer__info text-lg-end mb-4">{% translate "Images of the posts are credited on their respective pages." %}</span>
+{% endblock %}
