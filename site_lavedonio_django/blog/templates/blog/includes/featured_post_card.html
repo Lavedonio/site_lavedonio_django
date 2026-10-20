@@ -1,0 +1,13 @@
+{% load i18n %}
+{% with post_translation=post.translation post_url=post.get_absolute_url %}
+<article class="featured-post"{% if post_translation.is_fallback %} lang="{{ post_translation.language }}"{% endif %}>
+  <a class="featured-post__image-link" href="{{ post_url }}" tabindex="-1" aria-hidden="true">
+    {% if post.cover_image %}<img class="featured-post__image" src="{{ post.cover_image.url }}" alt="" loading="lazy">{% else %}<div class="featured-post__image content-placeholder"><i class="bi bi-journal-richtext"></i></div>{% endif %}
+  </a>
+  <div class="featured-post__body">
+    <h3 class="featured-post__title"><a href="{{ post_url }}">{{ post_translation.title }}</a></h3>
+    <p class="featured-post__excerpt">{{ post_translation.excerpt }}</p>
+    <a class="btn btn-info btn-sm align-self-start" href="{{ post_url }}" lang="{{ LANGUAGE_CODE }}">{% translate "Keep reading" %} &raquo;</a>
+  </div>
+</article>
+{% endwith %}

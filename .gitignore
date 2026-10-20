@@ -8,11 +8,9 @@
 __pycache__/
 local_settings.py
 db.sqlite3
-media
+/media/
 secrets.py
-static
-migrations/
-!migrations/__init__.py
+/static/
 
 # If your build process includes running collectstatic, then you probably don't need or want to include staticfiles/
 # in your Git repository. Update and uncomment the following line accordingly.
@@ -70,8 +68,7 @@ coverage.xml
 .hypothesis/
 .pytest_cache/
 
-# Translations
-*.mo
+# Translations (the compiled .mo files are committed, so deploys don't need gettext)
 
 # Django stuff:
 db.sqlite3-journal
@@ -389,3 +386,7 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.gitignore.io/api/venv,linux,macos,python,django,windows,pycharm,sublimetext
+
+# Local credentials and data exported from the v1 production database
+postgres_conn.txt
+/v1_export/

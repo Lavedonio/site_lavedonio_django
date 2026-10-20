@@ -1,259 +1,195 @@
 # Site Lavedonio
 
 #### [ENGLISH / INGLÊS]
-This is the source code for [lavedonio.com](https://www.lavedonio.com/) and [lavedonio.com.br](https://www.lavedonio.com.br/) (pt-br) Django Websites. To see the english version of this README, [click here](#index).
+This is the source code of the [lavedonio.com](https://www.lavedonio.com/) (English) and [lavedonio.com.br](https://www.lavedonio.com.br/) (Brazilian Portuguese) Django website. [Read it in English](#readme---english).
 
 #### [BRAZILIAN PORTUGUESE / PORTUGUÊS BRASILEIRO]
-Este é o código fonte para os sites Django [lavedonio.com](https://www.lavedonio.com/) e [lavedonio.com.br](https://www.lavedonio.com.br/) (pt-br). Para ver a versão em português deste arquivo README (LEIAME), [clique aqui](#leiame---portugu%C3%AAs-brasileiro-pt-br).
+Este é o código fonte do site Django [lavedonio.com](https://www.lavedonio.com/) (inglês) e [lavedonio.com.br](https://www.lavedonio.com.br/) (português brasileiro). [Leia em português](#leiame---português-brasileiro-pt-br).
+
+> The first version of the site (v1) is kept in the [`v1`](https://github.com/Lavedonio/site_lavedonio_django/tree/v1) branch. / A primeira versão do site (v1) está na branch [`v1`](https://github.com/Lavedonio/site_lavedonio_django/tree/v1).
+
+# README - English
+
+## About
+
+My personal website, made with **Python** and **Django**. It's an *open-source* project: feel free to use it as a base for your own, as long as this repository is credited. See the license for other legal questions.
+
+It has:
+
+- Home, About and Contact pages;
+- A blog, written in Markdown with a WYSIWYG editor, with tags, an archive and sharing buttons;
+- A projects portfolio, written in HTML with a WYSIWYG editor, with categories and optional custom CSS/JavaScript for interactive projects (e.g. games);
+- English and Brazilian Portuguese versions, each on its own domain, with a banner suggesting the visitor's language. Each post and project can be in one or both languages, under the same address;
+- Editors that work on phones, with image uploads (resized and converted to WebP);
+- Light and dark modes, and cookie consent for analytics.
+
+## Project structure
+
+The Django project is in the `site_lavedonio_django/` folder (where `manage.py` is):
+
+- `base/`: home, about and contact pages, plus what the other apps share (language handling, editor forms, Markdown rendering, image optimization);
+- `blog/`, `projects/`: the blog and the projects portfolio;
+- `uploads/`: images uploaded through the editors;
+- `users/`: login and logout (kept in sync across the domains of every language);
+- `locale/`: translations.
+
+## Requirements
+
+- **Python 3.12** (`requirements.txt` has the packages);
+- [gettext](https://www.gnu.org/software/gettext/), only to update the translations.
+
+## Setup
+
+1. Install the packages: `pip install -r requirements.txt`;
+2. Create a `.env` file in the repository root:
+
+   ```
+   ENVIRONMENT=development
+   SECRET_KEY=<a long random string>
+   DEBUG_VALUE=True
+   ```
+
+   `ENVIRONMENT` picks the settings in `site_lavedonio_django/site_lavedonio_django/env_settings.py`: `development` (SQLite), `docker_development` (PostgreSQL, also needs `DB_NAME`, `DB_USER`, `DB_PASSWORD`, `DB_HOST` and optionally `DB_PORT`), `staging` or `production`. `ANALYTICS_ID` (Google Analytics) is optional and only loaded for visitors who allow cookies.
+
+   The contact form sends its messages to `CONTACT_EMAIL` through an SMTP server, set with `EMAIL_HOST`, `EMAIL_PORT` (default `587`), `EMAIL_HOST_USER`, `EMAIL_HOST_PASSWORD` and `EMAIL_USE_TLS` (default `True`). The sender is `DEFAULT_FROM_EMAIL` (default: `EMAIL_HOST_USER`) and `CONTACT_EMAIL` also defaults to it. Replies go to the visitor's address. In development the e-mails are printed in the terminal instead, unless `EMAIL_BACKEND` is set (e.g. `django.core.mail.backends.smtp.EmailBackend`):
+
+   ```
+   EMAIL_HOST=smtp.example.com
+   EMAIL_HOST_USER=site@example.com
+   EMAIL_HOST_PASSWORD=<password>
+   CONTACT_EMAIL=me@example.com
+   ```
+
+   The contact form is protected from bots by [Cloudflare Turnstile](https://developers.cloudflare.com/turnstile/). Development uses Cloudflare's test keys, whose challenge always passes. In `staging` and `production`, `TURNSTILE_SITE_KEY` and `TURNSTILE_SECRET_KEY` are required, with the keys of a widget that includes the site's domains;
+3. From the `site_lavedonio_django/` folder, create the database and an admin user:
+
+   ```
+   python manage.py migrate
+   python manage.py createsuperuser
+   ```
+
+## Running in development
+
+```
+python manage.py runserver
+```
+
+Open [localhost:8000](http://localhost:8000) for the English version and [127.0.0.1:8000](http://127.0.0.1:8000) for the Brazilian Portuguese one. Log in at `/accounts/login/` to create and edit posts and projects.
+
+## Languages
+
+Each language is served by its own domain, set in `LANGUAGE_DOMAINS` (`env_settings.py`). To add a language, add it to `LANGUAGES` (`settings.py`), give it a domain and create its translations. No database change is needed.
+
+To update the translations after changing the texts:
+
+```
+python manage.py makemessages -l pt_BR --no-location
+python manage.py compilemessages
+```
+
+## Images
+
+Photos added to `base/static/img` should be optimized with `python manage.py optimize_static_images` and used in the templates with `{% static_image 'img/photo.jpeg' %}` (from `{% load site_tags %}`).
+
+## Tests
+
+```
+python manage.py test
+```
+
+## License
+
+[Mozilla Public License 2.0](LICENSE).
 
 # LEIAME - Português Brasileiro (pt-br)
 
-## Sumário
-
- - [Sobre](#sobre)
- - [Requisitos](#requisitos)
- - [Download e configuração inicial](#download-e-configura%C3%A7%C3%A3o-inicial)
- - [Executando em ambiente de desenvolvimento](#executando-em-ambiente-de-desenvolvimento)
- - [Deployment](#deployment)
- - [Leitura complementar](#leitura-complementar)
-
 ## Sobre
 
-Este site é feito em **Python**, utilizando a framework **Django**. Trata-se do meu site pessoal, um projeto *open-source* que pode ser utilizado como base para outros projetos.
+Meu site pessoal, feito em **Python** com **Django**. É um projeto *open-source*: fique à vontade para usá-lo como base para os seus, desde que citado este repositório. Para demais questões legais, veja a licença.
 
-Este projeto é livre para ser copiado, modificado e comercializado, desde que citado este repositório do GitHub. Para demais questões legais, verifique a licença neste repositório.
+Ele tem:
 
-#### Versão atual: 0.1.0 (beta)
+- Páginas inicial, Sobre e Contato;
+- Um blog, escrito em Markdown com um editor WYSIWYG, com tags, arquivo e botões de compartilhamento;
+- Um portfólio de projetos, escritos em HTML com um editor WYSIWYG, com categorias e CSS/JavaScript personalizados opcionais para projetos interativos (ex.: jogos);
+- Versões em inglês e português brasileiro, cada uma em seu domínio, com um aviso sugerindo o idioma do visitante. Cada publicação e projeto pode estar em um ou nos dois idiomas, no mesmo endereço;
+- Editores que funcionam no celular, com envio de imagens (redimensionadas e convertidas para WebP);
+- Modos claro e escuro e consentimento de cookies para análise de visitas.
 
-Este projeto contém:
+## Estrutura do projeto
 
- - Homepage com a lista dos projetos e publicações em destaque, além de links para as páginas de sobre e contato;
- - Página estática de "Sobre", dizendo um pouco mais do autor e do site;
- - Página de Projetos, um portfólio com projetos relevantes e em destaque;
- - Página de Blog, com artigos com total flexibilidade de colocar um código HTML qualquer;
- - Página de Contato, que tem proteção de SPAM com RECAPTCHA e envia um email com as informações passadas;
- - Upload e redirecionamento de Imagens e Arquivos;
- - Encurtador de Links;
- - Site Admin para coordenar todo o processo.
+O projeto Django está na pasta `site_lavedonio_django/` (onde está o `manage.py`):
 
-Afazeres:
-
- - Dashboard customizável;
- - Template da página de Login;
- - Editor WYSIWYG para Blog e Projetos;
- - Sendgrid como email de envio para Contato;
- - Tradução do site em inglês baseado em domínio;
- - Páginas de erro customizadas (404, 500, 403, etc...).
+- `base/`: páginas inicial, Sobre e Contato, além do que os outros apps compartilham (idiomas, formulários dos editores, Markdown, otimização de imagens);
+- `blog/`, `projects/`: o blog e o portfólio de projetos;
+- `uploads/`: imagens enviadas pelos editores;
+- `users/`: login e logout (sincronizados entre os domínios de todos os idiomas);
+- `locale/`: traduções.
 
 ## Requisitos
 
-#### Para ambiente de desenvolvimento:
+- **Python 3.12** (os pacotes estão no `requirements.txt`);
+- [gettext](https://www.gnu.org/software/gettext/), apenas para atualizar as traduções.
 
-- **Python 3.6** ou superior;
-- Conta no Gmail ou outro serviço de email.
+## Configuração
 
-#### Para ambiente de *staging*:
+1. Instale os pacotes: `pip install -r requirements.txt`;
+2. Crie um arquivo `.env` na raiz do repositório:
 
-- **Python 3.6** ou superior;
-- Conta no Gmail ou outro serviço de email;
-- RECAPTCHA ativo;
-- Conta na AWS.
+   ```
+   ENVIRONMENT=development
+   SECRET_KEY=<um texto aleatório longo>
+   DEBUG_VALUE=True
+   ```
 
-#### Para ambiente de produção:
+   `ENVIRONMENT` escolhe as configurações em `site_lavedonio_django/site_lavedonio_django/env_settings.py`: `development` (SQLite), `docker_development` (PostgreSQL, que também precisa de `DB_NAME`, `DB_USER`, `DB_PASSWORD`, `DB_HOST` e opcionalmente `DB_PORT`), `staging` ou `production`. `ANALYTICS_ID` (Google Analytics) é opcional e só é carregado para visitantes que permitirem cookies.
 
-- **Python 3.6** ou superior;
-- Conta no Gmail ou outro serviço de email;
-- RECAPTCHA ativo;
-- Conta na AWS;
-- Conta no Google Analytics.
+   O formulário de contato envia as mensagens para `CONTACT_EMAIL` por um servidor SMTP, definido com `EMAIL_HOST`, `EMAIL_PORT` (padrão `587`), `EMAIL_HOST_USER`, `EMAIL_HOST_PASSWORD` e `EMAIL_USE_TLS` (padrão `True`). O remetente é `DEFAULT_FROM_EMAIL` (padrão: `EMAIL_HOST_USER`), que também é o padrão de `CONTACT_EMAIL`. As respostas vão para o endereço do visitante. Em desenvolvimento, os e-mails são mostrados no terminal em vez de enviados, a não ser que `EMAIL_BACKEND` seja definido (ex.: `django.core.mail.backends.smtp.EmailBackend`):
 
-## Download e configuração inicial
+   ```
+   EMAIL_HOST=smtp.example.com
+   EMAIL_HOST_USER=site@example.com
+   EMAIL_HOST_PASSWORD=<senha>
+   CONTACT_EMAIL=eu@example.com
+   ```
 
-Baixe os arquivos deste projeto, seja baixando o arquivo ZIP e descompactando-o, utilizando o comando `git clone https://github.com/Lavedonio/site_lavedonio_django.git` diretamente deste repositório ou fazendo um *Fork* deste e utilizar o comando `git clone` de lá.
+   O formulário de contato é protegido contra bots pelo [Cloudflare Turnstile](https://developers.cloudflare.com/turnstile/). Em desenvolvimento são usadas as chaves de teste da Cloudflare, cujo desafio sempre passa. Em `staging` e `production`, `TURNSTILE_SITE_KEY` e `TURNSTILE_SECRET_KEY` são obrigatórias, com as chaves de um widget que inclua os domínios do site;
+3. Na pasta `site_lavedonio_django/`, crie o banco de dados e um usuário administrador:
 
-Uma vez baixado, considerando que você já tenha o [Python 3.6 ou superior](https://www.python.org/downloads/) instalado, abra o Terminal (Prompt de Comando no caso do Windows), navegue até a pasta onde está o projeto e digite o comando:
-
-`pip install -r requirements.txt`
-
-Se a instalação do pacote `psycopg2` falhar, você pode tirá-lo da lista deste arquivo txt e rodar o comando novamente (ele é importante para o Postgres, mas não é necessário para o ambiente de desenvolvimento).
-
-**Pronto!** Ele já pode ser executado em ambiente de desenvolvimento. **MAS...** recomenda-se mais um passo (obrigatório para ambientes de *staging* e produção) que é configurar as variáveis de segredos e senhas. Para fazer esta configuração existem 2 opções:
-
-#### 1. Configurar o arquivo `secrets.py` (Recomendado)
-
-Abra o projeto e vá para a pasta `site_core/settings`. Em seguida, copie e cole o arquivo `secrets_example.py` na mesma pasta e renomeie-o para `secrets.py`.
-
-> **Obs:** Renomeie o arquivo **exatamente** para `secrets.py`, isto é importante não só para que o projeto funcione, mas para garantir que você não dê *commit* por engano suas chaves privadas, segredos e senhas para terceiros.
-
-Abra o arquivo `secrets.py` com um editor de texto e coloque seus segredos e chaves correspondentes em cada campo. (Mais informações no tópico a seguir **Variáveis de segredo**).
-
-#### 2. Configurar variáveis de ambiente
-
-Apesar de não ser a melhor recomendação, alguns serviços de hospedagem obrigam que todos os arquivos que pertencem ao projeto estejam no projeto do git (ex.: Heroku). Isso é ruim pois chaves privadas, segredos e senhas que forem *commitadas* sempre estarão no histórico, para qualquer um que tenha acesso ao código ver. Portanto, a alternativa neste caso é utilizar variáveis de ambiente.
-
-##### MacOS e Linux
-1. Vá ao terminal, digite `cd` e dê Enter, para garantir que esteja no diretório home;
-2. Digite o comando `sudo nano .bashrc` e em seguida digite sua senha;
-3. Para cada chave do dicionário *secrets* dentro do arquivo `secrets_example.py` (localizado na pasta `site_core/settings`), digite ao final do arquivo o seguinte comando:
-`export KEY="VALUE"`
-Lembrando de substituir KEY pelo valor da chave que será adicionada (ex.: ENVIRONMENT, SECRET_KEY, SERVER_TYPE, etc...), VALUE pelo valor correspondente (sempre estando entre parênteses) e de não deixar espaços entre o sinal de igual. Coloque um comando por linha.
-4. Salve o arquivo usando `Ctrl-X`, em seguida aperte `Y` e depois Enter para salvar as alterações;
-5. Reinicie o terminal.
-
-##### Windows
-1. Abra o **Painel de Controle**;
-2. Vá para **Sistema e Segurança** e depois para **Sistema**;
-3. Clique em **Configurações avançadas do sistema**;
-4. Clique no botão **Variáveis de Ambiente...**;
-5. Na área de Variáveis de usuário para USER (sendo USER o nome de usuário do seu computador), clique no botão **Novo...**;
-6. Para cada chave do dicionário *secrets* dentro do arquivo `secrets_example.py` (localizado na pasta `site_core/settings`), digite o valor da chave do dicionário em **Nome da Variável** e o seu respectivo valor em **Valor da Variável**. Ao final, aperte o botão **OK**;
-7. Repita os passos 5 e 6 para quantas variáveis você deseja adicionar;
-8. Dê **OK** nas duas janelas abertas e feche o **Painel de Controle**.
-
-##### Heroku e serviços de hospedagem do tipo
-Neste caso, não insira diretamente as variáveis no terminal. Procure como adicionar variáveis de ambiente nesses serviços.
-
-### Variáveis de segredo
-Cada variável possui um propósito específico dentro do projeto. Elas estão especificadas abaixo, classificadas de acordo com seu tipo.
-
-#### Categoria 1: Django
-
-##### ENVIRONMENT
-Esta variável serve para especificar qual ambiente o programa está rodando e, portanto, qual conjunto de configurações deve ser importado.
-
-Valores possíveis: **development**, **staging**, **production**.
-
-##### SECRET_KEY
-Esta variável é importantíssima para a segurança de autenticação do sistema. Para o ambiente de desenvolvimento, esta variável não é necessária pois já existe uma fixa em código (que não deve ser reutilizada em servidores).
-
-Para os ambientes de staging e produção, recomenda-se abra o terminal, para MacOS e Linux, ou o Prompt de Comando, para Windows, e digite o comando:
-
-    python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
-
-Pegue o resultado e use este valor para a variável SECRET_KEY.
-
-##### DEBUG_VALUE
-Este valor define se o Django irá detalhar os erros de execução direto no navegador ou não. Isso é ótimo para o desenvolvimento, mas péssimo para ambientes de produção.
-
-Para o ambiente de desenvolvimento, este valor já possui em código o valor True, então esta configuração não é necessária. Para ambientes de *staging* e produção, essa variável deve ser configurada para a execução correta do sistema.
-
-**Para o ambiente de produção, em específico, esse valor deve, necessariamente, ser False, pois o log detalhado de erros pode ser um risco à segurança do sistema.**
-
-Valores possíveis: **True**, **False**.
-
-##### SERVER_TYPE
-Esta configuração tem efeito apenas nos ambientes de *staging* e produção.
-
-Ela serve especificamente para o Heroku e faz todo o setup necessário automaticamente. Para outros tipos de servidores, deve-se colocar os valores do banco de dados nas variáveis DB_NAME, DB_USER e DB_PASS.
-
-Valores possíveis: **heroku**, ***Vazio***.
-
-##### HTTPS_TRAFFIC_ONLY
-Esta configuração tem efeito apenas nos ambientes de *staging* e produção.
-
-Ela serve para forçar o tráfego do site a usar o protocolo HTTPS em vez do HTTP.
-
-Valores possíveis: **True**, **False**.
-
-#### Categoria 2: E-mail
-
-##### EMAIL_USER
-É o usuário de e-mail do qual partirá o envio da mensagem no formulário de Contato. O código está configurado para e-mails do gmail. Para outros provedores, é necessário alterar o código.
-
-##### EMAIL_PASS
-A senha de acesso do seu e-mail. Para o Gmail, existem 2 formas de se fazer:
-
-1. Ativando senhas de app (veja como [aqui](https://support.google.com/accounts/answer/185833?hl=pt)) e utilizando a senha gerada.
-2. Ativando login por apps menos seguros e utilizando sua senha de acesso padrão (não recomendado).
-
-#### Categoria 3: RECAPTCHA
-Entre no [site do RECAPTCHA](https://www.google.com/recaptcha) e adicione um site no console. Preencha o que for pedido e certifique-se que estará usando a versão 3. Adicione `localhost` e `127.0.0.1` na seção de sites para que seja possível testar em ambiente de desenvolvimento. Você irá ter 2 chaves, que devem ser utilizadas nas variáveis a seguir.
-
-**ATENÇÃO:** este site utiliza a versão 3. Se você criar chaves pra versão 2, a autenticação irá falhar.
-
-##### RECAPTCHA_PUBLIC_KEY
-No console do RECAPTCHA, esta variável deve ser preenchida com o valor de `site_key`.
-
-##### RECAPTCHA_PRIVATE_KEY
-No console do RECAPTCHA, esta variável deve ser preenchida com o valor de `secret_key`.
-
-#### Categoria 4: Banco de Dados Postgres
-Nos ambientes de *staging* e produção, recomenda-se usar um banco de dados mais robusto que o sqlite3 que é colocado por padrão no Django. Este projeto está configurado para usar o Postgres fora do ambiente de desenvolvimento.
-
-Caso esteja rodando no Heroku, estas variáveis não serão utilizadas e podem ser deixadas em branco.
-
-Para o banco de dados funcionar, você deve instalá-lo e configurá-lo. Para o download e instalação, eu recomendo seguir os passos da [página de downloads do Postgres](https://www.postgresql.org/download/linux/ubuntu/). Para a configuração inicial, recomendo ler a seção "Getting Started" do [manual oficial](https://www.postgresql.org/docs/manuals/). Deve ser o suficiente para este projeto, pois o Django cria as tabelas manualmente.
-
-Uma vez que o banco esteja configurado, popule as variáveis a seguir:
-
-##### DB_NAME
-Nome do banco de dados criado.
-
-##### DB_USER
-Nome do usuário de acesso.
-
-##### DB_PASS
-Senha para o usuário da variável acima.
-
-#### Categoria 5: AWS (Amazon Web Services)
-Para melhorar o desempenho do site e para contornar limitações impostas por serviços como o Heroku, é necessário utilizar um serviço externo para entregar os arquivos de mídia registrado pelos usuários.
-
-Para criar uma conta e configurá-la, recomendo assistir este tutorial: [Python Django Tutorial: Full-Featured Web App Part 13 - Using AWS S3 for File Uploads](https://www.youtube.com/watch?v=kt3ZtW9MXhw).
-
-Uma vez que o serviço da AWS esteja configurado, preencha as variáveis a seguir:
-
-##### AWS_ACCESS_KEY_ID
-Nas credenciais baixadas do usuário, procure a chave correspondente ao mesmo nome desta variável.
-
-##### AWS_SECRET_ACCESS_KEY
-Nas credenciais baixadas do usuário, procure a chave correspondente ao mesmo nome desta variável.
-
-##### AWS_STORAGE_BUCKET_NAME
-Nome do *Bucket* devidamente configurado onde o Django deverá colocar os arquivos.
-
-#### Categoria 6: Google Analytics
-Recomendado para o ambiente de produção, apesar de estar disponível para *staging*, se julgar necessário verificar a utilização deste site também.
-
-Entre na página do [Google Analytics](https://analytics.google.com/analytics/web/) e crie um novo projeto. Não é necessário copiar o código, apenas o ID de acompanhamento. Use-o para configurar a variável a seguir:
-
-##### ANALYTICS_ID
-ID de acompanhamento do Google Analytics.
+   ```
+   python manage.py migrate
+   python manage.py createsuperuser
+   ```
 
 ## Executando em ambiente de desenvolvimento
-Com o projeto baixado e devidamente configurado, execute os seguintes comandos no Terminal (ou Prompt de Comando):
 
-1. `python manage.py migrate`
-2. `python manage.py createsuperuser` (neste comando, crie um usuário, e-mail e senha)
-3. `python manage.py runserver`
-4. Abra o navegador e digite `localhost:8000` ou `127.0.0.1:8000`
-5. Aproveite!
-6. **P.S.:** entre em `localhost:8000/admin/` para cadastrar usuários, publicações, projetos, etc...
+```
+python manage.py runserver
+```
 
-## Deployment
-**Obs.:** Não se esqueça de mudar os valores de ALLOWED_HOSTS nas configurações de staging/produção pra os domínios ou endereços IPs que sejam os seus.
+Abra [localhost:8000](http://localhost:8000) para a versão em inglês e [127.0.0.1:8000](http://127.0.0.1:8000) para a versão em português. Entre em `/accounts/login/` para criar e editar publicações e projetos.
 
-### Heroku
-Para fazer o deploy deste projeto no Heroku, siga os passos abaixo:
+## Idiomas
 
- 1. Crie uma conta no [Heroku](https://www.heroku.com/);
- 2. Instale o [CLI do Heroku](https://devcenter.heroku.com/articles/heroku-cli) no seu computador;
- 3. Crie um app com o comando `heroku apps:create example` (trocando example pelo nome do seu app, que deve possuir um nome único);
- 4. Entre no seu dashboard e insira as variáveis de segredo configuradas anteriormente na seção *Config Vars*;
- 5. Execute o comando `git push heroku master` no Terminal (ou Prompt de Comando) na pasta do projeto.
+Cada idioma é servido por um domínio, definido em `LANGUAGE_DOMAINS` (`env_settings.py`). Para adicionar um idioma, inclua-o em `LANGUAGES` (`settings.py`), defina seu domínio e crie suas traduções. Nenhuma mudança no banco de dados é necessária.
 
-Talvez ocorra um erro na primeira vez que o app for colocado no ar. Isso se deve ao módulo django_heroku não encontrar a configuração inicial do banco de dados. Para resolver esse problema, dentro da pasta `site_core/settings`, abra o código da `staging.py` ou `production.py` (dependendo se vocês estiver fazendo deploy para um ou outro), copie o código da configuração da variável DATABASES e coloque antes da linha que contém `if config.get("SERVER_TYPE") == "heroku":`. Dê *commit* e rode o passo 5 de novo. O site não irá funcionar, mas o banco estará criado. Volte ao que estava antes, dê *commit* e rode novamente o passo 5. Após isso, o site deverá funcionar normalmente.
+Para atualizar as traduções depois de mudar os textos:
 
-### Servidor Linux
-Este é um processo bem mais complexo e com muitos passos. Recomendo seguir este tutorial passo a passo do Corey Schafer que está muito bem explicado: [Python Django Tutorial: Deploying Your Application (Option #1) - Deploy to a Linux Server](https://www.youtube.com/watch?v=Sa_kQheCnds).
+```
+python manage.py makemessages -l pt_BR --no-location
+python manage.py compilemessages
+```
 
-De quebra, para configurar um domínio e habilitar um certificado SSL (para habilitar navegação por HTTPS), recomendo estes dois vídeos também do Corey Schafer:
+## Imagens
 
- - [Python Django Tutorial: How to Use a Custom Domain Name for Our Application](https://www.youtube.com/watch?v=D2lwk1Ukgz0);
- - [Python Django Tutorial: How to enable HTTPS with a free SSL/TLS Certificate using Let's Encrypt](https://www.youtube.com/watch?v=NhidVhNHfeU).
+Fotos adicionadas em `base/static/img` devem ser otimizadas com `python manage.py optimize_static_images` e usadas nos templates com `{% static_image 'img/foto.jpeg' %}` (de `{% load site_tags %}`).
 
-## Leitura complementar
-Para entender mais sobre este projeto e Django em geral, recomendo esses links:
+## Testes
 
- - [Documentação oficial do Django](https://docs.djangoproject.com/pt-br/2.2/) (sério, é muito util e essencial pros primeiros passos);
- - [Django Tutorials - Corey Schafer](https://www.youtube.com/playlist?list=PL-osiE80TeTtoQCKZ03TU5fNfx2UY6U4p).
+```
+python manage.py test
+```
 
+## Licença
+
+[Mozilla Public License 2.0](LICENSE).

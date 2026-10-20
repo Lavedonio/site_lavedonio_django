@@ -1,0 +1,184 @@
+/* ------ Editor pages (blog posts and projects) ------ */
+.editor-page {
+    padding-top: 2rem;
+}
+
+.editor-card {
+    margin-bottom: 1.5rem;
+    padding: 1.25rem;
+    border: 1px solid var(--bs-border-color);
+    border-radius: 0.5rem;
+}
+
+.editor-card__heading {
+    margin-bottom: 1rem;
+    font-family: 'Poppins', arial, tahoma, sans-serif;
+    font-size: 1.125rem;
+}
+
+/* Save bar that stays visible while scrolling the form */
+.editor-actions {
+    position: sticky;
+    bottom: 0;
+    z-index: 1020;
+    margin-top: 1rem;
+    padding: 0.75rem 0;
+    border-top: 1px solid var(--bs-border-color);
+    background-color: var(--bs-body-bg);
+    box-shadow: 0 -0.5rem 1rem rgba(0, 0, 0, 0.05);
+}
+
+.editor-actions__container {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+}
+
+@media screen and (max-width: 575.98px) {
+    .editor-actions__container > * {
+        flex: 1;
+    }
+}
+
+.code-input {
+    font-family: var(--bs-font-monospace);
+    font-size: 0.875rem;
+}
+
+
+/* ------ Language tabs ------ */
+.translation-tabs .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.translation-tabs__status {
+    width: 0.5rem;
+    height: 0.5rem;
+    border: 1px solid currentColor;
+    border-radius: 50%;
+}
+
+.translation-tabs__status--enabled {
+    border-color: var(--bs-success);
+    background-color: var(--bs-success);
+}
+
+.translation-tabs__link--error,
+.translation-tabs__link--error.active {
+    color: var(--bs-danger);
+}
+
+.translation-panes {
+    padding: 0 1.25rem 1.25rem;
+    border: 1px solid var(--bs-border-color);
+    border-top: 0;
+    border-radius: 0 0 0.5rem 0.5rem;
+}
+
+@media screen and (max-width: 575.98px) {
+    .translation-panes {
+        padding: 0 0.75rem 0.75rem;
+    }
+}
+
+.translation-panes__switch {
+    padding-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.translation-panes__fields--disabled {
+    opacity: 0.45;
+}
+
+/* Short fields (subtitle, credits) follow their "rows" instead of the
+   crispy-forms default height for textareas (CRISPY_CLASS_CONVERTERS) */
+.translation-panes textarea.textarea--large {
+    height: auto !important;
+}
+
+
+/* ------ Tag picker and cover image ------ */
+.tag-picker {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.tag-picker__option {
+    cursor: pointer;
+    opacity: 0.5;
+    padding: 0.25rem 0.75rem;
+}
+
+.btn-check:checked + .tag-picker__option {
+    border-color: var(--bs-emphasis-color);
+    opacity: 1;
+}
+
+.btn-check:checked + .tag-picker__option::before {
+    content: "\2713";
+}
+
+.btn-check:focus-visible + .tag-picker__option {
+    outline: 2px solid var(--bs-primary);
+    outline-offset: 2px;
+}
+
+.cover-picker__preview {
+    display: block;
+    width: 100%;
+    margin-bottom: 0.75rem;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: 0.5rem;
+}
+
+.cover-picker__preview[hidden] {
+    display: none;
+}
+
+
+/* ------ Rich text editors ------ */
+.markdown-editor,
+.jodit-container {
+    margin-bottom: 0.5rem;
+}
+
+.toastui-editor-defaultUI {
+    border-radius: 0.375rem;
+}
+
+.toastui-editor-contents {
+    font-size: 1rem;
+}
+
+/* Overflow ("...") menu of the toolbar: wraps instead of leaving the screen on phones */
+.toastui-editor-defaultUI .toastui-editor-dropdown-toolbar {
+    flex-wrap: wrap;
+    height: auto;
+    max-width: calc(100vw - 3rem);
+}
+
+/* Matches the editors' dark themes with the site's dark mode */
+.jodit_theme_dark.jodit-container:not(.jodit_inline),
+.jodit_theme_dark .jodit-workplace,
+.jodit_theme_dark .jodit-wysiwyg,
+.toastui-editor-dark .ProseMirror,
+.toastui-editor-dark.toastui-editor-defaultUI .toastui-editor-md-container,
+.toastui-editor-dark.toastui-editor-defaultUI .toastui-editor-ww-container {
+    background-color: var(--bs-body-bg);
+}
+
+/* Inputs smaller than 16px make iOS Safari zoom in when focused */
+@media screen and (max-width: 991.98px) {
+    .code-input,
+    .toastui-editor-popup input,
+    .jodit input,
+    .jodit textarea,
+    .jodit-container textarea,
+    .jodit-wysiwyg {
+        font-size: 16px !important;
+    }
+}

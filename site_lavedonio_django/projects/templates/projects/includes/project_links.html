@@ -1,0 +1,8 @@
+{% load i18n %}
+{% comment %}Links to the source code and live demo. `compact` shows only the icons.{% endcomment %}
+{% if project.repository_url or project.live_url %}
+<div class="project-links">
+  {% if project.repository_url %}<a class="btn btn-sm {{ button_class|default:'btn-outline-secondary' }} icon-link" href="{{ project.repository_url }}" target="_blank" rel="noopener noreferrer"{% if compact %} title="{% translate 'Source code' %}" aria-label="{% translate 'Source code' %}"{% endif %}><i class="bi bi-github" aria-hidden="true"></i>{% if not compact %}{% translate "Source code" %}{% endif %}</a>{% endif %}
+  {% if project.live_url %}<a class="btn btn-sm {{ button_class|default:'btn-outline-secondary' }} icon-link" href="{{ project.live_url }}" target="_blank" rel="noopener noreferrer"{% if compact %} title="{% translate 'Live demo' %}" aria-label="{% translate 'Live demo' %}"{% endif %}><i class="bi bi-box-arrow-up-right" aria-hidden="true"></i>{% if not compact %}{% translate "Live demo" %}{% endif %}</a>{% endif %}
+</div>
+{% endif %}
