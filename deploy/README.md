@@ -155,7 +155,9 @@ Each environment has its own bucket, public only through its custom domain
 `media-staging.lavedonio.com` and `lavedonio` at `media.lavedonio.com`. Django
 writes to it through R2's S3 API (django-storages), with an R2 API token limited
 to that bucket (*Object Read & Write*), whose key is in the `.env`
-(`R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`). Uploaded files never replace one
+(`R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`). If the token is limited to some
+client IPs, include the CloudPanel VPS's IPv6 address as well as its IPv4 one:
+the VPS reaches Cloudflare over IPv6, and R2 answers `AccessDenied` otherwise. Uploaded files never replace one
 with the same name and are sent with a one-year `Cache-Control`.
 
 The custom domains are one level below the zones (`media-staging`, not
