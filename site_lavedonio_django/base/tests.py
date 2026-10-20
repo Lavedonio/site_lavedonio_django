@@ -645,6 +645,18 @@ class RemoteMediaTests(SimpleTestCase):
         self.assertEqual(response.status_code, 301)
         self.assertEqual(response.url, 'https://media.example.com/images/Site%20homepage.jpg')
 
+    def test_content_links_point_to_the_bucket(self):
+        from django.template import Context, Template
+
+        template = Template('{% load site_tags %}{{ html|safe|media_urls }}')
+        html = '<img src="/media/images/a.jpg"> <a href=\'/media/b.pdf\'>b</a> <p>/media/ in text</p>'
+        with self.settings(MEDIA_URL='https://media.example.com/'):
+            self.assertEqual(template.render(Context({'html': html})),
+                '<img src="https://media.example.com/images/a.jpg"> <a href=\'https://media.example.com/b.pdf\'>b</a> <p>/media/ in text</p>')
+        # Locally, uploads are served by Django itself
+        with self.settings(MEDIA_URL='media/'):
+            self.assertEqual(template.render(Context({'html': html})), html)
+
     def test_absolute_uri_keeps_urls_of_other_hosts(self):
         from django.template import Context, Template
 

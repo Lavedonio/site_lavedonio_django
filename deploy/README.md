@@ -83,8 +83,11 @@ WhiteNoise's manifest storage), so Cloudflare and browsers can keep them for goo
 
 Django answers both hosts (`ALLOWED_HOSTS` in `StagingSettings`, in
 `env_settings.py`) and picks the language from the host. Uploads are in R2, so
-the server has no `media` folder; old `/media/...` links (from posts imported
-from v1) redirect to the bucket's domain.
+the server has no `media` folder. Posts and projects keep `/media/...` links
+(like the ones imported from v1): the `media_urls` template filter points them
+to the bucket's domain when the page is rendered, because on the Python site
+nginx answers image URLs itself and they would never reach Django. Other
+`/media/...` requests that do reach Django redirect to the bucket.
 
 Staging sends `X-Robots-Tag: noindex` and a `Disallow: /` robots.txt, and the
 contact form's e-mails are only written to the uWSGI log.

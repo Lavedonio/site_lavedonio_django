@@ -78,7 +78,7 @@
 
           <hr>
           <div class="rendered-content">
-            {{ post_translation.content_html|safe }}
+            {{ post_translation.content_html|safe|media_urls }}
           </div>
           <hr>
 
@@ -115,7 +115,7 @@
 {% endblock %}
 
 {% block credits %}
-          {% if post_translation.credits %}<span class="custom-footer__info text-lg-end mb-4" lang="{{ post_translation.language }}">{{ post_translation.credits|safe }}</span>{% endif %}
+          {% if post_translation.credits %}<span class="custom-footer__info text-lg-end mb-4" lang="{{ post_translation.language }}">{{ post_translation.credits|safe|media_urls }}</span>{% endif %}
 {% endblock %}
 
 {% block javascript %}

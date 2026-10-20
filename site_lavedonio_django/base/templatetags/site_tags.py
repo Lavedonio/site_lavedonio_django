@@ -1,10 +1,13 @@
 import os
+import re
 from functools import lru_cache
 
 from django import template
+from django.conf import settings
 from django.contrib.staticfiles import finders
 from django.core.cache import cache
 from django.templatetags.static import static
+from django.utils.safestring import mark_safe
 
 from base.images import make_placeholder
 from base.management.commands.optimize_static_images import optimized_static_path
@@ -76,3 +79,20 @@ def query_string(context, **kwargs):
         else:
             query[key] = value
     return f'?{query.urlencode()}' if query else '?'
+
+
+# A /media/ path at the start of an attribute value or CSS url()
+MEDIA_LINK = re.compile(r'(?<=["\'(])/media/')
+
+
+@register.filter
+def media_urls(html):
+    """
+    Points the /media/ links of content written in the editors (or imported
+    from v1) to MEDIA_URL when uploads are kept on another host, like the R2
+    bucket on the servers. There, the web server answers image URLs itself, so
+    a /media/ link wouldn't reach Django to be redirected. Keeps `html` safe.
+    """
+    if not settings.MEDIA_URL.startswith(('http://', 'https://')):
+        return html
+    return mark_safe(MEDIA_LINK.sub(settings.MEDIA_URL, str(html)))
