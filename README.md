@@ -102,7 +102,7 @@ python manage.py test
 
 ## Deployment
 
-Every push to the `staging` branch is tested and deployed to [staging.lavedonio.com](https://staging.lavedonio.com) and [staging.lavedonio.com.br](https://staging.lavedonio.com.br). See [`deploy/README.md`](deploy/README.md) for how it works and how to operate it.
+Every push to the `staging` branch is tested and deployed to [staging.lavedonio.com](https://staging.lavedonio.com) and [staging.lavedonio.com.br](https://staging.lavedonio.com.br). Production, [lavedonio.com](https://lavedonio.com) and [lavedonio.com.br](https://lavedonio.com.br), is deployed from the `production` branch (`git push origin main:production`), after the deploy is approved in GitHub Actions. See [`deploy/README.md`](deploy/README.md) for how it works and how to operate it.
 
 ## License
 
@@ -202,7 +202,7 @@ python manage.py test
 
 ## Publicação
 
-Cada push na branch `staging` é testado e publicado em [staging.lavedonio.com](https://staging.lavedonio.com) e [staging.lavedonio.com.br](https://staging.lavedonio.com.br). Veja como funciona e como operá-lo em [`deploy/README.md`](deploy/README.md) (em inglês).
+Cada push na branch `staging` é testado e publicado em [staging.lavedonio.com](https://staging.lavedonio.com) e [staging.lavedonio.com.br](https://staging.lavedonio.com.br). A produção, [lavedonio.com](https://lavedonio.com) e [lavedonio.com.br](https://lavedonio.com.br), é publicada a partir da branch `production` (`git push origin main:production`), depois que a publicação é aprovada no GitHub Actions. Veja como funciona e como operá-lo em [`deploy/README.md`](deploy/README.md) (em inglês).
 
 ## Licença
 

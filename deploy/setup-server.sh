@@ -65,6 +65,22 @@ MEDIA_DOMAIN=$media_domain
 TURNSTILE_SITE_KEY=
 TURNSTILE_SECRET_KEY=
 EOF
+    # Staging only writes the contact form's e-mails to the uWSGI log
+    if [[ $environment == production ]]; then
+        cat >> "$app/shared/.env" <<EOF
+
+# Contact form e-mails, sent from EMAIL_HOST_USER (Google Workspace, with an
+# App Password of that account) to CONTACT_EMAIL.
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_HOST_USER=
+EMAIL_HOST_PASSWORD=
+CONTACT_EMAIL=
+
+# Google Analytics measurement ID (optional).
+ANALYTICS_ID=
+EOF
+    fi
 else
     echo "==> Keeping the existing $app/shared/.env"
 fi
