@@ -390,3 +390,6 @@ $RECYCLE.BIN/
 # Local credentials and data exported from the v1 production database
 postgres_conn.txt
 /v1_export/
+
+# Images no page uses, kept out of the repository (same paths as in base/static/img)
+/unused_images/

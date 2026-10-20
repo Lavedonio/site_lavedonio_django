@@ -26,6 +26,16 @@ class BaseSettings:
         self.ALLOWED_HOSTS = []
         self.DATABASES = {}
 
+        # Kept in the database, so it's shared by every server process, which
+        # the single-use tokens need (Turnstile and the login sync). Its table
+        # is created with `python manage.py createcachetable`.
+        self.CACHES = {
+            'default': {
+                'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+                'LOCATION': 'django_cache',
+            }
+        }
+
         # Which host serves each language ("www." prefixes are ignored).
         # Requests to any other host are served in LANGUAGE_CODE.
         self.LANGUAGE_DOMAINS = {}
