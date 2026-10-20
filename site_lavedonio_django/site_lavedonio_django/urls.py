@@ -20,10 +20,13 @@ from django.contrib import admin
 from django.urls import include, path
 from django.utils.translation import gettext_lazy as _
 
+from users.views import AdminLoginView
+
 
 # Paths wrapped in _() are translated to the language of the host, e.g.
 # lavedonio.com/projects/ and lavedonio.com.br/projetos/
 urlpatterns = [
+    path('admin/login/', AdminLoginView.as_view()),
     path('admin/', admin.site.urls),
     path('accounts/', include('users.urls', namespace='users')),
     path('uploads/', include('uploads.urls', namespace='uploads')),

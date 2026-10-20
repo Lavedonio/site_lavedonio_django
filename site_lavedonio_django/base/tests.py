@@ -1,5 +1,15 @@
+import json
+import shutil
+import tempfile
 from io import BytesIO
+from smtplib import SMTPException
+from unittest import mock
+from urllib.error import URLError
+from urllib.parse import parse_qs
 
+from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Permission
+from django.core import mail
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import RequestFactory, SimpleTestCase, TestCase, override_settings
 from django.urls import reverse
@@ -9,6 +19,7 @@ from PIL import Image
 from .i18n import get_language_alternates, language_from_host
 from .images import optimize_image
 from .markdown import render_markdown
+from .models import AboutSection, AboutSectionTranslation
 
 LANGUAGE_DOMAINS = {'en': 'example.com', 'pt-br': 'example.com.br'}
 ALLOWED_HOSTS = ['example.com', 'www.example.com', 'example.com.br', 'www.example.com.br', 'other.com']
@@ -220,16 +231,347 @@ class CookieConsentTests(TestCase):
         self.assertNotContains(self.client.get('/', headers={'host': 'example.com'}), 'id="cookie-banner"')
 
 
-@override_settings(LANGUAGE_DOMAINS=LANGUAGE_DOMAINS, ALLOWED_HOSTS=ALLOWED_HOSTS)
+@override_settings(
+    LANGUAGE_DOMAINS=LANGUAGE_DOMAINS, ALLOWED_HOSTS=ALLOWED_HOSTS, CONTACT_EMAIL='owner@example.com',
+    TURNSTILE_SITE_KEY='site-key', TURNSTILE_SECRET_KEY='secret-key',
+)
 class ContactPageTests(TestCase):
+    EN = {'host': 'example.com'}
+    PT = {'host': 'example.com.br'}
+    form_data = {'name': 'Ada', 'email': 'ada@example.org', 'subject': 'Hello', 'message': 'Nice site!', 'cf-turnstile-response': 'token'}
+    TURNSTILE_PASSED = {'success': True, 'error-codes': [], 'action': 'contact', 'hostname': 'example.com'}
+    TURNSTILE_ERROR = "Couldn't verify that you're not a robot. Please try again."
+
+    def setUp(self):
+        # Cloudflare's Siteverify API, which answers with self.siteverify_result
+        self.siteverify_result = dict(self.TURNSTILE_PASSED)
+        patcher = mock.patch('base.turnstile.urlopen', side_effect=lambda *args, **kwargs: BytesIO(json.dumps(self.siteverify_result).encode()))
+        self.urlopen = patcher.start()
+        self.addCleanup(patcher.stop)
 
     def test_social_links_dont_use_third_party_widgets(self):
-        response = self.client.get('/contact/', headers={'host': 'example.com'})
+        response = self.client.get('/contact/', headers=self.EN)
         self.assertContains(response, 'class="social-link social-link--linkedin"')
         self.assertNotContains(response, 'platform.linkedin.com')
         self.assertNotContains(response, 'platform.twitter.com')
 
     def test_form_isnt_nested(self):
-        response = self.client.get('/contact/', headers={'host': 'example.com'})
+        response = self.client.get('/contact/', headers=self.EN)
         self.assertContains(response, '<form', count=1)
         self.assertContains(response, 'name="csrfmiddlewaretoken"', count=1)
+
+    def test_sends_the_message_and_redirects(self):
+        self.siteverify_result['hostname'] = 'www.example.com'
+        response = self.client.post('/contact/', self.form_data, headers={'host': 'www.example.com'})
+
+        self.assertRedirects(response, '/contact/success/', fetch_redirect_response=False)
+        self.assertEqual(len(mail.outbox), 1)
+        email = mail.outbox[0]
+        self.assertEqual(email.to, ['owner@example.com'])
+        self.assertEqual(email.subject, '[Via example.com] Hello')
+        self.assertIn('Ada <ada@example.org>', email.body)
+        self.assertIn('Nice site!', email.body)
+        # Only the owner gets the e-mail, but replies go to the visitor
+        self.assertEqual(email.recipients(), ['owner@example.com'])
+        self.assertEqual(email.reply_to, ['ada@example.org'])
+        self.assertEqual(email.message()['Reply-To'], 'ada@example.org')
+
+    def test_subject_has_the_domain_of_the_language(self):
+        self.siteverify_result['hostname'] = 'example.com.br'
+        response = self.client.post('/contato/', self.form_data, headers=self.PT)
+
+        self.assertRedirects(response, '/contato/sucesso/', fetch_redirect_response=False)
+        self.assertEqual(mail.outbox[0].subject, '[Via example.com.br] Hello')
+
+    def test_line_breaks_are_removed_from_the_subject(self):
+        self.client.post('/contact/', {**self.form_data, 'subject': 'Hello\r\nBcc: spam@example.org'}, headers=self.EN)
+        self.assertEqual(mail.outbox[0].subject, '[Via example.com] Hello Bcc: spam@example.org')
+
+    def test_invalid_form_shows_the_errors(self):
+        response = self.client.post('/contact/', {**self.form_data, 'email': 'not-an-email', 'message': ''}, headers=self.EN)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(set(response.context['form'].errors), {'email', 'message'})
+        self.assertContains(response, 'Enter a valid email address.')
+        self.assertContains(response, 'value="Ada"')
+        self.assertEqual(len(mail.outbox), 0)
+        # The Turnstile token isn't spent
+        self.urlopen.assert_not_called()
+
+    @mock.patch('base.views.EmailMessage.send', side_effect=SMTPException)
+    def test_shows_an_error_when_the_email_cant_be_sent(self, _send):
+        self.siteverify_result['hostname'] = 'example.com.br'
+        with self.assertLogs('base.views', 'ERROR'):
+            response = self.client.post('/contato/', self.form_data, headers=self.PT)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Não foi possível enviar a sua mensagem agora.')
+        # What the visitor typed isn't lost
+        self.assertContains(response, 'Nice site!')
+
+    def test_success_page(self):
+        self.assertContains(self.client.get('/contact/success/', headers=self.EN), 'Message sent!')
+        response = self.client.get('/contato/sucesso/', headers=self.PT)
+        self.assertContains(response, 'Mensagem enviada!')
+        self.assertContains(response, '<title>Mensagem enviada - Contato - Daniel Lavedonio de Lima</title>')
+        self.assertContains(response, '<meta name="robots" content="noindex">')
+
+    def test_turnstile_widget(self):
+        response = self.client.get('/contato/', headers=self.PT)
+        self.assertContains(response, 'class="cf-turnstile mb-3" data-sitekey="site-key" data-action="contact" data-language="pt-br"')
+        self.assertContains(response, '<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>')
+
+    def test_turnstile_token_is_validated_by_cloudflare(self):
+        self.client.post('/contact/', self.form_data, headers=self.EN)
+
+        request = self.urlopen.call_args.args[0]
+        self.assertEqual(request.full_url, 'https://challenges.cloudflare.com/turnstile/v0/siteverify')
+        self.assertEqual(parse_qs(request.data.decode()), {'secret': ['secret-key'], 'response': ['token']})
+
+    def test_bots_are_blocked(self):
+        failures = {
+            'challenge failed': {'success': False, 'error-codes': ['invalid-input-response']},
+            'token already used': {'success': False, 'error-codes': ['timeout-or-duplicate']},
+            'widget of another form': {'action': 'login'},
+            'widget on another site': {'hostname': 'other.com'},
+        }
+        for case, result in failures.items():
+            with self.subTest(case):
+                self.siteverify_result = {**self.TURNSTILE_PASSED, **result}
+                response = self.client.post('/contact/', self.form_data, headers=self.EN)
+
+                self.assertEqual(response.status_code, 200)
+                self.assertEqual(response.context['form'].non_field_errors(), [self.TURNSTILE_ERROR])
+                self.assertContains(response, 'Nice site!')
+                self.assertEqual(len(mail.outbox), 0)
+
+    def test_missing_turnstile_token(self):
+        data = {**self.form_data, 'cf-turnstile-response': ''}
+        response = self.client.post('/contato/', data, headers=self.PT)
+
+        self.assertContains(response, 'Não foi possível verificar que você não é um robô.')
+        self.urlopen.assert_not_called()
+        self.assertEqual(len(mail.outbox), 0)
+
+    def test_blocks_the_form_when_cloudflare_cant_be_reached(self):
+        self.urlopen.side_effect = URLError('timed out')
+        with self.assertLogs('base.turnstile', 'ERROR'):
+            response = self.client.post('/contact/', self.form_data, headers=self.EN)
+
+        self.assertEqual(response.context['form'].non_field_errors(), [self.TURNSTILE_ERROR])
+        self.assertEqual(len(mail.outbox), 0)
+
+    def test_logs_a_wrong_secret_key(self):
+        self.siteverify_result = {'success': False, 'error-codes': ['invalid-input-secret']}
+        with self.assertLogs('base.turnstile', 'ERROR'):
+            self.client.post('/contact/', self.form_data, headers=self.EN)
+        self.assertEqual(len(mail.outbox), 0)
+
+    def test_turnstile_test_keys_only_work_in_development(self):
+        # What Cloudflare answers for the test secret key: no action and the hostname of another site
+        self.siteverify_result = {'success': True, 'error-codes': [], 'hostname': 'example.com', 'metadata': {'result_with_testing_key': True}}
+
+        response = self.client.post('/contato/', self.form_data, headers=self.PT)
+        self.assertEqual(response.context['form'].non_field_errors(), ['Não foi possível verificar que você não é um robô. Tente novamente.'])
+        self.assertEqual(len(mail.outbox), 0)
+
+        with self.settings(DEBUG=True):
+            response = self.client.post('/contato/', self.form_data, headers=self.PT)
+        self.assertRedirects(response, '/contato/sucesso/', fetch_redirect_response=False)
+        self.assertEqual(len(mail.outbox), 1)
+
+
+ABOUT_MEDIA_ROOT = tempfile.mkdtemp()
+
+
+def make_image(name='photo.png', size=(3000, 2000)):
+    output = BytesIO()
+    Image.new('RGB', size, 'green').save(output, format='PNG')
+    return SimpleUploadedFile(name, output.getvalue(), content_type='image/png')
+
+
+@override_settings(LANGUAGE_DOMAINS=LANGUAGE_DOMAINS, ALLOWED_HOSTS=ALLOWED_HOSTS, MEDIA_ROOT=ABOUT_MEDIA_ROOT)
+class AboutSectionTests(TestCase):
+    EN = {'host': 'example.com'}
+    PT = {'host': 'example.com.br'}
+
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(ABOUT_MEDIA_ROOT, ignore_errors=True)
+        super().tearDownClass()
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.staff = get_user_model().objects.create_user('staff', password='test-password', is_staff=True)
+        cls.staff.user_permissions.add(*Permission.objects.filter(content_type__app_label='base'))
+        cls.reader = get_user_model().objects.create_user('reader', password='test-password')
+
+    def create_section(self, slug, order, translations):
+        section = AboutSection.objects.create(slug=slug, order=order, image=make_image(f'{slug}.png', (40, 30)))
+        for language, title in translations.items():
+            AboutSectionTranslation.objects.create(section=section, language=language, title=title, content=f'Text of **{title}**')
+        return section
+
+    def form_data(self, **extra):
+        data = {
+            'order': '',
+            'slug': '',
+            'translation_en-enabled': 'on',
+            'translation_en-title': 'Hobbies',
+            'translation_en-content': 'Trains and *more*.',
+            'translation_en-image_caption': 'A model railway.',
+        }
+        data.update(extra)
+        return data
+
+    def test_migration_created_the_sections_of_the_old_page(self):
+        sections = AboutSection.objects.prefetch_related('translations')
+        self.assertEqual([section.slug for section in sections], ['about-me', 'education', 'career', 'projects', 'hiring'])
+        for section in sections:
+            self.assertEqual(section.available_languages, ['en', 'pt-br'])
+            self.assertTrue(section.image.name.startswith('about/'))
+
+    def test_sections_are_shown_in_order_with_the_sidebar(self):
+        AboutSection.objects.filter(slug='hiring').update(order=0)
+        content = self.client.get('/about/', headers=self.EN).content.decode()
+
+        self.assertLess(content.index('id="hiring"'), content.index('id="about-me"'))
+        self.assertLess(content.index('href="#hiring"'), content.index('href="#about-me"'))
+
+    def test_markdown_picture_and_caption(self):
+        section = self.create_section('hobbies', 60, {'en': 'Hobbies'})
+        AboutSectionTranslation.objects.filter(section=section).update(image_caption='A model railway.')
+
+        response = self.client.get('/about/', headers=self.EN)
+        self.assertContains(response, '<strong>Hobbies</strong>', html=True)
+        self.assertContains(response, f'<img src="{section.image.url}" width="40" height="30" alt="" loading="lazy">', html=True)
+        self.assertContains(response, '<figcaption>A model railway.</figcaption>', html=True)
+
+    def test_section_only_in_another_language(self):
+        self.create_section('so-em-portugues', 60, {'pt-br': 'Só em português'})
+
+        response = self.client.get('/about/', headers=self.EN)
+        self.assertContains(response, '<article id="so-em-portugues" class="about-article" lang="pt-br">')
+        self.assertContains(response, 'Só em português')
+
+    def test_edit_buttons_are_only_shown_to_editors(self):
+        section = AboutSection.objects.get(slug='career')
+        self.assertNotContains(self.client.get('/about/', headers=self.EN), f'/about/sections/edit/{section.pk}/')
+
+        self.client.force_login(self.staff)
+        response = self.client.get('/about/', headers=self.EN)
+        self.assertContains(response, f'/about/sections/edit/{section.pk}/')
+        self.assertContains(response, '/about/sections/new/')
+        self.assertContains(self.client.get('/sobre/', headers=self.PT), f'/sobre/secoes/editar/{section.pk}/')
+
+    def test_editor_requires_permission(self):
+        response = self.client.get('/about/sections/new/', headers=self.EN)
+        self.assertRedirects(response, '/accounts/login/?next=/about/sections/new/', fetch_redirect_response=False)
+
+        self.client.force_login(self.reader)
+        self.assertEqual(self.client.get('/about/sections/new/', headers=self.EN).status_code, 403)
+
+    def test_create_section(self):
+        self.client.force_login(self.staff)
+        self.assertEqual(self.client.get('/about/sections/new/', headers=self.EN).context['form']['order'].value(), 60)
+
+        response = self.client.post('/about/sections/new/', self.form_data(order='60', image=make_image()), headers=self.EN)
+
+        section = AboutSection.objects.get(slug='hobbies')
+        self.assertRedirects(response, '/about/#hobbies', fetch_redirect_response=False)
+        self.assertEqual(section.available_languages, ['en'])
+        self.assertEqual(section.translation.image_caption, 'A model railway.')
+        # Resized and converted, like the other uploads
+        self.assertTrue(section.image.name.endswith('.webp'))
+        self.assertEqual((section.image_width, section.image_height), (1200, 800))
+
+    def test_picture_is_required(self):
+        self.client.force_login(self.staff)
+        response = self.client.post('/about/sections/new/', self.form_data(order='60'), headers=self.EN)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('image', response.context['form'].errors)
+        self.assertFalse(AboutSection.objects.filter(slug='hobbies').exists())
+
+    def test_generated_slug_is_unique(self):
+        self.client.force_login(self.staff)
+        self.client.post('/about/sections/new/', self.form_data(**{'order': '60', 'image': make_image(), 'translation_en-title': 'Career'}), headers=self.EN)
+        self.assertTrue(AboutSection.objects.filter(slug='career-2').exists())
+
+    def test_edit_keeps_the_picture(self):
+        section = self.create_section('hobbies', 60, {'en': 'Hobbies'})
+        image = section.image.name
+        self.client.force_login(self.staff)
+
+        response = self.client.post(f'/about/sections/edit/{section.pk}/', self.form_data(**{
+            'order': '35',
+            'slug': 'hobbies',
+            'translation_en-title': 'Free time',
+            'translation_pt-br-enabled': 'on',
+            'translation_pt-br-title': 'Trabalho',
+            'translation_pt-br-content': 'Texto',
+        }), headers=self.EN)
+
+        self.assertRedirects(response, '/about/#hobbies', fetch_redirect_response=False)
+        section.refresh_from_db()
+        self.assertEqual(section.image.name, image)
+        self.assertEqual(section.order, 35)
+        self.assertEqual(section.get_translation('en').title, 'Free time')
+        self.assertEqual(section.get_translation('pt-br').title, 'Trabalho')
+
+    def slugs(self):
+        return list(AboutSection.objects.values_list('slug', flat=True))
+
+    def test_move_section(self):
+        section = AboutSection.objects.get(slug='career')
+        self.client.force_login(self.staff)
+
+        response = self.client.post(f'/about/sections/move/{section.pk}/', {'direction': 'up'}, headers=self.EN)
+        self.assertRedirects(response, '/about/#career', fetch_redirect_response=False)
+        self.assertEqual(self.slugs(), ['about-me', 'career', 'education', 'projects', 'hiring'])
+
+        self.client.post(f'/about/sections/move/{section.pk}/', {'direction': 'down'}, headers=self.EN)
+        self.client.post(f'/about/sections/move/{section.pk}/', {'direction': 'down'}, headers=self.EN)
+        self.assertEqual(self.slugs(), ['about-me', 'education', 'projects', 'career', 'hiring'])
+        self.assertEqual(list(AboutSection.objects.values_list('order', flat=True)), [10, 20, 30, 40, 50])
+
+    def test_move_untangles_sections_with_the_same_order(self):
+        AboutSection.objects.update(order=0)
+        section = AboutSection.objects.get(slug='hiring')
+        self.client.force_login(self.staff)
+
+        self.client.post(f'/about/sections/move/{section.pk}/', {'direction': 'up'}, headers=self.EN)
+        self.assertEqual(self.slugs(), ['about-me', 'education', 'career', 'hiring', 'projects'])
+
+    def test_first_and_last_sections_stay_in_place(self):
+        self.client.force_login(self.staff)
+        first, last = AboutSection.objects.get(slug='about-me'), AboutSection.objects.get(slug='hiring')
+
+        self.client.post(f'/about/sections/move/{first.pk}/', {'direction': 'up'}, headers=self.EN)
+        self.client.post(f'/about/sections/move/{last.pk}/', {'direction': 'down'}, headers=self.EN)
+        self.assertEqual(self.slugs(), ['about-me', 'education', 'career', 'projects', 'hiring'])
+
+        # The buttons that would do nothing are disabled
+        response = self.client.get('/about/', headers=self.EN)
+        self.assertContains(response, 'value="up" title="Move up" aria-label="Move up" disabled', count=1)
+        self.assertContains(response, 'value="down" title="Move down" aria-label="Move down" disabled', count=1)
+
+    def test_move_requires_permission_and_a_direction(self):
+        section = AboutSection.objects.get(slug='career')
+        url = f'/about/sections/move/{section.pk}/'
+
+        self.client.force_login(self.reader)
+        self.assertEqual(self.client.post(url, {'direction': 'up'}, headers=self.EN).status_code, 403)
+
+        self.client.force_login(self.staff)
+        self.assertEqual(self.client.get(url, headers=self.EN).status_code, 405)
+        self.assertEqual(self.client.post(url, {'direction': 'left'}, headers=self.EN).status_code, 400)
+        self.assertEqual(self.slugs(), ['about-me', 'education', 'career', 'projects', 'hiring'])
+
+    def test_delete_section(self):
+        section = AboutSection.objects.get(slug='hiring')
+        self.client.force_login(self.staff)
+
+        response = self.client.post(f'/about/sections/delete/{section.pk}/', headers=self.EN)
+        self.assertRedirects(response, '/about/', fetch_redirect_response=False)
+        self.assertFalse(AboutSection.objects.filter(pk=section.pk).exists())

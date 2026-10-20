@@ -81,3 +81,18 @@ class SessionSyncTests(TestCase):
     def test_single_host(self):
         response = self.english.post('/accounts/login/', {'username': 'daniel', 'password': 'test-password'}, headers=EN)
         self.assertEqual(response.url, 'http://example.com/')
+
+
+@override_settings(LANGUAGE_DOMAINS=LANGUAGE_DOMAINS, ALLOWED_HOSTS=['example.com', 'example.com.br'])
+class AdminLoginTests(TestCase):
+
+    def test_admin_uses_the_login_that_logs_in_on_every_host(self):
+        response = self.client.get('/admin/login/?next=/admin/', headers=EN)
+        self.assertRedirects(response, '/accounts/login/?next=/admin/', fetch_redirect_response=False)
+
+    def test_logged_in_users_without_access_see_the_admin_page(self):
+        # The site's login would send them back to the admin, in a loop
+        self.client.force_login(get_user_model().objects.create_user('reader', password='test-password'))
+        response = self.client.get('/admin/login/?next=/admin/', headers=EN)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'reader')

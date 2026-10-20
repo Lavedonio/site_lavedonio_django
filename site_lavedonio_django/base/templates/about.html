@@ -5,8 +5,8 @@
 {% block background_images %}
   <style>
     #about-img {
-      --background-image: url('{{ request.scheme }}://{{ request.get_host }}{% static_image "img/IMG_7875.jpeg" %}');
-      --background-placeholder: url('{% image_placeholder "img/IMG_7875.jpeg" %}');
+      --background-image: url('{{ request.scheme }}://{{ request.get_host }}{% static_image "img/conny-schneider-data-unsplash.jpg" %}');
+      --background-placeholder: url('{% image_placeholder "img/conny-schneider-data-unsplash.jpg" %}');
     }
   </style>
 {% endblock %}
@@ -23,25 +23,63 @@
 
     <div class="container row mx-auto mt-5">
       <aside class="d-none d-lg-block col-lg-2">
+        {% if sections %}
         <nav id="about-sidebar" class="autohide dark">
           <nav class="nav nav-pills flex-column">
-            <a class="nav-link" href="#about-me">{% translate "About me" %}</a>
-            <a class="nav-link" href="#education">{% translate "Education" %}</a>
-            <a class="nav-link" href="#career">{% translate "Career" %}</a>
-            <a class="nav-link" href="#projects">{% translate "Projects" %}</a>
-            <a class="nav-link" href="#hiring">{% translate "How to hire me" %}</a>
+            {% for section, section_translation in sections %}
+            <a class="nav-link" href="#{{ section.slug }}" lang="{{ section_translation.language }}">{{ section_translation.title }}</a>
+            {% endfor %}
           </nav>
         </nav>
+        {% endif %}
       </aside>
-    
+
       <section class="col-12 col-lg-10">
         <div id="about-main-content" data-bs-spy="scroll" data-bs-target="#about-sidebar" data-bs-smooth-scroll="true" class="scrollspy-example-2" tabindex="0">
-          {% include content_templates %}
+          {% for section, section_translation in sections %}
+          <article id="{{ section.slug }}" class="about-article" lang="{{ section_translation.language }}">
+            <div class="about-article__content">
+              <h2>{{ section_translation.title }}</h2>
+              {% if perms.base.change_aboutsection %}
+              <div class="admin-controls" lang="{{ LANGUAGE_CODE }}">
+                <a class="btn btn-primary btn-sm icon-link" href="{{ request.scheme }}://{{ request.get_host }}{% url 'base:about-section-update' section.pk %}"><i class="bi bi-pencil" aria-hidden="true"></i>{% translate "Edit" %}</a>
+                {% if perms.base.delete_aboutsection %}<a class="btn btn-outline-danger btn-sm icon-link" href="{{ request.scheme }}://{{ request.get_host }}{% url 'base:about-section-delete' section.pk %}"><i class="bi bi-trash3" aria-hidden="true"></i>{% translate "Delete" %}</a>{% endif %}
+                <form method="post" action="{{ request.scheme }}://{{ request.get_host }}{% url 'base:about-section-move' section.pk %}" class="btn-group btn-group-sm" role="group">
+                  {% csrf_token %}
+                  <button class="btn btn-outline-secondary icon-link" type="submit" name="direction" value="up" title="{% translate 'Move up' %}" aria-label="{% translate 'Move up' %}"{% if forloop.first %} disabled{% endif %}><i class="bi bi-arrow-up" aria-hidden="true"></i></button>
+                  <button class="btn btn-outline-secondary icon-link" type="submit" name="direction" value="down" title="{% translate 'Move down' %}" aria-label="{% translate 'Move down' %}"{% if forloop.last %} disabled{% endif %}><i class="bi bi-arrow-down" aria-hidden="true"></i></button>
+                </form>
+              </div>
+              {% endif %}
+              <div class="rendered-content about-article__text">
+                {{ section_translation.content_html|safe }}
+              </div>
+            </div>
+            {% if section.image %}
+            <figure class="about-article__figure">
+              <img src="{{ section.image.url }}"{% if section.image_width %} width="{{ section.image_width }}" height="{{ section.image_height }}"{% endif %} alt="" loading="lazy">
+              {% if section_translation.image_caption %}<figcaption>{{ section_translation.image_caption }}</figcaption>{% endif %}
+            </figure>
+            {% endif %}
+          </article>
+          {% empty %}
+          <p class="about-article text-body-secondary">{% translate "There is nothing here yet." %}</p>
+          {% endfor %}
+
+          {% if perms.base.add_aboutsection %}
+          <div class="about-article">
+            <div class="about-article__content">
+              <div class="admin-controls">
+                <a class="btn btn-success btn-sm icon-link" href="{{ request.scheme }}://{{ request.get_host }}{% url 'base:about-section-create' %}"><i class="bi bi-plus-lg" aria-hidden="true"></i>{% translate "Add section" %}</a>
+              </div>
+            </div>
+          </div>
+          {% endif %}
         </div>
       </section>
     </div>
 {% endblock %}
 
 {% block credits %}
-      <span class="custom-footer__info text-lg-end mb-4">{% blocktranslate trimmed with author='<a href="https://unsplash.com/@artlasovsky?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" target="_blank" rel="noopener noreferrer">Art Lasovsky</a>' website='<a href="https://unsplash.com/s/photos/pen?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" target="_blank" rel="noopener noreferrer">Unsplash</a>' %}Photo on this page by {{ author }} on {{ website }}.{% endblocktranslate %}</span>
+      <span class="custom-footer__info text-lg-end mb-4">{% blocktranslate trimmed with author='<a href="https://unsplash.com/@choys_?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" target="_blank" rel="noopener noreferrer">Conny Schneider</a>' website='<a href="https://unsplash.com/photos/a-blue-background-with-lines-and-dots-xuTJZ7uD7PI?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" target="_blank" rel="noopener noreferrer">Unsplash</a>' %}Photo on this page by {{ author }} on {{ website }}.{% endblocktranslate %}</span>
 {% endblock %}

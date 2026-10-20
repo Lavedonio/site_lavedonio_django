@@ -67,6 +67,15 @@ body {
     background-color: #000599;
 }
 
+/* .icon-link is made for SVG icons. With the icon font, the glyph sits on the
+   baseline of a line taller than its 1em box (and .125em below it), ending up
+   lower than the text next to it, so it's centered in the box instead */
+.icon-link > i.bi {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
 
 /* ------ Crispy Forms  ------ */
 .textarea--large {
@@ -450,6 +459,8 @@ body {
 
 .about-article {
     margin: 2rem 0;
+    /* Space above the section when going to it by its link (e.g. after moving it) */
+    scroll-margin-top: 1.5rem;
 }
 
 @media screen and (min-width: 768px) {
@@ -480,6 +491,17 @@ body {
 
 .about-article__figure > figcaption {
     font-style: italic;
+}
+
+/* Written in the editor like the posts, but keeps the size of the other texts of the page
+   (with both classes, since .rendered-content is defined further down) */
+.rendered-content.about-article__text {
+    font-size: inherit;
+    line-height: inherit;
+}
+
+.about-article__text > :last-child {
+    margin-bottom: 0;
 }
 
 .about-article__content {
@@ -527,6 +549,19 @@ body {
 html[data-bs-theme="dark"] .contact-card .form-control:focus {
     border-color: #6C8CFF;
     box-shadow: 0 0 0 0.25rem rgba(108, 140, 255, 0.25);
+}
+
+/* Shown after the contact form is sent */
+.contact-success {
+    max-width: 36rem;
+}
+
+.contact-success__icon {
+    display: block;
+    margin-bottom: 0.75rem;
+    color: var(--bs-success);
+    font-size: 3rem;
+    line-height: 1;
 }
 
 /* Links to the social networks, all with the same look */

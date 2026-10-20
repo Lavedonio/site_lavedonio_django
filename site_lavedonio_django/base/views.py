@@ -1,11 +1,27 @@
-# from django.conf import settings
-from django.utils.translation import get_language, gettext as _
-from django.views.generic import TemplateView
+import logging
+from smtplib import SMTPException
+
+from django.conf import settings
+from django.contrib import messages
+from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.core.mail import EmailMessage
+from django.http import HttpResponseBadRequest, HttpResponseRedirect
+from django.shortcuts import get_object_or_404
+from django.utils.text import slugify
+from django.utils.translation import gettext as _, gettext_lazy
+from django.views import View
+from django.views.generic import CreateView, DeleteView, TemplateView, UpdateView
 from django.views.generic.edit import FormView
 from django.urls import reverse_lazy
 from blog.models import Post
 from projects.models import Project
-from .forms import ContactForm
+from .editing import TranslatableEditMixin
+from .forms import ABOUT_ORDER_STEP, AboutSectionForm, AboutSectionTranslationForm, ContactForm
+from .i18n import normalize_host
+from .models import AboutSection
+from .turnstile import verify_turnstile
+
+logger = logging.getLogger(__name__)
 
 # How many featured projects and posts are shown in the homepage
 HOME_FEATURED_COUNT = 3
@@ -36,83 +52,148 @@ class AboutView(TemplateView):
         context["navbar_active"] = "about"
         # context["analytics_id"] = settings.ANALYTICS_ID
 
-        # Long texts are kept in one template per language instead of the .po files
-        context["content_templates"] = [f"about/content_{get_language()}.html", "about/content_en.html"]
+        # Sections only written in another language are shown in that language
+        sections = AboutSection.objects.prefetch_related("translations")
+        context["sections"] = [(section, section.translation) for section in sections if section.translation]
 
         return context
+
+
+class AboutSectionEditMixin(PermissionRequiredMixin, TranslatableEditMixin):
+    model = AboutSection
+    form_class = AboutSectionForm
+    translation_form_class = AboutSectionTranslationForm
+    translation_parent_field = "section"
+    success_message = gettext_lazy("Section saved.")
+    template_name = "about/section_form.html"
+
+    def get_queryset(self):
+        return AboutSection.objects.prefetch_related("translations")
+
+    def get_success_url(self):
+        return self.object.get_absolute_url()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["navbar_active"] = "about"
+        return context
+
+    def prepare_object(self, form, translation_forms):
+        if form.instance.slug:
+            return
+
+        # Unique slug based on the title of the first included language
+        title = next(item.cleaned_data["title"] for item in translation_forms if item.is_enabled)
+        base_slug = slugify(title)[:56].strip("-") or "section"
+        slug, number = base_slug, 2
+        while AboutSection.objects.filter(slug=slug).exclude(pk=form.instance.pk).exists():
+            slug, number = f"{base_slug}-{number}", number + 1
+        form.instance.slug = slug
+
+
+class AboutSectionCreateView(AboutSectionEditMixin, CreateView):
+    permission_required = "base.add_aboutsection"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = _("New section - About")
+        return context
+
+
+class AboutSectionUpdateView(AboutSectionEditMixin, UpdateView):
+    permission_required = "base.change_aboutsection"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = _("Edit section - About")
+        return context
+
+
+class AboutSectionMoveView(PermissionRequiredMixin, View):
+    """Moves a section one position up or down (the `direction` sent by the buttons of the About page)."""
+    permission_required = "base.change_aboutsection"
+    offsets = {"up": -1, "down": 1}
+
+    def post(self, request, *args, **kwargs):
+        section = get_object_or_404(AboutSection, pk=kwargs["pk"])
+        offset = self.offsets.get(request.POST.get("direction"))
+        if offset is None:
+            return HttpResponseBadRequest()
+
+        sections = list(AboutSection.objects.all())
+        index = sections.index(section)
+        if 0 <= index + offset < len(sections):
+            sections.insert(index + offset, sections.pop(index))
+            # Renumbers all of them, which also untangles sections with the same order
+            for position, item in enumerate(sections, start=1):
+                item.order = position * ABOUT_ORDER_STEP
+            AboutSection.objects.bulk_update(sections, ["order"])
+
+        return HttpResponseRedirect(section.get_absolute_url())
+
+
+class AboutSectionDeleteView(PermissionRequiredMixin, DeleteView):
+    model = AboutSection
+    permission_required = "base.delete_aboutsection"
+    template_name = "about/section_confirm_delete.html"
+    success_url = reverse_lazy("base:about")
+
+    def get_queryset(self):
+        return AboutSection.objects.prefetch_related("translations")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = _("Delete section - About")
+        context["navbar_active"] = "about"
+        return context
+
+    def form_valid(self, form):
+        messages.success(self.request, _("Section deleted."))
+        return super().form_valid(form)
 
 
 class ContactView(FormView):
     template_name = "contact.html"
     form_class = ContactForm
-    success_url = reverse_lazy("contact-success")
+    success_url = reverse_lazy("base:contact-success")
+    turnstile_action = "contact"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["title"] = _("Contact")
         context["navbar_active"] = "contact"
-        # context["analytics_id"] = settings.ANALYTICS_ID
-
+        context["turnstile_site_key"] = settings.TURNSTILE_SITE_KEY
+        context["turnstile_action"] = self.turnstile_action
         return context
-
-        # Sets public key and, if not found, uses a test one publicly made available by Google
-        # Docs: https://developers.google.com/recaptcha/docs/faq
-        try:
-            site_key = settings.RECAPTCHA_PUBLIC_KEY
-        except AttributeError:
-            site_key = "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
-
-        context["recaptcha_public_key"] = site_key
-        return context
-
-    def post(self, request, *args, **kwargs):
-        print("Teste")
-        form_class = self.get_form_class()
-        form = self.get_form(form_class)
-
-        # captcha verification based on: https://medium.com/@mihfazhillah/how-to-implement-google-recaptcha-v3-on-your-django-app-3e4cc5b65013
-
-        # Sets private key and, if not found, uses a test one publicly made available by Google
-        # Docs: https://developers.google.com/recaptcha/docs/faq
-        # try:
-        #     secret_key = settings.RECAPTCHA_PRIVATE_KEY
-        # except AttributeError:
-        #     secret_key = "6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe"
-
-        # data = {
-        #     'response': request.POST.get('g-recaptcha-response'),
-        #     'secret': secret_key
-        # }
-        # resp = requests.post('https://www.google.com/recaptcha/api/siteverify', data=data)
-        # result_json = resp.json()
-
-        # # Sets minimum score to pass validation
-        # try:
-        #     threshold = settings.RECAPTCHA_REQUIRED_SCORE
-        # except AttributeError:
-        #     threshold = 0.5
-        print("Teste")
-
-        # if form.is_valid() and result_json.get("success") and result_json.get("score") >= threshold:
-        if form.is_valid():
-            return self.form_valid(form)
-        else:
-            return self.form_invalid(form, **kwargs)
 
     def form_valid(self, form):
-        # Sending email
-        name = form.cleaned_data.get('name')
-        raw_subject = form.cleaned_data.get('subject')
-        email = form.cleaned_data.get('email')
-        raw_message = form.cleaned_data.get('message')
+        if not verify_turnstile(self.request, self.turnstile_action):
+            form.add_error(None, _("Couldn't verify that you're not a robot. Please try again."))
+            return self.form_invalid(form)
 
-        subject = "[Via lavedonio.com.br] {0}".format(raw_subject)
-        message = "Mensagem de {0};\nE-mail {1}:\n\n{2}".format(name, email, raw_message)
-
-        # from_email = settings.EMAIL_HOST_USER
-        # send_mail(subject, message, from_email, [settings.EMAIL_HOST_USER, email], fail_silently=False)
+        try:
+            self.build_email(form).send()
+        except (SMTPException, OSError):
+            logger.exception("Couldn't send the contact form e-mail")
+            form.add_error(None, _("Your message couldn't be sent right now. Please try again later or reach me through social media."))
+            return self.form_invalid(form)
 
         return super().form_valid(form)
+
+    def build_email(self, form):
+        name = form.cleaned_data["name"]
+        email = form.cleaned_data["email"]
+        # The domain tells which language version of the site the message came from
+        domain = normalize_host(self.request.get_host())
+
+        return EmailMessage(
+            subject=f"[Via {domain}] {form.cleaned_data['subject']}",
+            body=f"Message from {name} <{email}>:\n\n{form.cleaned_data['message']}",
+            to=[settings.CONTACT_EMAIL],
+            # Replies go to the visitor, but no copy is sent to them, so the
+            # form can't be used to send e-mails to arbitrary addresses
+            reply_to=[email],
+        )
 
 
 class ContactSuccessView(TemplateView):
@@ -120,9 +201,8 @@ class ContactSuccessView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["title"] = _("Contact - Form Submitted Successfully")
+        context["title"] = _("Message sent - Contact")
         context["navbar_active"] = "contact"
-        # context["analytics_id"] = settings.ANALYTICS_ID
         return context
 
 

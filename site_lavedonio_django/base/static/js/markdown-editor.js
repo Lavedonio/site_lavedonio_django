@@ -1,4 +1,4 @@
-// Markdown editor of the blog posts (TOAST UI Editor). It has a WYSIWYG mode
+// Markdown editor of the blog posts and About sections (TOAST UI Editor). It has a WYSIWYG mode
 // and a Markdown mode with preview; the Markdown is what gets saved.
 document.addEventListener('DOMContentLoaded', function() {
     const Editor = toastui.Editor;

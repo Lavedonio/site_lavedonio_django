@@ -153,6 +153,24 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # Analytics (only loaded after the visitor allows cookies)
 ANALYTICS_ID = environment_settings.ANALYTICS_ID
 
+# E-mail (contact form)
+EMAIL_BACKEND = environment_settings.EMAIL_BACKEND
+EMAIL_HOST = environment_settings.EMAIL_HOST
+EMAIL_PORT = environment_settings.EMAIL_PORT
+EMAIL_HOST_USER = environment_settings.EMAIL_HOST_USER
+EMAIL_HOST_PASSWORD = environment_settings.EMAIL_HOST_PASSWORD
+EMAIL_USE_TLS = environment_settings.EMAIL_USE_TLS
+# Seconds, so a slow server doesn't keep the visitor waiting
+EMAIL_TIMEOUT = 10
+DEFAULT_FROM_EMAIL = environment_settings.DEFAULT_FROM_EMAIL
+
+# Who receives the messages of the contact form
+CONTACT_EMAIL = environment_settings.CONTACT_EMAIL
+
+# Cloudflare Turnstile (bot protection of the contact form)
+TURNSTILE_SITE_KEY = environment_settings.TURNSTILE_SITE_KEY
+TURNSTILE_SECRET_KEY = environment_settings.TURNSTILE_SECRET_KEY
+
 # Authentication
 LOGIN_URL = 'users:login'
 LOGIN_REDIRECT_URL = 'base:home'

@@ -7,8 +7,8 @@
 {% block background_images %}
   <style>
     #contact-img {
-      --background-image: url('{{ request.scheme }}://{{ request.get_host }}{% static_image "img/IMG_9172.jpeg" %}');
-      --background-placeholder: url('{% image_placeholder "img/IMG_9172.jpeg" %}');
+      --background-image: url('{{ request.scheme }}://{{ request.get_host }}{% static_image "img/jayne-harris-contact-unsplash.jpg" %}');
+      --background-placeholder: url('{% image_placeholder "img/jayne-harris-contact-unsplash.jpg" %}');
     }
   </style>
 {% endblock %}
@@ -32,7 +32,11 @@
 
             {% crispy form form.helper %}
 
-            <!-- Hidden input for recaptcha v3 info -->
+            <div id="contact-turnstile" class="cf-turnstile mb-3" data-sitekey="{{ turnstile_site_key }}" data-action="{{ turnstile_action }}" data-language="{{ LANGUAGE_CODE }}" data-size="flexible"></div>
+            <script>
+              // Same theme as the site, which can be different from the browser's
+              document.getElementById('contact-turnstile').dataset.theme = document.documentElement.getAttribute('data-bs-theme') || 'auto';
+            </script>
 
             <div class="d-flex justify-content-end">
               <button class="btn btn-primary icon-link" type="submit">{% translate "Send" %}<i class="bi bi-send" aria-hidden="true"></i></button>
@@ -70,4 +74,12 @@
         </section>
       </div>
     </div>
+{% endblock %}
+
+{% block javascript %}
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+{% endblock %}
+
+{% block credits %}
+      <span class="custom-footer__info text-lg-end mb-4">{% blocktranslate trimmed with author='<a href="https://unsplash.com/@jayneharr33?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" target="_blank" rel="noopener noreferrer">Jayne Harris</a>' website='<a href="https://unsplash.com/photos/a-message-in-a-bottle-sitting-on-the-beach-EDTXcRCCVGk?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" target="_blank" rel="noopener noreferrer">Unsplash</a>' %}Photo on this page by {{ author }} on {{ website }}.{% endblocktranslate %}</span>
 {% endblock %}

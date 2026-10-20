@@ -10,6 +10,12 @@ BASE_DIR = Path(__file__).resolve().parents[2]
 
 load_dotenv(BASE_DIR / '.env')
 
+# Cloudflare's Turnstile test keys: the widget always passes. Only accepted
+# with DEBUG on (see base/turnstile.py).
+# Docs: https://developers.cloudflare.com/turnstile/troubleshooting/testing/
+TURNSTILE_TEST_SITE_KEY = '1x00000000000000000000AA'
+TURNSTILE_TEST_SECRET_KEY = '1x0000000000000000000000000000000AA'
+
 
 class BaseSettings:
 
@@ -27,6 +33,22 @@ class BaseSettings:
         # Google Analytics measurement ID (optional). It's only loaded for
         # visitors who allow cookies.
         self.ANALYTICS_ID = os.environ.get('ANALYTICS_ID') or None
+
+        # E-mail sent by the contact form, from DEFAULT_FROM_EMAIL to
+        # CONTACT_EMAIL, through an SMTP server.
+        self.EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND', 'django.core.mail.backends.smtp.EmailBackend')
+        self.EMAIL_HOST = os.environ.get('EMAIL_HOST', 'localhost')
+        self.EMAIL_PORT = int(os.environ.get('EMAIL_PORT', 587))
+        self.EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
+        self.EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
+        self.EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', 'True') == 'True'
+        self.DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL') or self.EMAIL_HOST_USER or 'webmaster@localhost'
+        self.CONTACT_EMAIL = os.environ.get('CONTACT_EMAIL') or self.DEFAULT_FROM_EMAIL
+
+        # Cloudflare Turnstile, which keeps bots from sending the contact form.
+        # Development uses the test keys unless real ones are set.
+        self.TURNSTILE_SITE_KEY = os.environ.get('TURNSTILE_SITE_KEY', TURNSTILE_TEST_SITE_KEY)
+        self.TURNSTILE_SECRET_KEY = os.environ.get('TURNSTILE_SECRET_KEY', TURNSTILE_TEST_SECRET_KEY)
 
 
 class DevSettings(BaseSettings):
@@ -50,6 +72,10 @@ class DevSettings(BaseSettings):
             'pt-br': '127.0.0.1',
         }
 
+        # E-mails are printed in the terminal instead of being sent, unless
+        # EMAIL_BACKEND is set
+        self.EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
+
 
 class DevDockerSettings(BaseSettings):
 
@@ -72,6 +98,10 @@ class DevDockerSettings(BaseSettings):
             'pt-br': '127.0.0.1',
         }
 
+        # E-mails are printed in the terminal instead of being sent, unless
+        # EMAIL_BACKEND is set
+        self.EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
+
 
 class StagingSettings(BaseSettings):
 
@@ -86,6 +116,10 @@ class StagingSettings(BaseSettings):
             'en': 'staging.lavedonio.com',
             'pt-br': 'staging.lavedonio.com.br',
         }
+
+        # Real Turnstile keys are required outside development
+        self.TURNSTILE_SITE_KEY = str(os.environ['TURNSTILE_SITE_KEY'])
+        self.TURNSTILE_SECRET_KEY = str(os.environ['TURNSTILE_SECRET_KEY'])
 
 
 class ProductionSettings(BaseSettings):
@@ -103,6 +137,10 @@ class ProductionSettings(BaseSettings):
             'en': 'lavedonio.com',
             'pt-br': 'lavedonio.com.br',
         }
+
+        # Real Turnstile keys are required outside development
+        self.TURNSTILE_SITE_KEY = str(os.environ['TURNSTILE_SITE_KEY'])
+        self.TURNSTILE_SECRET_KEY = str(os.environ['TURNSTILE_SECRET_KEY'])
 
 
 env_mapping = {

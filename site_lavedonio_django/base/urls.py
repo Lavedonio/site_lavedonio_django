@@ -17,7 +17,10 @@ Including another URLconf
 from django.urls import path
 from django.utils.translation import gettext_lazy as _
 
-from .views import HomeView, AboutView, ContactView, ContactSuccessView, TempAdminView
+from .views import (
+    HomeView, AboutView, AboutSectionCreateView, AboutSectionDeleteView, AboutSectionMoveView, AboutSectionUpdateView,
+    ContactView, ContactSuccessView, TempAdminView,
+)
 
 
 app_name = 'base'
@@ -25,6 +28,10 @@ app_name = 'base'
 urlpatterns = [
     path('', HomeView.as_view(), name='home'),
     path(_('about/'), AboutView.as_view(), name='about'),
+    path(_('about/sections/new/'), AboutSectionCreateView.as_view(), name='about-section-create'),
+    path(_('about/sections/edit/<int:pk>/'), AboutSectionUpdateView.as_view(), name='about-section-update'),
+    path(_('about/sections/delete/<int:pk>/'), AboutSectionDeleteView.as_view(), name='about-section-delete'),
+    path(_('about/sections/move/<int:pk>/'), AboutSectionMoveView.as_view(), name='about-section-move'),
     path(_('contact/'), ContactView.as_view(), name='contact'),
     path(_('contact/success/'), ContactSuccessView.as_view(), name='contact-success'),
 

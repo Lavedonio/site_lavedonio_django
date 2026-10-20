@@ -49,7 +49,18 @@ The Django project is in the `site_lavedonio_django/` folder (where `manage.py` 
    DEBUG_VALUE=True
    ```
 
-   `ENVIRONMENT` picks the settings in `site_lavedonio_django/site_lavedonio_django/env_settings.py`: `development` (SQLite), `docker_development` (PostgreSQL, also needs `DB_NAME`, `DB_USER`, `DB_PASSWORD`, `DB_HOST` and optionally `DB_PORT`), `staging` or `production`. `ANALYTICS_ID` (Google Analytics) is optional and only loaded for visitors who allow cookies;
+   `ENVIRONMENT` picks the settings in `site_lavedonio_django/site_lavedonio_django/env_settings.py`: `development` (SQLite), `docker_development` (PostgreSQL, also needs `DB_NAME`, `DB_USER`, `DB_PASSWORD`, `DB_HOST` and optionally `DB_PORT`), `staging` or `production`. `ANALYTICS_ID` (Google Analytics) is optional and only loaded for visitors who allow cookies.
+
+   The contact form sends its messages to `CONTACT_EMAIL` through an SMTP server, set with `EMAIL_HOST`, `EMAIL_PORT` (default `587`), `EMAIL_HOST_USER`, `EMAIL_HOST_PASSWORD` and `EMAIL_USE_TLS` (default `True`). The sender is `DEFAULT_FROM_EMAIL` (default: `EMAIL_HOST_USER`) and `CONTACT_EMAIL` also defaults to it. Replies go to the visitor's address. In development the e-mails are printed in the terminal instead, unless `EMAIL_BACKEND` is set (e.g. `django.core.mail.backends.smtp.EmailBackend`):
+
+   ```
+   EMAIL_HOST=smtp.example.com
+   EMAIL_HOST_USER=site@example.com
+   EMAIL_HOST_PASSWORD=<password>
+   CONTACT_EMAIL=me@example.com
+   ```
+
+   The contact form is protected from bots by [Cloudflare Turnstile](https://developers.cloudflare.com/turnstile/). Development uses Cloudflare's test keys, whose challenge always passes. In `staging` and `production`, `TURNSTILE_SITE_KEY` and `TURNSTILE_SECRET_KEY` are required, with the keys of a widget that includes the site's domains;
 3. From the `site_lavedonio_django/` folder, create the database and an admin user:
 
    ```
@@ -131,7 +142,18 @@ O projeto Django está na pasta `site_lavedonio_django/` (onde está o `manage.p
    DEBUG_VALUE=True
    ```
 
-   `ENVIRONMENT` escolhe as configurações em `site_lavedonio_django/site_lavedonio_django/env_settings.py`: `development` (SQLite), `docker_development` (PostgreSQL, que também precisa de `DB_NAME`, `DB_USER`, `DB_PASSWORD`, `DB_HOST` e opcionalmente `DB_PORT`), `staging` ou `production`. `ANALYTICS_ID` (Google Analytics) é opcional e só é carregado para visitantes que permitirem cookies;
+   `ENVIRONMENT` escolhe as configurações em `site_lavedonio_django/site_lavedonio_django/env_settings.py`: `development` (SQLite), `docker_development` (PostgreSQL, que também precisa de `DB_NAME`, `DB_USER`, `DB_PASSWORD`, `DB_HOST` e opcionalmente `DB_PORT`), `staging` ou `production`. `ANALYTICS_ID` (Google Analytics) é opcional e só é carregado para visitantes que permitirem cookies.
+
+   O formulário de contato envia as mensagens para `CONTACT_EMAIL` por um servidor SMTP, definido com `EMAIL_HOST`, `EMAIL_PORT` (padrão `587`), `EMAIL_HOST_USER`, `EMAIL_HOST_PASSWORD` e `EMAIL_USE_TLS` (padrão `True`). O remetente é `DEFAULT_FROM_EMAIL` (padrão: `EMAIL_HOST_USER`), que também é o padrão de `CONTACT_EMAIL`. As respostas vão para o endereço do visitante. Em desenvolvimento, os e-mails são mostrados no terminal em vez de enviados, a não ser que `EMAIL_BACKEND` seja definido (ex.: `django.core.mail.backends.smtp.EmailBackend`):
+
+   ```
+   EMAIL_HOST=smtp.example.com
+   EMAIL_HOST_USER=site@example.com
+   EMAIL_HOST_PASSWORD=<senha>
+   CONTACT_EMAIL=eu@example.com
+   ```
+
+   O formulário de contato é protegido contra bots pelo [Cloudflare Turnstile](https://developers.cloudflare.com/turnstile/). Em desenvolvimento são usadas as chaves de teste da Cloudflare, cujo desafio sempre passa. Em `staging` e `production`, `TURNSTILE_SITE_KEY` e `TURNSTILE_SECRET_KEY` são obrigatórias, com as chaves de um widget que inclua os domínios do site;
 3. Na pasta `site_lavedonio_django/`, crie o banco de dados e um usuário administrador:
 
    ```
