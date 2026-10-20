@@ -1,7 +1,9 @@
 from django.urls import path
 from django.utils.translation import gettext_lazy as _
 
-from .views import PostCreateView, PostDeleteView, PostDetailView, PostListView, PostRedirectView, PostUpdateView
+from .views import (
+    PostCreateView, PostDeleteView, PostDetailView, PostListView, PostRedirectView, PostUpdateView, V1PostRedirectView,
+)
 
 
 app_name = 'blog'
@@ -15,4 +17,6 @@ urlpatterns = [
     path(_('delete/<int:pk>/'), PostDeleteView.as_view(), name='post-delete'),
     path('<int:pk>/', PostRedirectView.as_view(), name='post-short'),
     path('<int:pk>/<slug:slug>/', PostDetailView.as_view(), name='post-detail'),
+    # Links to the v1 site's posts
+    path('post/<slug:slug>/', V1PostRedirectView.as_view(), name='v1-post'),
 ]

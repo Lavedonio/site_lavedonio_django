@@ -95,6 +95,22 @@ class PostRedirectView(RedirectView):
         return post.get_absolute_url()
 
 
+class V1PostRedirectView(RedirectView):
+    """The v1 site's post URLs (/blog/post/<slug>/), whose slugs are the posts' Portuguese ones."""
+    permanent = True
+
+    def get_redirect_url(self, *args, **kwargs):
+        post = (
+            Post.objects.visible_to(self.request.user)
+            .filter(translations__language="pt-br", translations__slug=kwargs["slug"])
+            .prefetch_related("translations")
+            .first()
+        )
+        if post is None:
+            raise Http404
+        return post.get_absolute_url()
+
+
 class PostDetailView(DetailView):
     context_object_name = "post"
 
