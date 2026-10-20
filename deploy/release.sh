@@ -56,7 +56,8 @@ manage collectstatic --noinput --verbosity 0
 
 # Ask uWSGI directly, as the first host in ALLOWED_HOSTS (others get a 400).
 port="$(sed -n 's/^http-socket = 127\.0\.0\.1:\([0-9]*\)$/\1/p' "$uwsgi_ini")"
-host="$(manage shell -c 'from django.conf import settings; print(settings.ALLOWED_HOSTS[0])')"
+# (without shell's message about its automatic imports, which goes to stdout)
+host="$(manage shell --no-imports --verbosity 0 -c 'from django.conf import settings; print(settings.ALLOWED_HOSTS[0])' | tail -n 1)"
 site_answers() {
     curl -fsS -o /dev/null --max-time 10 \
         -H "Host: $host" -H "X-Forwarded-Proto: https" "http://127.0.0.1:$port/"
