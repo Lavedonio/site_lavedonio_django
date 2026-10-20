@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load static i18n %}
+{% block canonical %}<meta name="robots" content="noindex">{% endblock %}
+{% block language_alternates %}{% endblock %}
+{% block bottom_notices %}{% endblock %}
+
+{% block stylesheet %}
+  <link rel="stylesheet" href="https://uicdn.toast.com/editor/3.2.2/toastui-editor.min.css">
+  <link rel="stylesheet" href="https://uicdn.toast.com/editor/3.2.2/theme/toastui-editor-dark.min.css">
+  <link rel="stylesheet" type="text/css" href="{{ request.scheme }}://{{ request.get_host }}{% static 'css/editor.css' %}">
+{% endblock %}
+
+{% block main_section %}
+    <header class="font-poppins page-header page-header--light page-header--compact">
+      <div class="container d-flex align-items-end">
+        <div class="d-block">
+          <h1 class="page-header__heading page-header__heading--light">{% if object %}{% translate "Edit post" %}{% else %}{% translate "New post" %}{% endif %}</h1>
+          <div class="line line--light"></div>
+        </div>
+      </div>
+    </header>
+
+    <div class="container editor-page">
+      <form method="post" enctype="multipart/form-data" class="editor-form" novalidate data-editor-form data-upload-url="{{ request.scheme }}://{{ request.get_host }}{% url 'uploads:image' %}" data-upload-error-message="{% translate 'The image could not be uploaded.' %}">
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}<div class="alert alert-danger">{% for error in form.non_field_errors %}<div>{{ error }}</div>{% endfor %}</div>{% endif %}
+
+        <div class="row g-4">
+          <div class="col-12 col-lg-8">
+            {% include 'includes/translation_tabs.html' %}
+          </div>
+
+          <aside class="col-12 col-lg-4">
+            <div class="editor-card">
+              <h2 class="editor-card__heading">{% translate "Publishing" %}</h2>
+              {% include 'includes/editor_switch.html' with field=form.published %}
+              {% include 'includes/editor_switch.html' with field=form.featured %}
+              {% include 'includes/editor_field.html' with field=form.date_posted %}
+            </div>
+
+            <div class="editor-card">
+              <h2 class="editor-card__heading">{% translate "Tags" %}</h2>
+              {% if form.tags.field.queryset %}
+              <div class="tag-picker mb-3">
+                {% for choice in form.tags %}
+                {% with tag=choice.data.value.instance %}
+                {{ choice.tag }}<label class="tag-chip tag-picker__option" for="{{ choice.id_for_label }}" style="--tag-color: {{ tag.color }}; --tag-background: {{ tag.background_color }};">{{ choice.choice_label }}</label>
+                {% endwith %}
+                {% endfor %}
+              </div>
+              {% endif %}
+              {% include 'includes/editor_field.html' with field=form.new_tags %}
+            </div>
+
+            <div class="editor-card">
+              <h2 class="editor-card__heading">{{ form.cover_image.label }}</h2>
+              {% include 'includes/editor_cover_image.html' with field=form.cover_image %}
+            </div>
+          </aside>
+        </div>
+
+        <div class="editor-actions">
+          <div class="editor-actions__container">
+            {% if object %}
+            <a class="btn btn-outline-secondary" href="{{ request.scheme }}://{{ request.get_host }}{{ object.get_absolute_url }}">{% translate "Cancel" %}</a>
+            {% else %}
+            <a class="btn btn-outline-secondary" href="{{ request.scheme }}://{{ request.get_host }}{% url 'blog:list' %}">{% translate "Cancel" %}</a>
+            {% endif %}
+            <button class="btn btn-primary icon-link" type="submit"><i class="bi bi-check-lg" aria-hidden="true"></i>{% translate "Save" %}</button>
+          </div>
+        </div>
+      </form>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+  <script src="https://uicdn.toast.com/editor/3.2.2/toastui-editor-all.min.js"></script>
+  {% if LANGUAGE_CODE == 'pt-br' %}<script src="https://uicdn.toast.com/editor/3.2.2/i18n/pt-br.min.js"></script>{% endif %}
+  <script src="{{ request.scheme }}://{{ request.get_host }}{% static 'js/editor-forms.js' %}"></script>
+  <script src="{{ request.scheme }}://{{ request.get_host }}{% static 'js/markdown-editor.js' %}"></script>
+{% endblock %}

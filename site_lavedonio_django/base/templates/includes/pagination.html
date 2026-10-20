@@ -1,0 +1,27 @@
+{% load i18n site_tags %}
+{% if page_obj.paginator.num_pages > 1 %}
+<nav class="my-5" aria-label="{% translate 'Pagination' %}">
+  <ul class="pagination justify-content-center flex-wrap">
+    {% if page_obj.has_previous %}
+    <li class="page-item"><a class="page-link" href="{% query_string page=page_obj.previous_page_number %}" aria-label="{% translate 'Previous page' %}"><span aria-hidden="true">&laquo;</span></a></li>
+    {% else %}
+    <li class="page-item disabled"><span class="page-link" aria-hidden="true">&laquo;</span></li>
+    {% endif %}
+    {% elided_page_range page_obj as page_range %}
+    {% for number in page_range %}
+      {% if number == page_obj.number %}
+      <li class="page-item active" aria-current="page"><span class="page-link">{{ number }}</span></li>
+      {% elif number == page_obj.paginator.ELLIPSIS %}
+      <li class="page-item disabled"><span class="page-link">{{ number }}</span></li>
+      {% else %}
+      <li class="page-item"><a class="page-link" href="{% query_string page=number %}">{{ number }}</a></li>
+      {% endif %}
+    {% endfor %}
+    {% if page_obj.has_next %}
+    <li class="page-item"><a class="page-link" href="{% query_string page=page_obj.next_page_number %}" aria-label="{% translate 'Next page' %}"><span aria-hidden="true">&raquo;</span></a></li>
+    {% else %}
+    <li class="page-item disabled"><span class="page-link" aria-hidden="true">&raquo;</span></li>
+    {% endif %}
+  </ul>
+</nav>
+{% endif %}

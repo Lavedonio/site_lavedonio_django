@@ -1,0 +1,823 @@
+# Brazilian Portuguese translation of lavedonio.com.br.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: 2.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-20 01:26-0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Daniel Lavedonio de Lima\n"
+"Language-Team: Português (Brasil)\n"
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. Translators: shown to visitors whose browser is set to your language, offering
+#. them the site in your language. Replace "English" by the name of your language.
+msgid "This page is also available in English."
+msgstr "Esta página também está disponível em português."
+
+#. Translators: replace "English" by the name of your language.
+msgid "Switch to English"
+msgstr "Mudar para português"
+
+msgid "Dismiss"
+msgstr "Fechar"
+
+msgid "Leave it empty to use the moment it is saved."
+msgstr "Deixe em branco para usar o momento em que for salvo."
+
+#, python-format
+msgid "Include the %(language)s version"
+msgstr "Incluir a versão em %(language)s"
+
+msgid "Changes saved."
+msgstr "Alterações salvas."
+
+msgid "Include at least one language."
+msgstr "Inclua pelo menos um idioma."
+
+msgid "Name"
+msgstr "Nome"
+
+msgid "Subject"
+msgstr "Assunto"
+
+msgid "E-mail"
+msgstr "E-mail"
+
+msgid "Message"
+msgstr "Mensagem"
+
+msgid ""
+"Used in links to the section (e.g. /about/#education). Leave it blank to "
+"generate it from the title."
+msgstr ""
+"Usado nos links para a seção (ex.: /sobre/#education). Deixe em branco para "
+"gerá-lo a partir do título."
+
+msgid "Order"
+msgstr "Ordem"
+
+msgid "Sections are shown from the lowest to the highest number."
+msgstr "As seções são exibidas do menor para o maior número."
+
+msgid "Slug"
+msgstr "Slug"
+
+msgid "Used in links to the section (e.g. /about/#education)."
+msgstr "Usado nos links para a seção (ex.: /sobre/#education)."
+
+msgid "Picture"
+msgstr "Foto"
+
+msgid "About Section"
+msgstr "Seção do Sobre"
+
+msgid "About Sections"
+msgstr "Seções do Sobre"
+
+msgid "Section"
+msgstr "Seção"
+
+msgid "Title"
+msgstr "Título"
+
+msgid "Text"
+msgstr "Texto"
+
+msgid "Written in Markdown."
+msgstr "Escrito em Markdown."
+
+msgid "Picture description"
+msgstr "Descrição da foto"
+
+msgid "Shown under the picture."
+msgstr "Exibida abaixo da foto."
+
+msgid "About Section Translation"
+msgstr "Tradução da Seção do Sobre"
+
+msgid "About Section Translations"
+msgstr "Traduções das Seções do Sobre"
+
+msgid "About"
+msgstr "Sobre"
+
+msgid "Edit"
+msgstr "Editar"
+
+msgid "Delete"
+msgstr "Excluir"
+
+msgid "Move up"
+msgstr "Mover para cima"
+
+msgid "Move down"
+msgstr "Mover para baixo"
+
+msgid "There is nothing here yet."
+msgstr "Ainda não há nada aqui."
+
+msgid "Add section"
+msgstr "Adicionar seção"
+
+#, python-format
+msgid "Photo on this page by %(author)s on %(website)s."
+msgstr "Foto desta página por %(author)s em %(website)s."
+
+msgid "Delete section"
+msgstr "Excluir seção"
+
+#, python-format
+msgid ""
+"Are you sure you want to delete the section “%(title)s” from the About page?"
+msgstr "Tem certeza de que deseja excluir a seção “%(title)s” da página Sobre?"
+
+#, python-format
+msgid "This can't be undone."
+msgid_plural ""
+"Its versions in all %(counter)s languages will be deleted too. This can't be "
+"undone."
+msgstr[0] "Esta ação não pode ser desfeita."
+msgstr[1] ""
+"As versões em todos os %(counter)s idiomas também serão excluídas. Esta ação "
+"não pode ser desfeita."
+
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgid "Edit section"
+msgstr "Editar seção"
+
+msgid "New section"
+msgstr "Nova seção"
+
+msgid "The image could not be uploaded."
+msgstr "Não foi possível enviar a imagem."
+
+msgid "Position"
+msgstr "Posição"
+
+msgid "Save"
+msgstr "Salvar"
+
+msgid "Personal website"
+msgstr "Site pessoal"
+
+msgid "Toggle navigation"
+msgstr "Alternar navegação"
+
+msgid "Close"
+msgstr "Fechar"
+
+msgid "Home"
+msgstr "Home"
+
+msgid "Projects"
+msgstr "Projetos"
+
+msgid "Blog"
+msgstr "Blog"
+
+msgid "Contact"
+msgstr "Contato"
+
+msgid "Dark Mode"
+msgstr "Modo Escuro"
+
+msgid "Automatic"
+msgstr "Automático"
+
+msgid "Light Mode"
+msgstr "Modo Claro"
+
+msgid "Language"
+msgstr "Idioma"
+
+msgid "New post"
+msgstr "Nova publicação"
+
+msgid "New project"
+msgstr "Novo projeto"
+
+msgid "Site administration"
+msgstr "Administração do site"
+
+msgid "Log out"
+msgstr "Sair"
+
+msgid "Cookies"
+msgstr "Cookies"
+
+msgid "Analytics cookies, used to understand how the site is visited."
+msgstr "Cookies de análise, usados para entender como o site é visitado."
+
+msgid "Allow"
+msgstr "Permitir"
+
+msgid "Don't allow"
+msgstr "Não Permitir"
+
+#, python-format
+msgid ""
+"This website is an <i>open-source</i> project. See the source code <a "
+"href=\"%(source_url)s\" target=\"_blank\" rel=\"noopener noreferrer\">here</"
+"a>."
+msgstr ""
+"Este site é um projeto <i>open-source</i>. Veja o código fonte <a "
+"href=\"%(source_url)s\" target=\"_blank\" rel=\"noopener noreferrer\">aqui</"
+"a>."
+
+msgid "Some rights reserved."
+msgstr "Alguns direitos reservados."
+
+msgid ""
+"This site would like to use cookies to understand how it is visited (Google "
+"Analytics). They are only set if you allow them."
+msgstr ""
+"Este site gostaria de usar cookies para entender como ele é visitado (Google "
+"Analytics). Eles só são definidos se você permitir."
+
+msgid "Get in touch using the form..."
+msgstr "Entre em contato pelo formulário..."
+
+msgid "Send"
+msgstr "Enviar"
+
+msgid "...or through social media."
+msgstr "...ou pelas redes sociais."
+
+msgid "Connect"
+msgstr "Conectar"
+
+msgid "Follow"
+msgstr "Seguir"
+
+msgid "Message sent!"
+msgstr "Mensagem enviada!"
+
+msgid ""
+"Thanks for getting in touch. I'll reply to your e-mail as soon as I can."
+msgstr "Obrigado pelo contato. Vou responder o seu e-mail assim que possível."
+
+msgid "Back to the homepage"
+msgstr "Voltar à página inicial"
+
+msgid "Send another message"
+msgstr "Enviar outra mensagem"
+
+msgid "Hello, welcome!"
+msgstr "Olá, seja bem-vindo!"
+
+msgid ""
+"My name is Daniel and I'm always looking for new challenges involving "
+"programming and data."
+msgstr ""
+"Meu nome é Daniel e estou sempre procurando novos desafios que envolvam "
+"programação e dados."
+
+msgid "Learn more about me"
+msgstr "Saiba mais sobre mim"
+
+msgid "Get in touch"
+msgstr "Entre em contato"
+
+msgid "Daniel Lavedonio de Lima's profile image"
+msgstr "Foto de perfil de Daniel Lavedonio de Lima"
+
+msgid "Featured projects"
+msgstr "Projetos em destaque"
+
+msgid "See all projects"
+msgstr "Ver todos os projetos"
+
+msgid "Featured posts"
+msgstr "Publicações em destaque"
+
+msgid "See all posts"
+msgstr "Ver todas as publicações"
+
+#, python-format
+msgid ""
+"Background photos on this page by %(jeff)s and %(emile)s on %(unsplash)s."
+msgstr ""
+"Fotos em segundo plano desta página por %(jeff)s e %(emile)s em %(unsplash)s."
+
+#, python-format
+msgid "Background photo on this page by %(author)s on %(unsplash)s."
+msgstr "Foto em segundo plano desta página por %(author)s em %(unsplash)s."
+
+msgid ""
+"Images of the featured projects and posts are credited on their respective "
+"pages."
+msgstr ""
+"Imagens dos projetos e das publicações em destaque creditadas em suas "
+"respectivas páginas."
+
+msgid "Remove the current image"
+msgstr "Remover a imagem atual"
+
+msgid "Pagination"
+msgstr "Paginação"
+
+msgid "Previous page"
+msgstr "Página anterior"
+
+msgid "Next page"
+msgstr "Próxima página"
+
+#, python-format
+msgid "The %(language)s version will be deleted when you save."
+msgstr "A versão em %(language)s será excluída quando você salvar."
+
+msgid "about/"
+msgstr "sobre/"
+
+msgid "about/sections/new/"
+msgstr "sobre/secoes/nova/"
+
+msgid "about/sections/edit/<int:pk>/"
+msgstr "sobre/secoes/editar/<int:pk>/"
+
+msgid "about/sections/delete/<int:pk>/"
+msgstr "sobre/secoes/excluir/<int:pk>/"
+
+msgid "about/sections/move/<int:pk>/"
+msgstr "sobre/secoes/mover/<int:pk>/"
+
+msgid "contact/"
+msgstr "contato/"
+
+msgid "contact/success/"
+msgstr "contato/sucesso/"
+
+msgid "Homepage"
+msgstr "Página Inicial"
+
+msgid "Section saved."
+msgstr "Seção salva."
+
+msgid "New section - About"
+msgstr "Nova seção - Sobre"
+
+msgid "Edit section - About"
+msgstr "Editar seção - Sobre"
+
+msgid "Delete section - About"
+msgstr "Excluir seção - Sobre"
+
+msgid "Section deleted."
+msgstr "Seção excluída."
+
+msgid "Couldn't verify that you're not a robot. Please try again."
+msgstr "Não foi possível verificar que você não é um robô. Tente novamente."
+
+msgid ""
+"Your message couldn't be sent right now. Please try again later or reach me "
+"through social media."
+msgstr ""
+"Não foi possível enviar a sua mensagem agora. Tente novamente mais tarde ou "
+"fale comigo pelas redes sociais."
+
+msgid "Message sent - Contact"
+msgstr "Mensagem enviada - Contato"
+
+msgid "New tags"
+msgstr "Novas tags"
+
+msgid "Separated by commas. They are created when the post is saved."
+msgstr "Separadas por vírgulas. Elas são criadas quando a publicação é salva."
+
+msgid "Color"
+msgstr "Cor"
+
+msgid "Background Color"
+msgstr "Cor de Fundo"
+
+msgid "Tag"
+msgstr "Tag"
+
+msgid "Tags"
+msgstr "Tags"
+
+msgid "Tag Translation"
+msgstr "Tradução da Tag"
+
+msgid "Tag Translations"
+msgstr "Traduções de Tags"
+
+msgid "Author"
+msgstr "Autor"
+
+msgid "Cover Image"
+msgstr "Imagem de Capa"
+
+msgid "Featured"
+msgstr "Em destaque"
+
+msgid "Published"
+msgstr "Publicado"
+
+msgid ""
+"Unpublished posts are only visible to you. Published posts with a future "
+"date are only shown from that date on."
+msgstr ""
+"Rascunhos só são visíveis para você. Publicações com data futura só aparecem "
+"a partir dessa data."
+
+msgid "Date Posted"
+msgstr "Data de Publicação"
+
+msgid "Last Updated"
+msgstr "Última Atualização"
+
+msgid "Post"
+msgstr "Publicação"
+
+msgid "Posts"
+msgstr "Publicações"
+
+msgid "Subtitle"
+msgstr "Subtítulo"
+
+msgid ""
+"Used in the address of the post. Leave it blank to generate it from the "
+"title."
+msgstr ""
+"Usado no endereço da publicação. Deixe em branco para gerá-lo a partir do "
+"título."
+
+msgid "Content"
+msgstr "Conteúdo"
+
+msgid "Credits"
+msgstr "Créditos"
+
+msgid "Shown in the footer, e.g. who took the photos. HTML is allowed."
+msgstr ""
+"Exibidos no rodapé, por exemplo, quem tirou as fotos. HTML é permitido."
+
+msgid "Post Translation"
+msgstr "Tradução da Publicação"
+
+msgid "Post Translations"
+msgstr "Traduções de Publicações"
+
+msgid "Keep reading"
+msgstr "Continuar lendo"
+
+#, python-format
+msgid "%(minutes)s min read"
+msgid_plural "%(minutes)s min read"
+msgstr[0] "%(minutes)s min de leitura"
+msgstr[1] "%(minutes)s min de leitura"
+
+#, python-format
+msgid "Written in %(language)s"
+msgstr "Escrito em %(language)s"
+
+msgid "Draft"
+msgstr "Rascunho"
+
+msgid "Scheduled"
+msgstr "Agendado"
+
+msgid "Delete post"
+msgstr "Excluir publicação"
+
+#, python-format
+msgid "Are you sure you want to delete the post “%(title)s”?"
+msgstr "Tem certeza de que deseja excluir a publicação “%(title)s”?"
+
+msgid "Share"
+msgstr "Compartilhar"
+
+#, python-format
+msgid "Share on %(network)s"
+msgstr "Compartilhar no %(network)s"
+
+#, python-format
+msgid "This post is only available in %(language)s."
+msgstr "Esta publicação só está disponível em %(language)s."
+
+#, python-format
+msgid "By <a href=\"%(about_url)s\">%(author_name)s</a>"
+msgstr "Por <a href=\"%(about_url)s\">%(author_name)s</a>"
+
+#, python-format
+msgid "Updated on %(date)s"
+msgstr "Atualizado em %(date)s"
+
+msgid "Link copied!"
+msgstr "Link copiado!"
+
+msgid "Copy link"
+msgstr "Copiar link"
+
+msgid "Other posts"
+msgstr "Outras publicações"
+
+msgid "Older post"
+msgstr "Publicação anterior"
+
+msgid "Newer post"
+msgstr "Próxima publicação"
+
+msgid "Back to the blog"
+msgstr "Voltar ao blog"
+
+msgid "Edit post"
+msgstr "Editar publicação"
+
+msgid "Publishing"
+msgstr "Publicação"
+
+msgid "A collection of projects, tutorials and scribbled thoughts."
+msgstr "Uma coleção de projetos, tutoriais e rabiscos de pensamentos."
+
+#, python-format
+msgid "Posts tagged “%(tag)s”"
+msgstr "Publicações com a tag “%(tag)s”"
+
+#, python-format
+msgid "Posts from %(month)s"
+msgstr "Publicações de %(month)s"
+
+#, python-format
+msgid "(page %(number)s of %(total)s)"
+msgstr "(página %(number)s de %(total)s)"
+
+msgid "Clear filter"
+msgstr "Limpar filtro"
+
+msgid "There are no posts here."
+msgstr "Não há publicações aqui."
+
+msgid "No posts yet. Come back soon!"
+msgstr "Ainda não há publicações. Volte em breve!"
+
+msgid "Admin"
+msgstr "Administração"
+
+#, python-format
+msgid "%(counter)s draft or scheduled post, only visible to you."
+msgid_plural "%(counter)s draft or scheduled posts, only visible to you."
+msgstr[0] "%(counter)s rascunho ou publicação agendada, visível só para você."
+msgstr[1] ""
+"%(counter)s rascunhos ou publicações agendadas, visíveis só para você."
+
+msgid "Archive"
+msgstr "Arquivo"
+
+#, python-format
+msgid "Photo at the top of this page by %(author)s on %(website)s."
+msgstr "Foto no topo desta página por %(author)s em %(website)s."
+
+msgid "Images of the posts are credited on their respective pages."
+msgstr "Imagens das publicações creditadas em suas respectivas páginas."
+
+msgid "archive/<int:year>/<int:month>/"
+msgstr "arquivo/<int:year>/<int:month>/"
+
+msgid "new/"
+msgstr "novo/"
+
+msgid "edit/<int:pk>/"
+msgstr "editar/<int:pk>/"
+
+msgid "delete/<int:pk>/"
+msgstr "excluir/<int:pk>/"
+
+#, python-format
+msgid "%(post)s - Blog"
+msgstr "%(post)s - Blog"
+
+msgid "Post saved."
+msgstr "Publicação salva."
+
+msgid "New post - Blog"
+msgstr "Nova publicação - Blog"
+
+msgid "Edit post - Blog"
+msgstr "Editar publicação - Blog"
+
+msgid "Delete post - Blog"
+msgstr "Excluir publicação - Blog"
+
+msgid "Post deleted."
+msgstr "Publicação excluída."
+
+msgid "This slug is reserved, please choose another one."
+msgstr "Este slug é reservado, escolha outro."
+
+msgid "Category"
+msgstr "Categoria"
+
+msgid "Categories"
+msgstr "Categorias"
+
+msgid "Category Translation"
+msgstr "Tradução da Categoria"
+
+msgid "Category Translations"
+msgstr "Traduções de Categorias"
+
+msgid "In progress"
+msgstr "Em andamento"
+
+msgid "Completed"
+msgstr "Concluído"
+
+msgid "Archived"
+msgstr "Arquivado"
+
+msgid ""
+"Used in the address of the project, in every language. Leave it blank to "
+"generate it from the title."
+msgstr ""
+"Usado no endereço do projeto, em todos os idiomas. Deixe em branco para gerá-"
+"lo a partir do título."
+
+msgid "Status"
+msgstr "Status"
+
+msgid "Source code URL"
+msgstr "URL do código fonte"
+
+msgid "Live demo URL"
+msgstr "URL da demonstração"
+
+msgid "Unpublished projects are only visible to you."
+msgstr "Projetos não publicados só são visíveis para você."
+
+msgid "Dark Background"
+msgstr "Fundo Escuro"
+
+msgid "Keeps the content area dark, even when the site is in light mode."
+msgstr ""
+"Mantém a área do conteúdo escura, mesmo quando o site está no modo claro."
+
+msgid "Fix Autoscale"
+msgstr "Corrigir Zoom Automático"
+
+msgid ""
+"Stops Safari on iPhones from zooming in automatically on form inputs, while "
+"keeping the visitor's ability to zoom in manually."
+msgstr ""
+"Impede que o Safari dos iPhones dê zoom automaticamente nos campos de "
+"formulário, mantendo a possibilidade do visitante dar zoom manualmente."
+
+msgid "Custom CSS"
+msgstr "CSS Personalizado"
+
+msgid "Added to the page inside a <style> tag."
+msgstr "Adicionado à página dentro de uma tag <style>."
+
+msgid "Custom JavaScript"
+msgstr "JavaScript Personalizado"
+
+msgid "Added to the end of the page inside a <script> tag."
+msgstr "Adicionado ao final da página dentro de uma tag <script>."
+
+msgid "Project"
+msgstr "Projeto"
+
+msgid "Summary"
+msgstr "Resumo"
+
+msgid "Shown in the project cards and below the title."
+msgstr "Exibido nos cartões dos projetos e abaixo do título."
+
+msgid "Project Translation"
+msgstr "Tradução do Projeto"
+
+msgid "Project Translations"
+msgstr "Traduções de Projetos"
+
+msgid "Source code"
+msgstr "Código fonte"
+
+msgid "Live demo"
+msgstr "Demonstração"
+
+msgid "Delete project"
+msgstr "Excluir projeto"
+
+#, python-format
+msgid "Are you sure you want to delete the project “%(title)s”?"
+msgstr "Tem certeza de que deseja excluir o projeto “%(title)s”?"
+
+msgid "Published on"
+msgstr "Publicado em"
+
+#, python-format
+msgid "This project is only available in %(language)s."
+msgstr "Este projeto só está disponível em %(language)s."
+
+msgid "Back to the projects"
+msgstr "Voltar aos projetos"
+
+msgid "Edit project"
+msgstr "Editar projeto"
+
+msgid "Details"
+msgstr "Detalhes"
+
+msgid "Advanced"
+msgstr "Avançado"
+
+msgid ""
+"Personal projects I've built, and keep building, to make my own work easier, "
+"to practice and learn new concepts, or simply because I felt like it."
+msgstr ""
+"Projetos pessoais que desenvolvi e continuo desenvolvendo com o intuito de "
+"facilitar o meu próprio trabalho, praticar e aprender novos conceitos ou "
+"simplesmente porque deu vontade."
+
+msgid "All"
+msgstr "Todos"
+
+msgid "See more"
+msgstr "Ver mais"
+
+msgid "More projects"
+msgstr "Mais projetos"
+
+msgid "No projects here yet. Come back soon!"
+msgstr "Ainda não há projetos aqui. Volte em breve!"
+
+msgid "Images of the projects are credited on their respective pages."
+msgstr "Imagens dos projetos creditadas em suas respectivas páginas."
+
+#, python-format
+msgid "%(project)s - Projects"
+msgstr "%(project)s - Projetos"
+
+msgid "Project saved."
+msgstr "Projeto salvo."
+
+msgid "New project - Projects"
+msgstr "Novo projeto - Projetos"
+
+msgid "Edit project - Projects"
+msgstr "Editar projeto - Projetos"
+
+msgid "Delete project - Projects"
+msgstr "Excluir projeto - Projetos"
+
+msgid "Project deleted."
+msgstr "Projeto excluído."
+
+msgid "blog/"
+msgstr "blog/"
+
+msgid "projects/"
+msgstr "projetos/"
+
+msgid "Uploads"
+msgstr "Uploads"
+
+msgid "Image"
+msgstr "Imagem"
+
+msgid "Width"
+msgstr "Largura"
+
+msgid "Height"
+msgstr "Altura"
+
+msgid "Original Name"
+msgstr "Nome Original"
+
+msgid "Uploaded By"
+msgstr "Enviado Por"
+
+msgid "Created At"
+msgstr "Criado Em"
+
+msgid "Uploaded Image"
+msgstr "Imagem Enviada"
+
+msgid "Uploaded Images"
+msgstr "Imagens Enviadas"
+
+msgid "The image must be smaller than 15 MB."
+msgstr "A imagem deve ter menos de 15 MB."
+
+msgid "Invalid image."
+msgstr "Imagem inválida."
+
+msgid "Log in"
+msgstr "Entrar"
+
+#~ msgid "Contact - Form Submitted Successfully"
+#~ msgstr "Contato - Formulário Enviado com Sucesso"
+
+#~ msgid "Career"
+#~ msgstr "Carreira"
+
+#~ msgid "How to hire me"
+#~ msgstr "Como contratar"

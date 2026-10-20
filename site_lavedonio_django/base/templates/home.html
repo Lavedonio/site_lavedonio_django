@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load static i18n site_tags %}
+
+{% block background_images %}
+  {% if projects or posts %}
+  <style>
+    #home-projects {
+      --background-image: url('{{ request.scheme }}://{{ request.get_host }}{% static_image "img/jeff-sheldon-project-unsplash.jpg" %}');
+      --background-placeholder: url('{% image_placeholder "img/jeff-sheldon-project-unsplash.jpg" %}');
+    }
+    #home-posts {
+      --background-gradient: linear-gradient(225deg, var(--offcanvas-background-color), var(--navbar-background-color-transparent), var(--footer-text-color-transparent));
+      --background-image: url('{{ request.scheme }}://{{ request.get_host }}{% static_image "img/emile-perron-code-unsplash.jpg" %}');
+      --background-placeholder: url('{% image_placeholder "img/emile-perron-code-unsplash.jpg" %}');
+    }
+  </style>
+  {% endif %}
+{% endblock %}
+
+{% block main_section %}
+    <!-- Hero section -->
+    <section class="hero-main font-poppins background-gradient">
+      <div class="container hero-main__container flex-lg-row my-lg-0">
+        <div class="col-12 col-lg-6 my-5 align-self-lg-center">
+          <h1>{% translate "Hello, welcome!" %}</h1>
+          <div class="line line--light"></div>
+          <h2 class="hero-main__text">{% translate "My name is Daniel and I'm always looking for new challenges involving programming and data." %}</h2>
+          <div class="d-flex">
+            <a class="btn btn-info mx-1" href="{{ request.scheme }}://{{ request.get_host }}{% url 'base:about' %}" role="button">{% translate "Learn more about me" %}</a>
+            <a class="btn btn-secondary mx-1" href="{{ request.scheme }}://{{ request.get_host }}{% url 'base:contact' %}" role="button">{% translate "Get in touch" %}</a>
+          </div>
+        </div>
+        <img class="col-8 col-lg-6 mt-5 align-self-end hero-main__image" src="{{ request.scheme }}://{{ request.get_host }}{% static_image 'img/homepage-photo.png' %}" alt="{% translate "Daniel Lavedonio de Lima's profile image" %}">
+      </div>
+    </section>
+
+    {% if projects %}
+    <!-- Featured projects -->
+    <section id="home-projects" class="progressive-background home-section font-poppins">
+      <div class="container">
+        <h2 class="section-heading home-section__heading">{% translate "Featured projects" %}</h2>
+        <div class="line line--light"></div>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mt-1 justify-content-center">
+          {% for project in projects %}
+          <div class="col">{% include 'projects/includes/project_card.html' %}</div>
+          {% endfor %}
+        </div>
+        <a class="btn btn-outline-light mt-4" href="{{ request.scheme }}://{{ request.get_host }}{% url 'projects:list' %}">{% translate "See all projects" %} &raquo;</a>
+      </div>
+    </section>
+    {% endif %}
+
+    {% if posts %}
+    <!-- Featured blog posts -->
+    <section id="home-posts" class="progressive-background home-section font-poppins">
+      <div class="container">
+        <h2 class="section-heading home-section__heading">{% translate "Featured posts" %}</h2>
+        <div class="line line--light"></div>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mt-1 justify-content-center">
+          {% for post in posts %}
+          <div class="col">{% include 'blog/includes/featured_post_card.html' %}</div>
+          {% endfor %}
+        </div>
+        <a class="btn btn-outline-light mt-4" href="{{ request.scheme }}://{{ request.get_host }}{% url 'blog:list' %}">{% translate "See all posts" %} &raquo;</a>
+      </div>
+    </section>
+    {% endif %}
+{% endblock %}
+
+{% block credits %}
+          {% if projects or posts %}
+          {% with jeff='<a href="https://unsplash.com/@ugmonk?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" target="_blank" rel="noopener noreferrer">Jeff Sheldon</a>' emile='<a href="https://unsplash.com/@emilep?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" target="_blank" rel="noopener noreferrer">Émile Perron</a>' unsplash='<a href="https://unsplash.com/s/photos/code?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" target="_blank" rel="noopener noreferrer">Unsplash</a>' %}
+          <span class="custom-footer__info text-lg-end">{% if projects and posts %}{% blocktranslate trimmed %}Background photos on this page by {{ jeff }} and {{ emile }} on {{ unsplash }}.{% endblocktranslate %}{% elif projects %}{% blocktranslate trimmed with author=jeff %}Background photo on this page by {{ author }} on {{ unsplash }}.{% endblocktranslate %}{% else %}{% blocktranslate trimmed with author=emile %}Background photo on this page by {{ author }} on {{ unsplash }}.{% endblocktranslate %}{% endif %}</span>
+          {% endwith %}
+          <span class="custom-footer__info text-lg-end mb-4">{% translate "Images of the featured projects and posts are credited on their respective pages." %}</span>
+          {% endif %}
+{% endblock %}

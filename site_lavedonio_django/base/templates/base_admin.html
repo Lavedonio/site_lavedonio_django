@@ -1,0 +1,134 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta name="description" content="Site pessoal">
+  <meta name="keywords" content="Python,BI,Data Science,IA,Currículo,CV">
+  <meta name="author" content="Daniel Lavedonio de Lima">
+  {% block canonical %}<link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{% url 'base:home' %}">{% endblock %}
+
+  <link rel="icon" href="{{ request.scheme }}://{{ request.get_host }}{% static 'img/icons/favicon.ico' %}" type="image/x-icon"/>
+  <link rel="shortcut icon" href="{{ request.scheme }}://{{ request.get_host }}{% static 'img/icons/favicon.ico' %}" type="image/x-icon"/>
+
+  <!-- Bootstrap CSS -->
+  <link href="{{ request.scheme }}://{{ request.get_host }}{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{{ request.scheme }}://{{ request.get_host }}{% static 'css/bootstrap-icons.min.css' %}" rel="stylesheet">
+
+  <!-- Custom Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Dancing+Script|Poppins&display=swap" rel="stylesheet">
+
+  <!-- Project CSS overrides -->
+  <link rel="stylesheet" type="text/css" href="{{ request.scheme }}://{{ request.get_host }}{% static 'css/main.css' %}">
+
+  <!-- Custom stylesheet for this page (if necessary) -->
+  {% block stylesheet %}{% endblock %}
+
+  <!-- Loading all static background images from the page -->
+  {% block background_images %}{% endblock %}
+
+  {% block title_custom %}<title>{% if title %}{{ title }} - {% endif %}Daniel Lavedonio de Lima</title>{% endblock %}
+</head>
+<body class="d-flex flex-column">
+  <header>
+    <nav id="main-nav" class="autohide navbar nav-underline navbar-expand-lg fixed-top" data-bs-theme="dark">
+      <div class="container-lg">
+        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <a class="navbar-brand brand-font navbar-brand--font-size" href="{{ request.scheme }}://{{ request.get_host }}{% url 'base:home' %}">Lavedonio</a>
+      </div>
+    </nav>
+  </header>
+
+  <main role="main" class="d-flex flex-no-wrap h-100">
+    {% block main_section %}{% endblock %}
+    <div class="d-flex flex-column flex-shrink-0 p-3 text-bg-dark" style="width: 280px;">
+      <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+        <svg class="bi pe-none me-2" width="40" height="32"><use xlink:href="#bootstrap"/></svg>
+        <span class="fs-4">Sidebar</span>
+      </a>
+      <hr>
+      <ul class="nav nav-pills flex-column mb-auto">
+        <li class="nav-item">
+          <a href="#" class="nav-link active" aria-current="page">
+            <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#home"/></svg>
+            Home
+          </a>
+        </li>
+        <li>
+          <a href="#" class="nav-link text-white">
+            <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#speedometer2"/></svg>
+            Dashboard
+          </a>
+        </li>
+        <li>
+          <a href="#" class="nav-link text-white">
+            <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#table"/></svg>
+            Orders
+          </a>
+        </li>
+        <li>
+          <a href="#" class="nav-link text-white">
+            <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#grid"/></svg>
+            Products
+          </a>
+        </li>
+        <li>
+          <a href="#" class="nav-link text-white">
+            <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#people-circle"/></svg>
+            Customers
+          </a>
+        </li>
+      </ul>
+      <hr>
+      <div class="dropdown">
+        <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+          <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2">
+          <strong>mdo</strong>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
+          <li><a class="dropdown-item" href="#">New project...</a></li>
+          <li><a class="dropdown-item" href="#">Settings</a></li>
+          <li><a class="dropdown-item" href="#">Profile</a></li>
+          <li><hr class="dropdown-divider"></li>
+          <li><a class="dropdown-item" href="#">Sign out</a></li>
+        </ul>
+      </div>
+    </div>
+  </main>
+
+  <!-- <footer class="footer custom-footer mt-auto" data-bs-theme="dark">
+    <div class="container">
+      <div class="custom-footer__top flex-lg-row">
+        <h5 class="col-lg-3 custom-footer__brand brand-font">Lavedonio</h5>
+        <div class="col-lg-9 align-items-end">
+          {% block credits %}{% endblock %}
+          <span class="custom-footer__info text-lg-end mb-lg-4">Este site é um projeto <i>open-source</i>. Veja o código fonte <a href="https://github.com/Lavedonio/site_lavedonio_django/" target="_blank" rel="noopener noreferrer">aqui</a>.</span>
+        </div>
+      </div>
+      <hr class="text-light">
+      <div class="custom-footer__bottom flex-md-row">
+        <p>&copy; 2020&ndash;{% now "Y" %}. Daniel Lavedonio de Lima. Some rights reserved.</p>
+        <ul class="list-unstyled d-flex">
+          <li><a class="link-body-emphasis" href="https://www.linkedin.com/in/daniel-lavedonio-de-lima/" target="_blank" rel="noopener noreferrer"><img class="custom-footer__social-media-icons" src="{{ request.scheme }}://{{ request.get_host }}{% static 'img/icons/social-media/circle-svg/LinkedIn.svg' %}" alt="LinkedIn"></a></li>
+          <li class="ms-3"><a class="link-body-emphasis" href="https://www.twitter.com/Lavedonio" target="_blank" rel="noopener noreferrer"><img class="custom-footer__social-media-icons" src="{{ request.scheme }}://{{ request.get_host }}{% static 'img/icons/social-media/circle-svg/Twitter.svg' %}" alt="Twitter"></a></li>
+          <li class="ms-3"><a class="link-body-emphasis" href="https://www.github.com/Lavedonio" target="_blank" rel="noopener noreferrer"><img class="custom-footer__social-media-icons" src="{{ request.scheme }}://{{ request.get_host }}{% static 'img/icons/social-media/circle-svg/GitHub-Alt.svg' %}" alt="GitHub"></a></li>
+        </ul>
+      </div>
+    </div>
+  </footer> -->
+
+  <!-- Bootstrap JavaScript -->
+  <script src="{{ request.scheme }}://{{ request.get_host }}{% static 'js/bootstrap.bundle.min.js' %}"></script>
+
+  <!-- Project JavaScript overrides -->
+  <script src="{{ request.scheme }}://{{ request.get_host }}{% static 'js/main.js' %}"></script>
+
+  <!-- Custom javascript for this page (if necessary) -->
+  {% block javascript %}{% endblock %}
+</body>
+</html>

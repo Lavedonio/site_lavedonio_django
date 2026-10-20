@@ -1,0 +1,33 @@
+{% load i18n crispy_forms_filters %}
+{% comment %}
+  Language tabs of the editors. Each tab has a switch to include that language
+  and the fields of `translation_forms` (see base.editing.TranslationForm).
+{% endcomment %}
+<ul class="nav nav-tabs translation-tabs" role="tablist">
+  {% for translation_form in translation_forms %}
+  <li class="nav-item" role="presentation">
+    <button class="nav-link{% if translation_form.language == LANGUAGE_CODE %} active{% endif %}{% if translation_form.errors %} translation-tabs__link--error{% endif %}" id="tab-{{ translation_form.prefix }}" data-bs-toggle="tab" data-bs-target="#pane-{{ translation_form.prefix }}" type="button" role="tab" aria-controls="pane-{{ translation_form.prefix }}" aria-selected="{% if translation_form.language == LANGUAGE_CODE %}true{% else %}false{% endif %}">
+      <span class="translation-tabs__status" data-translation-status aria-hidden="true"></span>
+      <span class="d-none d-sm-inline">{{ translation_form.language_name }}</span>
+      <span class="d-sm-none">{{ translation_form.language_short_name }}</span>
+    </button>
+  </li>
+  {% endfor %}
+</ul>
+<div class="tab-content translation-panes">
+  {% for translation_form in translation_forms %}
+  <div class="tab-pane fade{% if translation_form.language == LANGUAGE_CODE %} show active{% endif %}" id="pane-{{ translation_form.prefix }}" role="tabpanel" aria-labelledby="tab-{{ translation_form.prefix }}" data-translation-pane{% if translation_form.instance.pk %} data-translation-exists{% endif %}>
+    {% if translation_form.non_field_errors %}<div class="alert alert-danger mt-3">{{ translation_form.non_field_errors }}</div>{% endif %}
+    <div class="form-check form-switch translation-panes__switch">
+      {{ translation_form.enabled }}
+      <label class="form-check-label" for="{{ translation_form.enabled.id_for_label }}">{{ translation_form.enabled.label }}</label>
+    </div>
+    <div class="alert alert-warning translation-panes__delete-warning" data-translation-delete-warning hidden>
+      {% blocktranslate trimmed with language=translation_form.language_name %}The {{ language }} version will be deleted when you save.{% endblocktranslate %}
+    </div>
+    <div class="translation-panes__fields" data-translation-fields lang="{{ translation_form.language }}">
+      {% for field in translation_form.visible_fields %}{% if field.name != 'enabled' %}{{ field|as_crispy_field }}{% endif %}{% endfor %}
+    </div>
+  </div>
+  {% endfor %}
+</div>

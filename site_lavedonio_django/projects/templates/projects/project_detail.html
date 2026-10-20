@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% load static i18n site_tags %}
+{% block viewport %}{% if project.fix_autoscale %}<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">{% else %}{{ block.super }}{% endif %}{% endblock %}
+{% block canonical %}<link rel="canonical" href="{{ canonical_url }}">{% endblock %}
+{% block meta_description %}{{ project_translation.summary }}{% endblock %}
+{% block meta %}
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="{{ project_translation.title }}">
+  <meta property="og:description" content="{{ project_translation.summary }}">
+  <meta property="og:url" content="{{ canonical_url }}">
+  {% if project.cover_image %}<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ project.cover_image.url }}">{% endif %}
+  <meta name="twitter:card" content="summary_large_image">
+  {% if not project.published %}<meta name="robots" content="noindex">{% endif %}
+{% endblock %}
+
+{% block stylesheet %}
+  {% if project.custom_css %}<style>{{ project.custom_css|safe }}</style>{% endif %}
+{% endblock %}
+
+{% block background_images %}
+  {% if project.cover_image %}
+  <style>
+    #project-img {
+      --background-image: url('{{ project.cover_image.url }}');
+      --background-placeholder: url('{% image_placeholder project.cover_image %}');
+    }
+  </style>
+  {% endif %}
+{% endblock %}
+
+{% block main_section %}
+    <header id="project-img" class="{% if project.cover_image %}progressive-background {% endif %}font-poppins page-header page-header--light">
+      <div class="container d-flex align-items-end">
+        <div class="d-block content-header" lang="{{ project_translation.language }}">
+          <h1 class="content-header__title">{{ project_translation.title }}</h1>
+          <div class="line line--light"></div>
+          <p class="page-header__subheading">{{ project_translation.summary }}</p>
+        </div>
+      </div>
+    </header>
+
+    <div class="container">
+      <div class="project-info">
+        <div>
+          <span class="project-info__label">{% translate "Status" %}</span>
+          {% include 'projects/includes/status_badge.html' %}
+        </div>
+        {% if project.categories.all %}
+        <div>
+          <span class="project-info__label">{% translate "Categories" %}</span>
+          {% for category in project.categories.all %}<a class="link-body-emphasis" href="{{ request.scheme }}://{{ request.get_host }}{% url 'projects:list' %}?category={{ category.slug }}">{{ category }}</a>{% if not forloop.last %} &middot; {% endif %}{% endfor %}
+        </div>
+        {% endif %}
+        <div>
+          <span class="project-info__label">{% translate "Published on" %}</span>
+          <time datetime="{{ project.date_posted|date:'c' }}">{{ project.date_posted|date }}</time>
+        </div>
+        <div class="project-info__links">
+          {% include 'projects/includes/project_links.html' %}
+        </div>
+      </div>
+
+      {% if project_translation.is_fallback %}
+      <div class="alert alert-info icon-link w-100 mt-4"><i class="bi bi-translate" aria-hidden="true"></i>{% blocktranslate trimmed with language=project_translation.language_name %}This project is only available in {{ language }}.{% endblocktranslate %}</div>
+      {% endif %}
+
+      {% if perms.projects.change_project %}
+      <div class="admin-controls mt-3">
+        {% if not project.published %}<span class="badge text-bg-danger align-self-center">{% translate "Draft" %}</span>{% endif %}
+        <a class="btn btn-primary btn-sm icon-link" href="{{ request.scheme }}://{{ request.get_host }}{% url 'projects:project-update' project.pk %}"><i class="bi bi-pencil" aria-hidden="true"></i>{% translate "Edit" %}</a>
+        {% if perms.projects.delete_project %}<a class="btn btn-outline-danger btn-sm icon-link" href="{{ request.scheme }}://{{ request.get_host }}{% url 'projects:project-delete' project.pk %}"><i class="bi bi-trash3" aria-hidden="true"></i>{% translate "Delete" %}</a>{% endif %}
+      </div>
+      {% endif %}
+    </div>
+
+    <article class="project-content py-5{% if project.dark_background %} project-content--dark{% endif %}"{% if project.dark_background %} data-bs-theme="dark"{% endif %} lang="{{ project_translation.language }}">
+      <div class="container">
+        <div class="rendered-content">
+          {{ project_translation.content|safe }}
+        </div>
+        <a class="btn btn-info btn-sm mt-4" href="{{ request.scheme }}://{{ request.get_host }}{% url 'projects:list' %}" lang="{{ LANGUAGE_CODE }}">&laquo; {% translate "Back to the projects" %}</a>
+      </div>
+    </article>
+{% endblock %}
+
+{% block credits %}
+          {% if project_translation.credits %}<span class="custom-footer__info text-lg-end mb-4" lang="{{ project_translation.language }}">{{ project_translation.credits|safe }}</span>{% endif %}
+{% endblock %}
+
+{% block javascript %}
+  {% if project.custom_js %}<script>{{ project.custom_js|safe }}</script>{% endif %}
+{% endblock %}

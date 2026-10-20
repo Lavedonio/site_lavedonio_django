@@ -1,0 +1,19 @@
+{% load i18n %}
+{% with project_translation=project.translation project_url=project.get_absolute_url %}
+<article class="project-card"{% if project_translation.is_fallback %} lang="{{ project_translation.language }}"{% endif %}>
+  {% if project.cover_image %}<img class="project-card__image" src="{{ project.cover_image.url }}" alt="" loading="lazy">{% else %}<div class="project-card__image content-placeholder"><i class="bi bi-code-slash" aria-hidden="true"></i></div>{% endif %}
+  <div class="project-card__body">
+    {% if project.categories.all %}<div class="project-card__categories" lang="{{ LANGUAGE_CODE }}">{{ project.categories.all|join:" · " }}</div>{% endif %}
+    <h3 class="project-card__title"><a class="stretched-link" href="{{ project_url }}">{{ project_translation.title }}</a></h3>
+    <p class="project-card__summary">{{ project_translation.summary }}</p>
+  </div>
+  <div class="project-card__footer" lang="{{ LANGUAGE_CODE }}">
+    <div class="d-flex flex-wrap gap-1">
+      {% include 'projects/includes/status_badge.html' %}
+      {% if project_translation.is_fallback %}<span class="badge rounded-pill text-bg-light border" title="{% blocktranslate with language=project_translation.language_name %}Written in {{ language }}{% endblocktranslate %}">{{ project_translation.language_short_name }}</span>{% endif %}
+      {% if not project.published %}<span class="badge rounded-pill text-bg-danger">{% translate "Draft" %}</span>{% endif %}
+    </div>
+    {% include 'projects/includes/project_links.html' with compact=True %}
+  </div>
+</article>
+{% endwith %}

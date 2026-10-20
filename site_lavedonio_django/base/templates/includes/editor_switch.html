@@ -1,0 +1,7 @@
+{% comment %}A boolean field rendered as a Bootstrap switch.{% endcomment %}
+<div class="form-check form-switch mb-3">
+  {{ field }}
+  <label class="form-check-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+  {% if field.help_text %}<div class="form-text">{{ field.help_text }}</div>{% endif %}
+  {% for error in field.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
+</div>

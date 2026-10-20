@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block canonical %}<meta name="robots" content="noindex">{% endblock %}
+{% block language_alternates %}{% endblock %}
+{% block bottom_notices %}{% endblock %}
+
+{% block main_section %}
+    <header class="font-poppins page-header page-header--light page-header--compact">
+      <div class="container d-flex align-items-end">
+        <div class="d-block">
+          <h1 class="page-header__heading page-header__heading--light">{% translate "Delete post" %}</h1>
+          <div class="line line--light"></div>
+        </div>
+      </div>
+    </header>
+
+    <div class="container my-5">
+      <form method="post" class="confirm-delete">
+        {% csrf_token %}
+        <p class="fs-5">{% blocktranslate trimmed with title=object.translation.title %}Are you sure you want to delete the post “{{ title }}”?{% endblocktranslate %}</p>
+        <p class="text-body-secondary">{% blocktranslate trimmed count counter=object.available_languages|length %}This can't be undone.{% plural %}Its versions in all {{ counter }} languages will be deleted too. This can't be undone.{% endblocktranslate %}</p>
+        <div class="d-flex flex-wrap gap-2">
+          <button class="btn btn-danger icon-link" type="submit"><i class="bi bi-trash3" aria-hidden="true"></i>{% translate "Delete" %}</button>
+          <a class="btn btn-outline-secondary" href="{{ request.scheme }}://{{ request.get_host }}{{ object.get_absolute_url }}">{% translate "Cancel" %}</a>
+        </div>
+      </form>
+    </div>
+{% endblock %}
