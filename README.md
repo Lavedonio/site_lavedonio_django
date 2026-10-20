@@ -61,12 +61,15 @@ The Django project is in the `site_lavedonio_django/` folder (where `manage.py` 
    ```
 
    The contact form is protected from bots by [Cloudflare Turnstile](https://developers.cloudflare.com/turnstile/). Development uses Cloudflare's test keys, whose challenge always passes. In `staging` and `production`, `TURNSTILE_SITE_KEY` and `TURNSTILE_SECRET_KEY` are required, with the keys of a widget that includes the site's domains;
-3. From the `site_lavedonio_django/` folder, create the database and an admin user:
+3. From the `site_lavedonio_django/` folder, create the database, its cache table and an admin user:
 
    ```
    python manage.py migrate
+   python manage.py createcachetable
    python manage.py createsuperuser
    ```
+
+   The cache is kept in the database so that every server process shares it, which makes each Turnstile token work only once. Run `createcachetable` in every database the site uses, such as staging and production (it does nothing when the table already exists).
 
 ## Running in development
 
@@ -154,12 +157,15 @@ O projeto Django está na pasta `site_lavedonio_django/` (onde está o `manage.p
    ```
 
    O formulário de contato é protegido contra bots pelo [Cloudflare Turnstile](https://developers.cloudflare.com/turnstile/). Em desenvolvimento são usadas as chaves de teste da Cloudflare, cujo desafio sempre passa. Em `staging` e `production`, `TURNSTILE_SITE_KEY` e `TURNSTILE_SECRET_KEY` são obrigatórias, com as chaves de um widget que inclua os domínios do site;
-3. Na pasta `site_lavedonio_django/`, crie o banco de dados e um usuário administrador:
+3. Na pasta `site_lavedonio_django/`, crie o banco de dados, a sua tabela de cache e um usuário administrador:
 
    ```
    python manage.py migrate
+   python manage.py createcachetable
    python manage.py createsuperuser
    ```
+
+   O cache fica no banco de dados para que todos os processos do servidor o compartilhem, o que faz cada token do Turnstile funcionar só uma vez. Rode `createcachetable` em todo banco de dados usado pelo site, como os de staging e produção (ele não faz nada se a tabela já existe).
 
 ## Executando em ambiente de desenvolvimento
 

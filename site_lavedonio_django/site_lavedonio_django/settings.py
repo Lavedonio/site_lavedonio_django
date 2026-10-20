@@ -97,6 +97,12 @@ WSGI_APPLICATION = 'site_lavedonio_django.wsgi.application'
 DATABASES = environment_settings.DATABASES
 
 
+# Cache
+# https://docs.djangoproject.com/en/5.2/topics/cache/
+
+CACHES = environment_settings.CACHES
+
+
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 

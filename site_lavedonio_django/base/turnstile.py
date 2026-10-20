@@ -6,12 +6,14 @@ The widget in the page gives the visitor a token, sent with the form in the
 Siteverify API before the form is processed.
 Docs: https://developers.cloudflare.com/turnstile/get-started/server-side-validation/
 """
+import hashlib
 import json
 import logging
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
 from django.conf import settings
+from django.core.cache import cache
 from django.http.request import split_domain_port
 
 logger = logging.getLogger(__name__)
@@ -22,6 +24,9 @@ SITEVERIFY_URL = 'https://challenges.cloudflare.com/turnstile/v0/siteverify'
 TOKEN_FIELD = 'cf-turnstile-response'
 
 TOKEN_MAX_LENGTH = 2048
+
+# Seconds a token is valid for
+TOKEN_MAX_AGE = 300
 
 # Seconds, so a slow response doesn't keep the visitor waiting
 SITEVERIFY_TIMEOUT = 10
@@ -58,9 +63,17 @@ def verify_turnstile(request, action):
 
     # The test keys don't return the action, and the hostname is always
     # example.com. They're only accepted in development, so that using them in
-    # production blocks the form instead of leaving it unprotected.
+    # production blocks the form instead of leaving it unprotected. Their token
+    # is always the same, so it isn't marked as used below.
     if (result.get('metadata') or {}).get('result_with_testing_key'):
         return settings.DEBUG
 
     domain, _port = split_domain_port(request.get_host())
-    return result.get('action') == action and result.get('hostname') == domain
+    if result.get('action') != action or result.get('hostname') != domain:
+        return False
+
+    # Each token works only once. Siteverify accepts the same token again until
+    # it expires, so without this a replayed form would be sent again. Only a
+    # hash of the token is kept, in the cache shared by the server processes.
+    key = 'turnstile:' + hashlib.sha256(token.encode()).hexdigest()
+    return cache.add(key, True, TOKEN_MAX_AGE)

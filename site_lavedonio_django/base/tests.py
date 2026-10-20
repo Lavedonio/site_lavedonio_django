@@ -10,6 +10,7 @@ from urllib.parse import parse_qs
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Permission
 from django.core import mail
+from django.core.cache import cache
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import RequestFactory, SimpleTestCase, TestCase, override_settings
 from django.urls import reverse
@@ -243,6 +244,8 @@ class ContactPageTests(TestCase):
     TURNSTILE_ERROR = "Couldn't verify that you're not a robot. Please try again."
 
     def setUp(self):
+        # Where the used Turnstile tokens are kept
+        cache.clear()
         # Cloudflare's Siteverify API, which answers with self.siteverify_result
         self.siteverify_result = dict(self.TURNSTILE_PASSED)
         patcher = mock.patch('base.turnstile.urlopen', side_effect=lambda *args, **kwargs: BytesIO(json.dumps(self.siteverify_result).encode()))
@@ -345,6 +348,37 @@ class ContactPageTests(TestCase):
                 self.assertContains(response, 'Nice site!')
                 self.assertEqual(len(mail.outbox), 0)
 
+    def test_each_token_works_only_once(self):
+        self.client.post('/contact/', self.form_data, headers=self.EN)
+        # Siteverify accepts the same token again until it expires
+        response = self.client.post('/contact/', self.form_data, headers=self.EN)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['form'].non_field_errors(), [self.TURNSTILE_ERROR])
+        self.assertContains(response, 'Nice site!')
+        self.assertEqual(len(mail.outbox), 1)
+
+        response = self.client.post('/contact/', {**self.form_data, 'cf-turnstile-response': 'another-token'}, headers=self.EN)
+        self.assertRedirects(response, '/contact/success/', fetch_redirect_response=False)
+        self.assertEqual(len(mail.outbox), 2)
+
+    def test_tokens_that_fail_arent_spent(self):
+        failures = {
+            'challenge failed': {'success': False, 'error-codes': ['internal-error']},
+            'widget on another site': {'hostname': 'other.com'},
+        }
+        for case, result in failures.items():
+            with self.subTest(case):
+                cache.clear()
+                mail.outbox.clear()
+                self.siteverify_result = {**self.TURNSTILE_PASSED, **result}
+                self.client.post('/contact/', self.form_data, headers=self.EN)
+
+                self.siteverify_result = dict(self.TURNSTILE_PASSED)
+                response = self.client.post('/contact/', self.form_data, headers=self.EN)
+                self.assertRedirects(response, '/contact/success/', fetch_redirect_response=False)
+                self.assertEqual(len(mail.outbox), 1)
+
     def test_missing_turnstile_token(self):
         data = {**self.form_data, 'cf-turnstile-response': ''}
         response = self.client.post('/contato/', data, headers=self.PT)
@@ -377,8 +411,12 @@ class ContactPageTests(TestCase):
 
         with self.settings(DEBUG=True):
             response = self.client.post('/contato/', self.form_data, headers=self.PT)
-        self.assertRedirects(response, '/contato/sucesso/', fetch_redirect_response=False)
-        self.assertEqual(len(mail.outbox), 1)
+            self.assertRedirects(response, '/contato/sucesso/', fetch_redirect_response=False)
+            self.assertEqual(len(mail.outbox), 1)
+
+            # The test keys always give the same token, which can be used again
+            self.client.post('/contato/', self.form_data, headers=self.PT)
+            self.assertEqual(len(mail.outbox), 2)
 
 
 ABOUT_MEDIA_ROOT = tempfile.mkdtemp()
