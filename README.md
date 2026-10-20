@@ -100,6 +100,10 @@ Photos added to `base/static/img` should be optimized with `python manage.py opt
 python manage.py test
 ```
 
+## Deployment
+
+Every push to the `staging` branch is tested and deployed to [staging.lavedonio.com](https://staging.lavedonio.com) and [staging.lavedonio.com.br](https://staging.lavedonio.com.br). See [`deploy/README.md`](deploy/README.md) for how it works and how to operate it.
+
 ## License
 
 [Mozilla Public License 2.0](LICENSE).
@@ -195,6 +199,10 @@ Fotos adicionadas em `base/static/img` devem ser otimizadas com `python manage.p
 ```
 python manage.py test
 ```
+
+## Publicação
+
+Cada push na branch `staging` é testado e publicado em [staging.lavedonio.com](https://staging.lavedonio.com) e [staging.lavedonio.com.br](https://staging.lavedonio.com.br). Veja como funciona e como operá-lo em [`deploy/README.md`](deploy/README.md) (em inglês).
 
 ## Licença
 

@@ -1,0 +1,71 @@
+name: Deploy to staging
+
+# Every push to the `staging` branch is tested, then deployed to
+# https://staging.lavedonio.com and https://staging.lavedonio.com.br
+# (CloudPanel VPS). See deploy/README.md.
+on:
+  push:
+    branches: [staging]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# One deploy at a time, and never cancelled halfway.
+concurrency:
+  group: deploy-staging
+  cancel-in-progress: false
+
+jobs:
+  tests:
+    uses: ./.github/workflows/tests.yml
+
+  deploy:
+    needs: tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    # Its secret is only available to the staging branch (environment's
+    # deployment branch rule)
+    environment:
+      name: lavedonio-staging
+      url: https://staging.lavedonio.com
+
+    steps:
+      - uses: actions/checkout@v5
+
+      # The server's address and host keys are secrets too: the repository and
+      # its Actions logs are public, and the site is behind Cloudflare's proxy,
+      # which keeps the origin server's address hidden.
+      - name: Set up SSH
+        env:
+          DEPLOY_SSH_KEY: ${{ secrets.STAGING_DEPLOY_SSH_KEY }}
+          SSH_KNOWN_HOSTS: ${{ secrets.STAGING_SSH_KNOWN_HOSTS }}
+        run: |
+          install -d -m 700 ~/.ssh
+          printf '%s\n' "$DEPLOY_SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          # The CloudPanel VPS's pinned host keys.
+          printf '%s\n' "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+
+      # The key can only run deploy/receive-release.sh on the server, which
+      # unpacks this tarball and runs deploy/release.sh from it.
+      - name: Deploy
+        env:
+          SSH_TARGET: ${{ secrets.STAGING_SSH_TARGET }}
+        run: |
+          git archive --format=tar.gz HEAD |
+            ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes -o BatchMode=yes \
+              -o StrictHostKeyChecking=yes "$SSH_TARGET" deploy "$GITHUB_SHA"
+
+      - name: Remove the key
+        if: always()
+        run: rm -f ~/.ssh/deploy_key ~/.ssh/known_hosts
+
+      # Follows redirects, so a redirect loop (e.g. Cloudflare's "Flexible" SSL
+      # mode) fails instead of passing as a 301.
+      - name: Check the public site
+        run: |
+          for url in https://staging.lavedonio.com/ https://staging.lavedonio.com.br/; do
+            curl -fsSL --max-redirs 5 --retry 5 --retry-delay 5 --retry-all-errors -o /dev/null \
+              -w '%{http_code} %{url_effective}\n' "$url"
+          done

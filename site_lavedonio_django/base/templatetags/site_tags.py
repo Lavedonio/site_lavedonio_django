@@ -49,8 +49,15 @@ def image_placeholder(source):
                 placeholder = make_placeholder(image_file)
             cache.set(key, placeholder, timeout=None)
         return placeholder
-    except (OSError, ValueError):
+    # Including the storage's errors (R2 on the servers): the page works without it
+    except Exception:
         return ''
+
+
+@register.simple_tag(takes_context=True)
+def absolute_uri(context, url):
+    """`url` with the request's scheme and host, unless it already has them (like uploads on R2)."""
+    return context['request'].build_absolute_uri(url)
 
 
 @register.simple_tag

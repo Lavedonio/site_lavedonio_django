@@ -32,6 +32,24 @@ DEBUG = environment_settings.DEBUG
 
 ALLOWED_HOSTS = environment_settings.ALLOWED_HOSTS
 
+# Behind HTTPS (staging and production). nginx tells Django the original scheme
+# in X-Forwarded-Proto.
+if environment_settings.HTTPS:
+    CSRF_TRUSTED_ORIGINS = [f'https://{host}' for host in ALLOWED_HOSTS]
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_HSTS_SECONDS = environment_settings.HSTS_SECONDS
+    # HSTS only covers each site's own host: other subdomains of the domains
+    # (e.g. Google's services) aren't ours to force HTTPS on, and the sites
+    # aren't meant for the browsers' preload list
+    SILENCED_SYSTEM_CHECKS = ['security.W005', 'security.W021']
+
+# Asks search engines not to index the site (staging), with a robots.txt that
+# disallows everything and an X-Robots-Tag header on every response
+NOINDEX = environment_settings.NOINDEX
+
 
 # Application definition
 
@@ -58,6 +76,9 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    # Static files on hosts whose web server passes them to Django (see deploy/README.md)
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+    'base.middleware.NoIndexMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'base.middleware.DomainLocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -151,9 +172,23 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-# User uploaded files (post covers, editor images, etc.)
-MEDIA_URL = 'media/'
+# Where collectstatic puts them on the servers
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# User uploaded files (post covers, editor images, etc.): a local folder in
+# development, a Cloudflare R2 bucket on the servers
+MEDIA_URL = environment_settings.MEDIA_URL
 MEDIA_ROOT = BASE_DIR / 'media'
+
+STORAGES = {
+    'default': environment_settings.MEDIA_STORAGE,
+    # On the servers, file names get a hash of their content, so browsers and
+    # Cloudflare can keep them for good, and they're also compressed
+    'staticfiles': {
+        'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage' if environment_settings.HTTPS
+        else 'django.contrib.staticfiles.storage.StaticFilesStorage',
+    },
+}
 
 
 # Analytics (only loaded after the visitor allows cookies)
@@ -186,6 +221,18 @@ LOGOUT_REDIRECT_URL = 'base:home'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# Warnings and errors (failed contact e-mails, Turnstile errors...) go to the
+# server's log (stderr), also with DEBUG off
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {'class': 'logging.StreamHandler'},
+    },
+    'root': {'handlers': ['console'], 'level': 'WARNING'},
+}
 
 
 # Third-Party apps settings

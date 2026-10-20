@@ -17,6 +17,57 @@ TURNSTILE_TEST_SITE_KEY = '1x00000000000000000000AA'
 TURNSTILE_TEST_SECRET_KEY = '1x0000000000000000000000000000000AA'
 
 
+def server_database():
+    """
+    The database of staging and production: PostgreSQL on the data VPS, reached
+    over TLS, with each environment's tables in its own schema (DB_SCHEMA) of
+    the same database. See deploy/README.md.
+    """
+    return {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': str(os.environ['DB_NAME']),
+            'USER': str(os.environ['DB_USER']),
+            'PASSWORD': str(os.environ['DB_PASSWORD']),
+            'HOST': str(os.environ['DB_HOST']),
+            'PORT': str(os.environ.get('DB_PORT', 5432)),
+            'OPTIONS': {
+                'sslmode': os.environ.get('DB_SSLMODE', 'verify-full'),
+                'sslrootcert': str(os.environ['DB_SSLROOTCERT']),
+                'options': f"-c search_path={os.environ['DB_SCHEMA']}",
+            },
+            # The database is on another server: reuse connections between requests
+            'CONN_MAX_AGE': 60,
+            'CONN_HEALTH_CHECKS': True,
+        }
+    }
+
+
+def r2_media_storage():
+    """
+    Uploads (covers, editor images...) in a Cloudflare R2 bucket, through its S3
+    API, served by Cloudflare from the bucket's custom domain (MEDIA_DOMAIN).
+    """
+    return {
+        'BACKEND': 'storages.backends.s3.S3Storage',
+        'OPTIONS': {
+            'bucket_name': str(os.environ['R2_BUCKET']),
+            'endpoint_url': f"https://{os.environ['R2_ACCOUNT_ID']}.r2.cloudflarestorage.com",
+            'access_key': str(os.environ['R2_ACCESS_KEY_ID']),
+            'secret_key': str(os.environ['R2_SECRET_ACCESS_KEY']),
+            'region_name': 'auto',
+            'custom_domain': str(os.environ['MEDIA_DOMAIN']),
+            'url_protocol': 'https:',
+            # The bucket is public through its domain, so URLs don't need signing
+            'querystring_auth': False,
+            # Like on a local disk: a new file never replaces another with the same name
+            'file_overwrite': False,
+            # So names never change content, and Cloudflare and browsers can keep them
+            'object_parameters': {'CacheControl': 'public, max-age=31536000'},
+        },
+    }
+
+
 class BaseSettings:
 
     def __init__(self) -> None:
@@ -25,6 +76,18 @@ class BaseSettings:
         self.DEBUG = str(os.environ['DEBUG_VALUE']) == 'True'
         self.ALLOWED_HOSTS = []
         self.DATABASES = {}
+
+        # Where uploads are kept, and the URL they're served from
+        self.MEDIA_STORAGE = {'BACKEND': 'django.core.files.storage.FileSystemStorage'}
+        self.MEDIA_URL = 'media/'
+
+        # Behind HTTPS (staging and production): secure cookies, HSTS and so on.
+        # HSTS_SECONDS is how long browsers keep refusing plain HTTP.
+        self.HTTPS = False
+        self.HSTS_SECONDS = 0
+
+        # Asks search engines not to index the site (staging)
+        self.NOINDEX = False
 
         # Kept in the database, so it's shared by every server process, which
         # the single-use tokens need (Turnstile and the login sync). Its table
@@ -113,11 +176,28 @@ class DevDockerSettings(BaseSettings):
         self.EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
 
 
-class StagingSettings(BaseSettings):
+class ServerSettings(BaseSettings):
+    """What staging and production have in common (see deploy/README.md)."""
 
     def __init__(self) -> None:
         super().__init__()
 
+        self.DATABASES = server_database()
+        self.MEDIA_STORAGE = r2_media_storage()
+        self.MEDIA_URL = f"https://{os.environ['MEDIA_DOMAIN']}/"
+        self.HTTPS = True
+
+        # Real Turnstile keys are required outside development
+        self.TURNSTILE_SITE_KEY = str(os.environ['TURNSTILE_SITE_KEY'])
+        self.TURNSTILE_SECRET_KEY = str(os.environ['TURNSTILE_SECRET_KEY'])
+
+
+class StagingSettings(ServerSettings):
+
+    def __init__(self) -> None:
+        super().__init__()
+
+        # The first one is the host the deploys check
         self.ALLOWED_HOSTS = [
             'staging.lavedonio.com',
             'staging.lavedonio.com.br',
@@ -127,16 +207,21 @@ class StagingSettings(BaseSettings):
             'pt-br': 'staging.lavedonio.com.br',
         }
 
-        # Real Turnstile keys are required outside development
-        self.TURNSTILE_SITE_KEY = str(os.environ['TURNSTILE_SITE_KEY'])
-        self.TURNSTILE_SECRET_KEY = str(os.environ['TURNSTILE_SECRET_KEY'])
+        # Short, so a mistake on staging doesn't lock browsers out for long
+        self.HSTS_SECONDS = 3600
+        self.NOINDEX = True
+
+        # The contact form's e-mails are only written to the server log, unless
+        # EMAIL_BACKEND is set
+        self.EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
 
 
-class ProductionSettings(BaseSettings):
+class ProductionSettings(ServerSettings):
 
     def __init__(self) -> None:
         super().__init__()
 
+        # The first one is the host the deploys check
         self.ALLOWED_HOSTS = [
             'lavedonio.com',
             'www.lavedonio.com',
@@ -148,9 +233,7 @@ class ProductionSettings(BaseSettings):
             'pt-br': 'lavedonio.com.br',
         }
 
-        # Real Turnstile keys are required outside development
-        self.TURNSTILE_SITE_KEY = str(os.environ['TURNSTILE_SITE_KEY'])
-        self.TURNSTILE_SECRET_KEY = str(os.environ['TURNSTILE_SECRET_KEY'])
+        self.HSTS_SECONDS = 31536000
 
 
 env_mapping = {

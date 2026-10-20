@@ -1,7 +1,8 @@
 import json
+import os
 import shutil
 import tempfile
-from io import BytesIO
+from io import BytesIO, StringIO
 from smtplib import SMTPException
 from unittest import mock
 from urllib.error import URLError
@@ -12,6 +13,8 @@ from django.contrib.auth.models import Permission
 from django.core import mail
 from django.core.cache import cache
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.core.management import call_command
+from django.core.management.base import CommandError
 from django.test import RequestFactory, SimpleTestCase, TestCase, override_settings
 from django.urls import reverse
 from django.utils import translation
@@ -613,3 +616,108 @@ class AboutSectionTests(TestCase):
         response = self.client.post(f'/about/sections/delete/{section.pk}/', headers=self.EN)
         self.assertRedirects(response, '/about/', fetch_redirect_response=False)
         self.assertFalse(AboutSection.objects.filter(pk=section.pk).exists())
+
+
+@override_settings(LANGUAGE_DOMAINS=LANGUAGE_DOMAINS, ALLOWED_HOSTS=ALLOWED_HOSTS)
+class SearchEngineTests(TestCase):
+
+    @override_settings(NOINDEX=True)
+    def test_staging_is_not_indexed(self):
+        response = self.client.get('/robots.txt', headers={'host': 'example.com'})
+        self.assertEqual(response.content, b'User-agent: *\nDisallow: /\n')
+        self.assertEqual(response.headers['X-Robots-Tag'], 'noindex, nofollow')
+        self.assertEqual(self.client.get('/', headers={'host': 'example.com'}).headers['X-Robots-Tag'], 'noindex, nofollow')
+
+    @override_settings(NOINDEX=False)
+    def test_everything_else_is(self):
+        response = self.client.get('/robots.txt', headers={'host': 'example.com'})
+        self.assertEqual(response.content, b'User-agent: *\nDisallow:\n')
+        self.assertNotIn('X-Robots-Tag', self.client.get('/', headers={'host': 'example.com'}).headers)
+
+
+class RemoteMediaTests(SimpleTestCase):
+
+    @override_settings(MEDIA_URL='https://media.example.com/')
+    def test_old_media_links_redirect_to_the_bucket(self):
+        from .views import media_redirect
+
+        response = media_redirect(RequestFactory().get('/media/images/Site homepage.jpg'), 'images/Site homepage.jpg')
+        self.assertEqual(response.status_code, 301)
+        self.assertEqual(response.url, 'https://media.example.com/images/Site%20homepage.jpg')
+
+    def test_absolute_uri_keeps_urls_of_other_hosts(self):
+        from django.template import Context, Template
+
+        template = Template('{% load site_tags %}{% absolute_uri url %}')
+        request = RequestFactory().get('/', HTTP_HOST='testserver')
+        self.assertEqual(template.render(Context({'request': request, 'url': '/media/a.webp'})), 'http://testserver/media/a.webp')
+        self.assertEqual(template.render(Context({'request': request, 'url': 'https://media.example.com/a.webp'})), 'https://media.example.com/a.webp')
+
+
+SERVER_ENV = {
+    'ENVIRONMENT': 'staging', 'SECRET_KEY': 'x', 'DEBUG_VALUE': 'False',
+    'DB_NAME': 'lavedonio_postgres', 'DB_USER': 'lavedonio_staging', 'DB_PASSWORD': 'p', 'DB_HOST': '192.0.2.1',
+    'DB_SCHEMA': 'lavedonio_staging', 'DB_SSLROOTCERT': '/tmp/ca.pem',
+    'R2_ACCOUNT_ID': 'account', 'R2_BUCKET': 'lavedonio-staging', 'R2_ACCESS_KEY_ID': 'id', 'R2_SECRET_ACCESS_KEY': 's',
+    'MEDIA_DOMAIN': 'media-staging.example.com', 'TURNSTILE_SITE_KEY': 'site', 'TURNSTILE_SECRET_KEY': 'secret',
+}
+
+
+class ServerSettingsTests(SimpleTestCase):
+
+    @mock.patch.dict(os.environ, SERVER_ENV)
+    def test_staging(self):
+        from site_lavedonio_django.env_settings import StagingSettings
+
+        staging = StagingSettings()
+        database = staging.DATABASES['default']
+        self.assertEqual(database['ENGINE'], 'django.db.backends.postgresql')
+        self.assertEqual(database['OPTIONS'], {
+            'sslmode': 'verify-full', 'sslrootcert': '/tmp/ca.pem', 'options': '-c search_path=lavedonio_staging',
+        })
+        storage = staging.MEDIA_STORAGE['OPTIONS']
+        self.assertEqual(storage['endpoint_url'], 'https://account.r2.cloudflarestorage.com')
+        self.assertEqual(storage['custom_domain'], 'media-staging.example.com')
+        self.assertFalse(storage['querystring_auth'])
+        self.assertEqual(staging.MEDIA_URL, 'https://media-staging.example.com/')
+        self.assertEqual(staging.ALLOWED_HOSTS[0], 'staging.lavedonio.com')
+        self.assertTrue(staging.NOINDEX)
+        self.assertEqual(staging.EMAIL_BACKEND, 'django.core.mail.backends.console.EmailBackend')
+
+    @mock.patch.dict(os.environ, SERVER_ENV)
+    def test_secrets_are_required(self):
+        from site_lavedonio_django.env_settings import ProductionSettings
+
+        del os.environ['R2_SECRET_ACCESS_KEY']
+        with self.assertRaises(KeyError):
+            ProductionSettings()
+
+
+@override_settings(LANGUAGE_DOMAINS=LANGUAGE_DOMAINS, ALLOWED_HOSTS=ALLOWED_HOSTS, MEDIA_ROOT=ABOUT_MEDIA_ROOT)
+class DemoContentTests(TestCase):
+
+    def test_creates_and_replaces_demo_content(self):
+        from blog.models import Post, Tag
+        from projects.models import Category, Project
+
+        call_command('create_demo_content', stdout=StringIO())
+        posts = Post.objects.filter(tags__slug='demo')
+        self.assertEqual(posts.count(), 9)
+        self.assertEqual(Project.objects.filter(slug__startswith='demo-').count(), 6)
+        self.assertTrue(posts.filter(cover_image__endswith='.webp').exists())
+        self.assertEqual(posts.filter(translations__language='en').distinct().count(), 7)
+
+        # Again: replaced, not duplicated
+        call_command('create_demo_content', stdout=StringIO())
+        self.assertEqual(Post.objects.filter(tags__slug='demo').count(), 9)
+
+        call_command('create_demo_content', '--delete', stdout=StringIO())
+        self.assertFalse(Post.objects.filter(tags__slug='demo').exists())
+        self.assertFalse(Project.objects.filter(slug__startswith='demo-').exists())
+        self.assertFalse(Tag.objects.filter(slug__startswith='demo').exists())
+        self.assertFalse(Category.objects.filter(slug__startswith='demo-').exists())
+
+    @mock.patch.dict(os.environ, {'ENVIRONMENT': 'production'})
+    def test_not_in_production(self):
+        with self.assertRaises(CommandError):
+            call_command('create_demo_content', stdout=StringIO())
