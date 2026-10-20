@@ -49,13 +49,16 @@ jobs:
 
       # The key can only run deploy/receive-release.sh on the server, which
       # unpacks this tarball and runs deploy/release.sh from it.
+      # The address is a secret on its own, so GitHub masks it wherever it
+      # appears in the log (e.g. in ssh's error messages)
       - name: Deploy
         env:
-          SSH_TARGET: ${{ secrets.STAGING_SSH_TARGET }}
+          SSH_HOST: ${{ secrets.STAGING_SSH_HOST }}
         run: |
           git archive --format=tar.gz HEAD |
             ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes -o BatchMode=yes \
-              -o StrictHostKeyChecking=yes "$SSH_TARGET" deploy "$GITHUB_SHA"
+              -o StrictHostKeyChecking=yes -o ConnectTimeout=30 \
+              "lavedonio-staging@$SSH_HOST" deploy "$GITHUB_SHA"
 
       - name: Remove the key
         if: always()

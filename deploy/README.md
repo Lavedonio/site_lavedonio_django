@@ -53,7 +53,7 @@ The workflow uses the `lavedonio-staging` environment's secrets, which only the
 | Secret | What |
 | --- | --- |
 | `STAGING_DEPLOY_SSH_KEY` | Private deploy key (its public half is in `lavedonio-staging`'s `authorized_keys`) |
-| `STAGING_SSH_TARGET` | `lavedonio-staging@<CloudPanel VPS address>` |
+| `STAGING_SSH_HOST` | The CloudPanel VPS's address, alone, so GitHub masks it wherever it appears in the (public) logs |
 | `STAGING_SSH_KNOWN_HOSTS` | The CloudPanel VPS's SSH host keys, pinned (`ssh-keyscan`, checked against the server) |
 
 Layout on the server:
