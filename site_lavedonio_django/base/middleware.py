@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.utils import translation
 
 from .i18n import language_from_host
@@ -20,4 +21,17 @@ class DomainLocaleMiddleware:
 
         response = self.get_response(request)
         response.headers.setdefault('Content-Language', language)
+        return response
+
+
+class NoIndexMiddleware:
+    """Asks search engines not to index any page when NOINDEX is on (staging)."""
+
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        response = self.get_response(request)
+        if settings.NOINDEX:
+            response['X-Robots-Tag'] = 'noindex, nofollow'
         return response

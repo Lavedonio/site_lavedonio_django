@@ -1,0 +1,44 @@
+name: Tests
+
+# Pull requests (including from forks, which get no secrets: none are used here),
+# pushes to main, and before every staging deploy (deploy-staging.yml).
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: site_lavedonio_django
+    env:
+      # Local settings (SQLite); the key only signs the tests' own data
+      ENVIRONMENT: development
+      DEBUG_VALUE: 'False'
+      SECRET_KEY: tests-only-not-a-secret
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r ../requirements.txt
+
+      - name: Check the project
+        run: |
+          python manage.py check
+          python manage.py makemigrations --check --dry-run
+
+      - name: Run the tests
+        run: python manage.py test

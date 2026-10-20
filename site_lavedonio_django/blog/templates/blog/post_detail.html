@@ -7,7 +7,7 @@
   <meta property="og:title" content="{{ post_translation.title }}">
   <meta property="og:description" content="{{ post_translation.excerpt }}">
   <meta property="og:url" content="{{ canonical_url }}">
-  {% if post.cover_image %}<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ post.cover_image.url }}">{% endif %}
+  {% if post.cover_image %}<meta property="og:image" content="{% absolute_uri post.cover_image.url %}">{% endif %}
   <meta property="article:published_time" content="{{ post.date_posted|date:'c' }}">
   <meta name="twitter:card" content="summary_large_image">
   {% if not post.published or post.is_scheduled %}<meta name="robots" content="noindex">{% endif %}
@@ -78,7 +78,7 @@
 
           <hr>
           <div class="rendered-content">
-            {{ post_translation.content_html|safe }}
+            {{ post_translation.content_html|safe|media_urls }}
           </div>
           <hr>
 
@@ -115,7 +115,7 @@
 {% endblock %}
 
 {% block credits %}
-          {% if post_translation.credits %}<span class="custom-footer__info text-lg-end mb-4" lang="{{ post_translation.language }}">{{ post_translation.credits|safe }}</span>{% endif %}
+          {% if post_translation.credits %}<span class="custom-footer__info text-lg-end mb-4" lang="{{ post_translation.language }}">{{ post_translation.credits|safe|media_urls }}</span>{% endif %}
 {% endblock %}
 
 {% block javascript %}

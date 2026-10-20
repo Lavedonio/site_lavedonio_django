@@ -1,11 +1,12 @@
 import logging
 from smtplib import SMTPException
+from urllib.parse import quote
 
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.core.mail import EmailMessage
-from django.http import HttpResponseBadRequest, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseBadRequest, HttpResponsePermanentRedirect, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.utils.text import slugify
 from django.utils.translation import gettext as _, gettext_lazy
@@ -216,3 +217,17 @@ class TempAdminView(TemplateView):
         # context["analytics_id"] = settings.ANALYTICS_ID
 
         return context
+
+
+def robots_txt(request):
+    """Everything can be crawled, except on staging (NOINDEX), where nothing can."""
+    rules = 'Disallow: /' if settings.NOINDEX else 'Disallow:'
+    return HttpResponse(f'User-agent: *\n{rules}\n', content_type='text/plain')
+
+
+def media_redirect(request, path):
+    """
+    Old links to /media/<file> (e.g. in posts imported from v1) when uploads are
+    kept elsewhere, like a Cloudflare R2 bucket on the servers.
+    """
+    return HttpResponsePermanentRedirect(f'{settings.MEDIA_URL}{quote(path)}')

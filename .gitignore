@@ -393,3 +393,6 @@ postgres_conn.txt
 
 # Images no page uses, kept out of the repository (same paths as in base/static/img)
 /unused_images/
+
+# Local cache of the Cloudflare CLI (cf)
+/.cloudflare/
