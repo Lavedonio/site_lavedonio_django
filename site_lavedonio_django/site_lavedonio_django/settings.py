@@ -50,6 +50,10 @@ if environment_settings.HTTPS:
 # disallows everything and an X-Robots-Tag header on every response
 NOINDEX = environment_settings.NOINDEX
 
+# Only shows the site to who's logged in (staging): every other request goes to
+# the login page, except the views marked with @login_not_required
+LOGIN_REQUIRED = environment_settings.LOGIN_REQUIRED
+
 
 # Application definition
 
@@ -84,6 +88,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'base.middleware.LoginRequiredMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]

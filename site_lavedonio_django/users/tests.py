@@ -77,6 +77,12 @@ class SessionSyncTests(TestCase):
         self.assertEqual(self.portuguese.get('/accounts/sync/?token=invalid', headers=PT).status_code, 403)
         self.assertEqual(self.portuguese.get('/accounts/sync/', headers=PT).status_code, 403)
 
+    @override_settings(LOGIN_REQUIRED=True)
+    def test_login_works_when_the_site_requires_it(self):
+        response = self.portuguese.get(path_of(self.log_in_on_english_host()), headers=PT)
+        self.assertEqual(response.url, 'http://example.com/blog/')
+        self.assertEqual(int(self.portuguese.session['_auth_user_id']), self.user.pk)
+
     @override_settings(LANGUAGE_DOMAINS={})
     def test_single_host(self):
         response = self.english.post('/accounts/login/', {'username': 'daniel', 'password': 'test-password'}, headers=EN)
@@ -89,6 +95,10 @@ class AdminLoginTests(TestCase):
     def test_admin_uses_the_login_that_logs_in_on_every_host(self):
         response = self.client.get('/admin/login/?next=/admin/', headers=EN)
         self.assertRedirects(response, '/accounts/login/?next=/admin/', fetch_redirect_response=False)
+
+        with self.settings(LOGIN_REQUIRED=True):
+            response = self.client.get('/admin/login/?next=/admin/', headers=EN)
+            self.assertRedirects(response, '/accounts/login/?next=/admin/', fetch_redirect_response=False)
 
     def test_logged_in_users_without_access_see_the_admin_page(self):
         # The site's login would send them back to the admin, in a loop

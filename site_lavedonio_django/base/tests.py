@@ -635,6 +635,28 @@ class SearchEngineTests(TestCase):
         self.assertNotIn('X-Robots-Tag', self.client.get('/', headers={'host': 'example.com'}).headers)
 
 
+@override_settings(LANGUAGE_DOMAINS=LANGUAGE_DOMAINS, ALLOWED_HOSTS=ALLOWED_HOSTS)
+class LoginRequiredTests(TestCase):
+
+    @override_settings(LOGIN_REQUIRED=True)
+    def test_staging_is_only_shown_to_who_is_logged_in(self):
+        response = self.client.get('/blog/?page=2', headers={'host': 'example.com'})
+        self.assertRedirects(response, '/accounts/login/?next=/blog/%3Fpage%3D2', fetch_redirect_response=False)
+        # In the language of the host
+        response = self.client.get('/sobre/', headers={'host': 'example.com.br'})
+        self.assertRedirects(response, '/accounts/login/?next=/sobre/', fetch_redirect_response=False)
+
+        self.assertEqual(self.client.get('/accounts/login/', headers={'host': 'example.com'}).status_code, 200)
+        self.assertEqual(self.client.get('/robots.txt', headers={'host': 'example.com'}).status_code, 200)
+
+        self.client.force_login(get_user_model().objects.create_user('daniel', password='test-password'))
+        self.assertEqual(self.client.get('/blog/', headers={'host': 'example.com'}).status_code, 200)
+
+    @override_settings(LOGIN_REQUIRED=False)
+    def test_everything_else_is_public(self):
+        self.assertEqual(self.client.get('/blog/', headers={'host': 'example.com'}).status_code, 200)
+
+
 class RemoteMediaTests(SimpleTestCase):
 
     @override_settings(MEDIA_URL='https://media.example.com/')
@@ -694,6 +716,7 @@ class ServerSettingsTests(SimpleTestCase):
         self.assertEqual(staging.MEDIA_URL, 'https://media-staging.example.com/')
         self.assertEqual(staging.ALLOWED_HOSTS[0], 'staging.lavedonio.com')
         self.assertTrue(staging.NOINDEX)
+        self.assertTrue(staging.LOGIN_REQUIRED)
         self.assertEqual(staging.EMAIL_BACKEND, 'django.core.mail.backends.console.EmailBackend')
 
     @mock.patch.dict(os.environ, SERVER_ENV)

@@ -109,8 +109,10 @@ because on the Python site nginx answers image URLs itself and they would never
 reach Django. Other `/media/...` requests that do reach Django redirect to the
 bucket.
 
-Staging sends `X-Robots-Tag: noindex` and a `Disallow: /` robots.txt, its HSTS
-lasts an hour, and the contact form's e-mails are only written to the uWSGI log.
+Staging only shows its pages to who's logged in (`LOGIN_REQUIRED`): everyone
+else goes to the login page, except for robots.txt. It also sends
+`X-Robots-Tag: noindex` and a `Disallow: /` robots.txt, its HSTS lasts an hour,
+and the contact form's e-mails are only written to the uWSGI log.
 Production's HSTS lasts a year, and its contact form sends e-mails through
 Google Workspace's SMTP relay (`smtp-relay.gmail.com`), which accepts them
 because they come from the CloudPanel VPS's address (no SMTP password; it
