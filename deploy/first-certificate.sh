@@ -9,6 +9,11 @@
 # with, so Let's Encrypt's challenge, redirected to HTTPS, never arrives. While
 # the certificate is issued, this serves the challenges over plain HTTP instead.
 # Renewals work through the proxy once the site has a valid certificate.
+#
+# For a domain without a subdomain (lavedonio.com), CloudPanel also puts
+# www.<domain> in the certificate, and its www vhost redirects to the domain
+# over HTTPS, so www's challenges are served here too. Its DNS record must
+# already point at the VPS.
 set -euo pipefail
 
 if [[ $# -lt 2 || $EUID -ne 0 ]]; then
@@ -27,7 +32,7 @@ cat > "$override" <<EOF
 server {
   listen 80;
   listen [::]:80;
-  server_name $domain $*;
+  server_name $domain www.$domain $*;
   location ^~ /.well-known/acme-challenge/ { root $docroot; }
   location / { return 301 https://\$host\$request_uri; }
 }

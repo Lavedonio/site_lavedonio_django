@@ -89,6 +89,9 @@ class BaseSettings:
         # Asks search engines not to index the site (staging)
         self.NOINDEX = False
 
+        # Only shows the site to who's logged in (staging)
+        self.LOGIN_REQUIRED = False
+
         # Kept in the database, so it's shared by every server process, which
         # the single-use tokens need (Turnstile and the login sync). Its table
         # is created with `python manage.py createcachetable`.
@@ -210,6 +213,7 @@ class StagingSettings(ServerSettings):
         # Short, so a mistake on staging doesn't lock browsers out for long
         self.HSTS_SECONDS = 3600
         self.NOINDEX = True
+        self.LOGIN_REQUIRED = True
 
         # The contact form's e-mails are only written to the server log, unless
         # EMAIL_BACKEND is set

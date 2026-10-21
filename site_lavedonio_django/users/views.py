@@ -1,12 +1,14 @@
 from django.conf import settings
 from django.contrib import admin
 from django.contrib.auth import get_user_model, login, logout
+from django.contrib.auth.decorators import login_not_required
 from django.contrib.auth.views import LoginView as BaseLoginView, LogoutView as BaseLogoutView
 from django.core import signing
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.utils.crypto import constant_time_compare
+from django.utils.decorators import method_decorator
 from django.utils.translation import gettext as _
 from django.views import View
 
@@ -41,6 +43,7 @@ class LogoutView(BaseLogoutView):
         return HttpResponseRedirect(get_sync_url(request, LOGOUT, user, next_url))
 
 
+@method_decorator(login_not_required, name='dispatch')
 class AdminLoginView(View):
     """
     Replaces the admin's login page with the site's one, which also logs in on
@@ -58,6 +61,8 @@ class AdminLoginView(View):
         return HttpResponseRedirect(f'{url}?{query_string}' if query_string else url)
 
 
+# The other hosts don't have the session yet when it logs in on them
+@method_decorator(login_not_required, name='dispatch')
 class SyncSessionView(View):
     """One step of the login/logout across the hosts of every language (see users.sync)."""
 

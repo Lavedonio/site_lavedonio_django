@@ -69,6 +69,16 @@ class PostLanguageTests(BlogTestCase):
         self.assertRedirects(self.client.get(f'/blog/{post.pk}/hello-world/', headers=PT), f'/blog/{post.pk}/ola-mundo/', status_code=301)
         self.assertRedirects(self.client.get(f'/blog/{post.pk}/', headers=EN), f'/blog/{post.pk}/hello-world/', status_code=301)
 
+    def test_v1_post_urls_redirect(self):
+        post = create_post({'en': 'Hello world', 'pt-br': 'Olá mundo'})
+        draft = create_post({'pt-br': 'Rascunho'}, published=False)
+
+        self.assertRedirects(self.client.get('/blog/post/ola-mundo/', headers=PT), f'/blog/{post.pk}/ola-mundo/', status_code=301)
+        self.assertRedirects(self.client.get('/blog/post/ola-mundo/', headers=EN), f'/blog/{post.pk}/hello-world/', status_code=301)
+        # v1 only had Portuguese slugs
+        self.assertEqual(self.client.get('/blog/post/hello-world/', headers=EN).status_code, 404)
+        self.assertEqual(self.client.get(f'/blog/post/{draft.translations.get().slug}/', headers=PT).status_code, 404)
+
     def test_post_only_in_another_language(self):
         post = create_post({'pt-br': 'Só em português'})
 
