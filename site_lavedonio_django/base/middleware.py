@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.contrib.auth.middleware import LoginRequiredMiddleware as BaseLoginRequiredMiddleware
 from django.utils import translation
 
 from .i18n import language_from_host
@@ -35,3 +36,15 @@ class NoIndexMiddleware:
         if settings.NOINDEX:
             response['X-Robots-Tag'] = 'noindex, nofollow'
         return response
+
+
+class LoginRequiredMiddleware(BaseLoginRequiredMiddleware):
+    """
+    Sends visitors who aren't logged in to the login page when LOGIN_REQUIRED is
+    on (staging), except for the views marked with @login_not_required.
+    """
+
+    def process_view(self, request, view_func, view_args, view_kwargs):
+        if not settings.LOGIN_REQUIRED:
+            return None
+        return super().process_view(request, view_func, view_args, view_kwargs)

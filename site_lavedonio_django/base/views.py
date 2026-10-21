@@ -4,6 +4,7 @@ from urllib.parse import quote
 
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth.decorators import login_not_required
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.core.mail import EmailMessage
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponsePermanentRedirect, HttpResponseRedirect
@@ -219,6 +220,7 @@ class TempAdminView(TemplateView):
         return context
 
 
+@login_not_required
 def robots_txt(request):
     """Everything can be crawled, except on staging (NOINDEX), where nothing can."""
     rules = 'Disallow: /' if settings.NOINDEX else 'Disallow:'
